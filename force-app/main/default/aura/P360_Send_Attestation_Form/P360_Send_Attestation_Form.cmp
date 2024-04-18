@@ -1,0 +1,45 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" 
+                access="global" controller="P360_Submit_Attestation_Form_Controller" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="selectedContact" type="String" />
+    <aura:attribute name="attScopingOptions" type="List" default="[]"/>
+    <aura:attribute name="noRecordsFound" type="Boolean" default="false" />
+    <strong class="slds-align_absolute-center "><span class="scrhdr">Send Attestation Form</span></strong> <!-- DY -18/1/24 - Updated title-->
+    
+    <aura:if isTrue="{!! v.noRecordsFound }">
+        <div  class="slds-align_absolute-center">
+            <lightning:layoutItem flexibility="auto" class="slds-p-top_small slds-p-bottom_small"  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="vertical-medium">  
+                <lightning:layout verticalAlign="center" multipleRows="true">
+                    <lightning:layoutItem flexibility="auto" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="horizontal-medium" > 
+                        
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_2-of-2">
+                                <lightning:recordEditForm objectApiName="TMKDA_DD_Attestation_Scoping__c">
+                                    <lightning:layoutItem flexibility="auto" class="slds-p-top_small slds-p-bottom_small"  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="vertical-medium">  
+                                        <lightning:layout verticalAlign="center" multipleRows="true">
+                                            <lightning:layoutItem flexibility="auto" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="horizontal-medium" >
+                                                <lightning:inputField required="true" aura:id="selectedContact" fieldName="Send_Attestation_Form_Contact__c" value="{!v.selectedContact}"/>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                    </lightning:layoutItem>
+                                    <lightning:messages />
+                                </lightning:recordEditForm>
+                            </div> 
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </div>
+        <div class="slds-float_right slds-p-around_x-small">
+            <lightning:button variant="brand" label="Send" onclick="{!c.handleEmailSendingAndUpdating}" />             
+        </div> 
+        <aura:set attribute="else">
+            <div class="slds-p-around_small">
+                <div class="slds-box slds-box_xx-small">
+                    <p class="slds-text-align_center"><strong>No Records Found...!!!</strong></p>
+                </div>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

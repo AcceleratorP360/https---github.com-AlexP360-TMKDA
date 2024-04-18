@@ -1,0 +1,524 @@
+<apex:page extensions="TMKDA_CommitteeSummaryReport" standardController="P360_Due_Diligence__c"   applyHtmlTag="false" showHeader="false" renderAs="PDF">
+
+    <html>
+        <head>
+            
+            <style>
+                @page {		size: landscape; 	<!--size: portrait;-->		}
+                
+                body { font-family  : Calibri, Arial, Sans-serif;}
+                
+                .container { width: 100%;}
+
+                @page {
+ <!--               	@top-left       {
+                        content     : "Committee Summary Report";
+                        font-family : Calibri, Arial, Sans-serif;
+                        font-size   : 12px;
+                    }   -->
+                
+                    @top-right       {
+                        content     : element(header);
+                    }
+                
+                    @bottom-left    {
+                        content     : element(footer);
+                    }
+                
+                    @bottom-right   {
+                        content     : "Page " counter(page) " of " counter(pages);
+                        font-family : Calibri, Arial, Sans-serif;
+                        font-size   : 11px;
+                		padding		: 0px 20px 0px 0px;
+                    }
+                }
+                
+                .header {
+                		top: 0;
+                		display     : block;
+                        padding     : 10px;  
+      -                  position    : running(header);   
+                        font-size   : 13px;
+                }
+    
+                .footer {
+                        display     : block;
+                        margin-right: 0px;
+                 <!--       padding     : 40px;   -->
+                        position    : running(footer);
+                        font-size   : 11px;
+                }
+                .pagenumber:before  { content : counter(page); }
+                .pagecount:before   { content : counter(pages); }
+                
+                *                   { box-sizing: border-box; }
+   
+                .heading        { font-weight: bold; }
+                .heading--main  { font-size: 20px; }
+                .heading--sub   { font-size: 20px; }
+                .heading--title { font-weight: bold; text-align: left; font-size:15px; color:blue}
+                
+                .box--half      { float: left; width: 50%; }
+                .box--full      { float: left; width: 50%; }
+   
+                table {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        margin-top: 10px;
+                        width: 100%;
+                	<!--        -fs-table-paginate: paginate;	-->
+                }
+    
+                th {
+  						border: 1px solid black;
+  						border-collapse: collapse;
+                        background-color: #e5e5e5;
+                        text-align      : center;
+                        font-family     : Arial, Calibri, sans-serif;
+                        font-size       : 12px;
+                        font-weight     : bold;
+                        padding         : 5px;
+                }
+            
+                th.review {
+                		background-color: #00bfff;
+                		color:white;
+                }
+
+                tr {    
+                		page-break-inside: avoid; 	
+                }
+                tr.category {
+                        page-break-inside: avoid;
+                		background-color : #505050;
+                }
+                
+                td {
+  						border			: 1px solid black;
+  						border-collapse	: collapse;
+                        font-size       : 12px;
+                        padding         : 2px 1px 2px 1px; 
+                        text-align      : left;
+                        border-collapse : collapse;   
+                }
+                
+                td.category {
+                        font-size       : 14px;
+                        font-weight     : bold;
+                		color			: white;
+                        padding         : 4px; 
+                        width           : 375px; 
+                }
+                td.subcat {
+                        font-style      : italic;
+                		color			: white;
+                }
+                td.revu {
+                        border      	: 1 px solid black;
+                }
+                
+                .label {
+                        font-size   : 12px;
+                        font-weight : bold;
+                        padding     : 6px;
+                        text-align  : left;
+                        border      : 0px;                      
+                        border-collapse : collapse;   
+                }  
+
+                .sublabel {
+                        font-size   : 14px;
+                        color       : #0096FF;
+                        font-weight : bold;
+                        text-align  : left;
+                        border      : 0px;                      
+                }  
+            
+                img {
+  					float: right;
+				}
+        		.highlighted-row {
+            			background-color: lightblue; /* Change this to the color you want */
+        		}
+           
+      		</style>
+	   	</head>
+        
+    	<body>
+           
+    		<!-- **START of FOOTER section here -->
+            <!-- **END here -->
+            
+            
+            <!-- **START of HEADER section here -->
+            <div class="header">
+                <table style="border:0px; margin:0px; padding:0px;">
+                    <tr><td style="border:0px;">&nbsp;</td>
+                        <td style="border:0px;"><apex:image url="{!$Resource.TMK_Logo}"  width="50" height="50"/></td>
+                    </tr>
+                </table>
+            </div>
+            <!-- **END here -->
+            
+            
+            <!-- **START of CONTENT section here -->
+            
+            <div class="container">
+       
+                <!-- ** START of DUE DILIGENCE DETAILS section here     -->
+                <div>
+                    <hr/><br/>
+                    <span class="heading heading--title">Coverholder / DCA Information</span>
+                    <table style="border: 0px; border-spacing: 10px; padding: 2px;">
+                        <tr style="border: 0px solid black;">
+                            <td class="label" style="width:15%;">Company Name</td>
+                            <td style="border: 0px;" colspan="5">{!duediligence.P360_CoverHolder_TPA_Name__r.Name}</td></tr>
+                        <tr>
+                        	<td class="label" style="width:15%;">Coverholder or DCA</td>
+                         	<td style="border: 0px;width:15%;">{!duediligence.P360_DD_Coverholder_or_DCA__c}</td>
+                         	<td class="label" style="width:20%;">DD Type</td>
+                         	<td style="border: 0px;width:15%;">{!duediligence.P360_Due_Diligence_Type__c}</td>
+                            	<!--        <td style="border: 0px">{!duediligence.TMKDA_Binder_Renewal_Date__c}</td> -->
+                         	<td class="label" style="border:0px; width:20%;">Binder Renewal Date</td>
+                         	<td style="border:0px;width:15%;"><apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.TMKDA_Binder_Renewal_Date__c}" /> 
+									</apex:outputText></td>
+                        </tr>
+                        	
+                        <tr>
+                          	<td class="label">Domicile</td>
+                            <td style="border: 0px;">{!duediligence.TMKDA_Domicile__c}</td>
+                            	<!--        <td style="border: 0px;">: {!duediligence.P360_DD_Coverholder_Live_Date__c}</td> -->
+                            <td class="label">Live Date</td>
+                            <td style="border:0px;"><apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.P360_DD_Coverholder_Live_Date__c}" /> 
+								</apex:outputText></td>
+                            <td class="label">Total EPI</td>
+                            <td style="border:0px;">{!duediligence.P360_DD_Total_EPI__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Line of Business</td>
+                            <td style="border: 0px;">{!duediligence.P360_DD_Line_of_Business__c}</td>
+                                <!--        <td style="border: 0px;">: {!duediligence.TMKDA_Previous_Committee_Date__c}</td> -->
+                            <td class="label">Previous Committee Date</td>
+                            <td style="border:0px;"><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.TMKDA_Previous_Committee_Date__c}" /> 
+							</apex:outputText></td>
+                            <td class="label">Number of Live Binders</td>
+                            <td style="border: 0px;">{!duediligence.P360_DD_Number_of_Live_Binders__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">DD Connection Status</td>
+                            <td style="border: 0px;">{!duediligence.TMKDA_DD_Connection_Status__c}</td>
+                            <td class="label">DD Connections</td>
+                            <td style="border: 0px;">{!duediligence.TMKDA_DD_Connection_Status__c}</td>
+                            <td class="label">Number of Run Off Binders</td>
+                            <td style="border: 0px;">{!duediligence.P360_DD_Number_of_Run_Off_Binders__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Customer Domicile</td>
+                            <td colspan="5" style="border: 0px;">{!duediligence.P360_DD_Customer_Domicile__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Risk Location</td>
+                            <td colspan="5" style="border: 0px;">{!duediligence.P360_DD_Risk_Location__c}</td>
+                        </tr>
+                        <tr> 
+                            <td class="label" style="width:20%;">Overview</td>
+                            <td colspan="5" style="border: 0px;">{!duediligence.TMKDA_Overview__c}</td>
+                        </tr><br/>
+                        <hr/>
+                    </table>
+                </div>
+                <br/>
+                <!-- End of DD DETAILS DIV -->
+                
+                <!-- ** START of AUDIT SUMMARY section here     -->
+                <div style="page-break-after: always;">
+                   	<span class="heading heading--title">Audit Summary</span>
+                    <table style="border: 0px;">
+            			<tr>
+                         	<td class="label" style="width:20%; text-align:center; ">Last Audit Date</td>
+                         	<td style="border:0px;width:25%;">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.P360_DD_Last_Audit_Date__c}" /> 
+								</apex:outputText>
+                            </td>
+	                        <td class="label" style="width:30%; text-align:center; ">Next Audit Date</td>
+    	                    <td style="border:0px;width:25%">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.P360_DD_Next_Audit_Date__c}" /> 
+								</apex:outputText>
+                            </td>
+                    	</tr>
+                    </table>
+                    
+                    <table>
+                       	<thead>
+                            <tr>
+                        		<th class="review" style="width:25%">Recommendations/Actions</th>
+                            	<th class="review" style="width:25%">Actions-Report</th> 
+                            	<th class="review" style="width:25%">Open at DD Review Date</th>
+                            	<th class="review" style="width:25%; white-space:wrap;">Overdue at DD Review Date</th>
+                        	</tr>
+                        </thead>  
+                        <tbody>
+							<tr>
+                                <td style="text-align:center;">High</td>
+                              	<td>{!duediligence.TMKDA_High_Actions_Report__c}</td>
+                                <td>{!duediligence.TMKDA_High_Open_at_DD_Review_Date__c}</td>
+                                <td>{!duediligence.TMKDA_High_Overview_at_DD_Review_Date__c}</td>
+							</tr>
+                            <tr style="width:25%;"><td style="text-align:center;">Medium</td>
+                                <td>{!duediligence.TMKDA_Medium_Actions_Report__c}</td>
+                                <td>{!duediligence.TMKDA_Medium_Open_at_DD_Review_Date__c}</td>
+                                <td>{!duediligence.TMKDA_Medium_Overview_at_DD_Review_Date__c}</td>
+                            </tr>
+                            <tr style="width:25%;"><td style="text-align:center;">Low</td>
+                                <td>{!duediligence.TMKDA_Low_Actions_Report__c}</td>
+                                <td>{!duediligence.TMKDA_Low_Open_at_DD_Review_Date__c}</td>
+                                <td>{!duediligence.TMKDA_Low_Overview_at_DD_Review_Date__c}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>		
+              	</div>        
+                <!-- End of **Audit Summary**      DIV -->
+                
+                <!-- ** START of RISK SUMMARY section here     -->
+ 				<div>
+					<div>
+                    	<span class="heading heading--title">Risk Summary</span>
+
+                        <table border="1" style="border-collapse: collapse;">
+
+           <!-- ** CODE TO PRINT ** CATEGORY NAME and DETAILS *** starts here     -->
+                            <apex:repeat value="{!category}" var="cat" >
+                             	<apex:outputText rendered="{!if(cat.Name=='Conduct', true ,false)}">  	
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Highest Risk Summary:&nbsp;&nbsp;{!cat.TMKDA_High_Risk_Customer_Type_wc}   <!-- colspan="4"  -->
+                                            <br/>&nbsp;Highest PDF Output:&nbsp;&nbsp;{!cat.TMKDA_Highest_PDT_Output_wc}
+                                            <br/>&nbsp;Number of BPAs:&nbsp;&nbsp;{!cat.TMKDA_Number_of_BPAs_wc}
+                                            <br/>&nbsp;Does attestation confirm a new TCF?:&nbsp;&nbsp;{!cat.TMKDA_Does_attestation_confirm_a_new_TCF_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+                                        					
+                             	<apex:outputText rendered="{!if(cat.Name=='Data Quality', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;High Monitored List?:&nbsp;&nbsp;{!cat.TMKDA_High_Monitored_List_wc}</td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+                                        					
+                             	<apex:outputText rendered="{!if(cat.Name=='Complaints', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                         <td class="subcat" colspan="3">&nbsp;Level of Authority:&nbsp;&nbsp;{!cat.TMKDA_Level_of_Authority_wc}
+                                            <br/>&nbsp;Attestation confirm new Complaint policy?:&nbsp;&nbsp;{!cat.TMKDA_attestationconfirm_a_new_Complaint_wc}
+                                            <br/>&nbsp;Has a new Complaints policy?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_Complaints_policy_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                             	<apex:outputText rendered="{!if(cat.Name=='Claims', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Highest underwriting authority:&nbsp;&nbsp;{!cat.TMKDA_Highest_underwriting_authority_wc}
+                                            <br/>&nbsp;Does attestation has a new system?:&nbsp;&nbsp;{!cat.TMKDA_Attestation_has_new_system_wc}
+                                            <br/>&nbsp;Attestation confirm new Succession plan?:&nbsp;&nbsp;{!cat.TMKDA_Attestation_new_Succession_plan_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                                <apex:outputText rendered="{!if(cat.Name=='Company', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Loss fund amount:&nbsp;&nbsp;{!cat.P360_Loss_Fund_wc}
+                                            <br/>&nbsp;Claims sign off date:&nbsp;&nbsp;{!cat.P360_CT_Date_of_claims_sign_off_review_wc}
+                                        	<br/>&nbsp;Has a new Claims Procedure?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_Claims_Procedure_wc}
+                                        	<br/>&nbsp;Claims authority limit?:&nbsp;&nbsp;{!cat.TMKDA_Claims_authority_limit_wc}
+                                        	<br/>&nbsp;Coverholder have claims authority?:&nbsp;&nbsp;{!cat.TMKDA_Coverholder_have_claims_authority_wc}
+                                        	<br/>&nbsp;Are Claims delegated to a DCA?:&nbsp;&nbsp;{!cat.TMKDA_Are_Claims_delegated_to_a_DCA_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                             	<apex:outputText rendered="{!if(cat.Name=='Controls & Risk Framework', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                       	<td class="subcat" colspan="3">&nbsp;Is Operational Resilience in scope?:&nbsp;&nbsp;{!cat.TMKDA_Is_Operational_Resilience_in_scope_wc}
+                                            <br/>&nbsp;Is Whistleblowing in scope?:&nbsp;&nbsp;{!cat.P360_In_Scope_for_Whistleblowing_wc}
+                                            <br/>&nbsp;Does attestation confirm a new DRP?:&nbsp;&nbsp;{!cat.TMKDA_Does_attestation_confirm_a_new_DRP_wc}
+                                        	<br/>&nbsp;Does attestation confirm a new BCP?:&nbsp;&nbsp;{!cat.TMKDA_Does_attestation_confirm_a_new_BCP_wc}
+                                            <br/>&nbsp;Has a new whistleblowing policy?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_whistleblowing_policy_wc}
+                                            <br/>&nbsp;Attestation confirm a new Outsourcing?:&nbsp;&nbsp;{!cat.TMKDA_attestationconfirmnew_Outsourci_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                                 <apex:outputText rendered="{!if(cat.Name=='Data & Information Security', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Has a new Info Security policy?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_Info_Security_policy_wc}
+                                            <br/>&nbsp;Has a new Data Protection policy?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_Data_Protection_policy_wc}
+                                            <br/>&nbsp;Highest level of customer data held?:&nbsp;&nbsp;{!cat.P360_Highest_data_type_held_wc}
+                                            <br/>&nbsp;Is GDPR in scope?:&nbsp;&nbsp;{!cat.TMKDA_Is_GDPR_in_scope_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                                <apex:outputText rendered="{!if(cat.Name=='Financial & Credit', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Has a new Accounting Procedure?:&nbsp;&nbsp;{!cat.TMKDA_Has_a_new_Accounting_Procedure_wc}
+                                          	<br/>&nbsp;JMD Rating?:&nbsp;&nbsp;{!cat.P360_JMD_rating_at_latest_review_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+
+                                <apex:outputText rendered="{!if(cat.Name=='Financial Crime', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;Inherent ABandC?&nbsp;&nbsp;{!cat.TMKDA_Inherent_AB_C_wc}
+                                            <br/>&nbsp;Inherent AML?&nbsp;&nbsp;{!cat.TMKDA_Inherent_AML_wc}
+                                        	<br/>&nbsp;Inherent Sactions?&nbsp;&nbsp;{!cat.TMKDA_Inherent_Sactions_wc}
+                                        	<br/>&nbsp;Attestation has new Fin Crime policy?&nbsp;&nbsp;{!cat.TMKDA_Attestation_Fin_Crime_policy_wc}
+                                        </td>
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText> 
+                                
+                             	<apex:outputText rendered="{!if(cat.Name=='Insurance Distribution Directive', true ,false)}">  
+                					<tr class="category">
+                                        <td class="category" colspan="1"> {!cat.Name}</td>
+                                        <td class="subcat" colspan="3">&nbsp;In scope?:&nbsp;&nbsp;{!cat.TMKDA_Highest_underwriting_authority_wc}</td> 
+                                        <td class="subcat">Connected to Primary?&nbsp;&nbsp;{!IF(cat.TMKDA_Primary_Linked_wc==true,': Yes','')}</td>
+		            				</tr>                                
+                                </apex:outputText>
+            <!-- ** CODE TO PRINT ** CATEGORY NAME and DETAILS *** ends here     -->
+
+
+            <!-- ** CODE TO PRINT ** REVIEW AREA NAME and DETAILS *** starts here     -->
+                                
+  <!--                                <apex:repeat value="{!subCategory}" var="subcat">		-->
+                     <!--               <apex:outputText rendered="{!if(subcat.P360_Category_Name__r.Name == cat.Name , true ,false)}">    -->
+   <!--                                   <apex:outputText rendered="{!if(subcat.P360_DA_Category_Name_linkage__c == cat.Name , true ,false)}">  		-->
+                              <!--      <table border="1">  -->
+                                        
+ <!-- 				        			<tr style="background-color:#fffaa0;">  -->
+        		      <!--                  <td colspan="6" style="font-weight:bold; font-size:13px; text-align:left;">Sub Category: {!subcat.Name}</td>  -->
+<!--        		                        <td colspan="6" style="font-weight:bold; font-size:13px; text-align:left;">Sub Category: {!subcat.P360_DA_Sub_Category_Name__r.Name}</td>
+                                       
+            						</tr> --> 
+            						<tr>
+            							<th class="review" style="width:40%;">Review Point</th> 
+		            					<th class="review" style="width:7%;">Answer</th> 
+        		    					<th class="review" style="width:8%;">Source</th>
+            							<th class="review" style="width:30%;">Comment</th>   
+                                        <th class="review" style="width:15%;">Risk Accepted / Fail</th>        
+            				<!--			<th class="review" style="width:10%;">Connected to Primary</th>		-->
+		            				</tr>
+            
+        		    				<apex:repeat value="{!reviewArea}" var="revarea">  
+                                        <apex:outputText rendered="{!if(revarea.TMKDA_Linked_Category__c == cat.Id, true, false)}">  
+        								<tr>
+                       <!--                     <td>{!revarea.TMKDA_Linked_Category__c +'   ' + cat.Id}</td>  		-->
+                        		        	<td>{!revarea.P360_DA_Review_Area_Name__r.P360_Review_Point__c}</td> 
+            								<td>{!revarea.P360_DA_Review_Area_Name__r.TMKDA_Answer_formula__c}</td>			<!-- P360_DA_Review_Area_Name__r.TMKDA_Answer__c -->
+		            						<td>{!revarea.P360_DA_Review_Area_Name__r.TMKDA_Source__c}</td>
+        		    						<td>{!revarea.P360_DA_Review_Area_Name__r.P360_Comment__c}</td>
+                                            <td style="text-align:center;">{!revarea.TMKDA_Pass_Fail__c}</td> 
+<!--                                            <td style="text-align:center;">{!revarea.TMKDA_Primary_Connected_Value_formula__c}</td>		  -->
+        								</tr>
+										</apex:outputText>
+                                  	</apex:repeat>
+                        		<br/><!-- <div  style="page-break-after: always;"></div> -->
+       	 					</apex:repeat> 
+        					
+    					</table>      
+					</div>            
+				</div>
+                
+                <!--   ** START of SUMMARY/ SIGN-OFF & REVIEW section here     -->
+                <div style="page-break-before: always;">
+                   	<span class="heading heading--title">Summary</span>
+                    <table style="border: 0px;">
+            			<tr>
+                         	<td class="label" style="width:20%;">Due Diligence Summary</td>
+                         	<td style="border:0px;width:80%;">{!duediligence.P360_Due_Diligence_Summary__c}</td>
+                        </tr>
+            			<tr>
+                         	<td class="label" style="width:20%;">Recommendation</td>
+                         	<td style="border:0px;width:80%;">{!duediligence.P360_Recommendation__c}</td>
+                        </tr>
+            			<tr>
+                         	<td class="label" style="width:20%;">Approval Method</td>
+                         	<td style="border:0px;width:30%;">{!duediligence.P360_Approval_Method__c}</td>
+                    	</tr>
+                    </table>
+                </div>
+                
+                <br /><hr /><br />
+                
+                <div>
+                   	<span class="heading heading--title">Sign Off and Review</span>
+                    <table style="border: 0px;">
+            			<tr>
+                         	<td class="label" style="width:20%;">Attestation Signed By</td>
+                         	<td style="border:0px;width:30%;">{!duediligence.P360_Attestation_Signed_By__c}</td>
+	                        <td class="label" style="width:20%;">Date Attestation Received</td>
+                         	<td style="border:0px;width:30%;">{!duediligence.P360_Date_Attestation_Received__c}</td>
+                        </tr>
+            			<tr>
+                         	<td class="label" style="width:20%;">Completed By</td>
+                         	<td style="border:0px;width:30%;">{!duediligence.TMKDA_Completed_By_Name_Rpt__c}</td>
+	                        <td class="label" style="width:20%;">Date Completed</td>
+    	                    <td style="border:0px;width:30%">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.P360_Date_Completed__c}" /> 
+								</apex:outputText>
+                            </td>
+                        </tr>
+            			<tr>
+                         	<td class="label" style="width:20%;">DA Peer Reviewer</td>
+                         	<td style="border:0px;width:30%;">{!duediligence.TMKDA_DD_Peer_Approver_Name_Rpt__c}</td>
+	                        <td class="label" style="width:20%;">Date Signed Off</td>
+    	                    <td style="border:0px;width:30%">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.P360_Date_Signed_Off__c}" /> 
+								</apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+	                        <td class="label" style="width:20%;">Committee Date</td>
+    	                    <td style="border:0px;width:30%">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.TMKDA_Commitee_Date__c}" /> 
+								</apex:outputText>
+                            </td>
+   	                        <td class="label" style="width:20%;">Date Completed</td>
+					        <td style="border:0px;width:30%">
+                                <apex:outputText value="{0,date,yyyy.MM.dd}">
+    								<apex:param value="{!duediligence.TMKDA_Committee_Date_Completed__c}" /> 
+								</apex:outputText>
+                            </td>
+                    	</tr>
+                    </table>
+                </div>
+				<!--    ** END of SUMMARY/ SIGN-OFF & REVIEW section here     -->
+
+			</div>
+		</body>
+	</html>
+</apex:page>

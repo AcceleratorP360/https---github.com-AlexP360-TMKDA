@@ -1,0 +1,33 @@
+<template>
+    <lightning-card style="height: 600px; margin: 0 auto; max-width: 1000px;">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-2">
+                <div class="slds-theme--default">
+                    <div class="slds-size_1-of-2">
+                        <img style="max-height: 200px;" alt="TMK Logo" src={TMK_Logo_URL}/>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-size_1-of-2 slds-text-color_inverse slds-text-heading_large slds-align_absolute-center" style="padding:0.5rem;background:#16325c; display: flex; justify-content: center;">        
+                BPA Attestation Form 
+            </div>
+            
+            <div class="slds-size_1-of-1 slds-align_absolute-center" style="padding: 10px;">
+                <p style="margin-top: 10px; text-align: center;">
+                    TMK's delegated partners are subject to due diligence before appointment, at renewal, and as appropriate throughout the period of the contract. In order to assist TMK's Delegated Authority team with ongoing oversight, please complete the following attestation questionnaire. Please note we may further contact you for additional information or clarity on some of the answers provided where applicable, please confirm the information answered below covers all grouped entities.
+                </p>
+            </div>
+        </div>
+        
+        <lightning-datatable
+            key-field="Id"
+            data={data}
+            columns={columns}
+            onsave={handleSave}
+            draft-values={saveDraftValues} 
+            hide-checkbox-column >
+        </lightning-datatable>
+    
+    </lightning-card>
+</template>

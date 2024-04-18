@@ -1,0 +1,39 @@
+.scroll-container {
+    max-height: 600px; /* Set the desired maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.sidebar{
+    height: 600px;;
+}
+.sidebar-button{    
+    width: 20px;
+}
+.open-panel {
+    width: 17%;
+    overflow:hidden;
+    transition: 0.3s;
+}
+.close-panel {
+    width: 0px;
+    min-width: 0px;
+    overflow:unset;
+    transition: 0.3s;
+}
+.expand-panel{
+    width: 99.5%;
+    transition: 0.3s;
+}
+.collapse-panel{
+    width: 77.5%;
+    transition: 0.3s;
+}
+.page-section {
+    border: solid 1px #ccc;
+    padding: .25rem;
+    background-color: #fff;
+}
+
+.refreshRotate {
+    animation: rotate .4s;
+}

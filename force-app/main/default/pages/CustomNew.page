@@ -1,0 +1,9 @@
+<!-- CategoryNewRecord.page -->
+<apex:page standardController="P360_DD_Category__c" lightningStylesheets="true">
+    <apex:form >
+        <!-- Add fields for the new record -->
+        <apex:inputField value="{!P360_DD_Category__c.Name}" required="true"/>
+        <!-- Add other fields as needed -->
+        <apex:commandButton action="{!save}" value="Save"/>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,312 @@
+<apex:page extensions="GenerateDD" standardController="P360_Due_Diligence__c"   applyHtmlTag="false" showHeader="false" renderAs="PDF">
+   
+    <html>
+        <head>
+            <style>
+                @page { 
+                    size: landscape; 
+                         <!--size: portrait;-->
+                }
+                
+                body { font-family  : Arial, Calibri, sans-serif; }
+                
+                .container { 
+                    <!--    float: right;  -->
+                        width: 100%;
+                        }
+
+                @page {
+                    @top-left       {
+                        content     : element(header);
+                    }
+                
+                    @bottom-left    {
+                        content     : element(footer);
+                    }
+                    @bottom-right   {
+                        content     : "Page " counter(page) " of " counter(pages);
+                        font-family : Arial, Calibri, sans-serif;
+                        font-size   : 11px;
+                    }
+                }
+                
+                .pagenumber:before  { content : counter(page); }
+                .pagecount:before   { content : counter(pages); }
+                
+                *                   { box-sizing: border-box; }
+   
+                .heading        { font-weight: bold; }
+                .heading--main  { font-size: 21px; }
+                .heading--sub   { font-size: 21px; }
+                .heading--title { font-weight: bold; text-align: left; font-size:16px; color:blue}
+                
+                .box--half      { float: left; width: 50%; }
+                .box--full      { float: left; width: 50%; }
+   
+                table {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        margin-top: 25px;
+                        width: 100%;
+                        -fs-table-paginate: paginate;
+                }
+    
+                .articleTable tr td:first-child { width: 50px; }
+                .articleTable tr td:nth-child(2){ width: 180px;}
+            
+                th {
+                        background-color: #e5e5e5;
+                        text-align      : center;
+                        font-family     : Arial, Calibri, sans-serif;
+                        font-size       : 12px;
+                        font-weight     : bold;
+                        padding         : 5px;
+<!--                        border          : 1px solid black;
+                        border          : 1px solid black;  -->
+                        border-collapse : collapse;   
+                }
+                
+                tr {
+                        page-break-inside: avoid;
+                }
+                
+                td {
+                        font-family     : Arial, Calibri, sans-serif;
+                        font-size       : 12px;
+                        padding         : 2px 1px 2px 1px; 
+                        text-align      : left;
+                        border-collapse : collapse;   
+                }
+                
+                .label {
+                        font-size   : 12px;
+                        font-weight : bold;
+                        padding     : 6px;
+                        text-align  : left;
+                        border      : 0px;                      
+<!--                        border-collapse : collapse;   -->
+                }  
+
+                .sublabel {
+                        font-size   : 14px;
+                        color       : #0096FF;
+                        font-weight : bold;
+                        text-align  : left;
+                        border      : 0px;                      
+                }  
+            
+                .header {
+                        display     : block;
+                        margin      : 30px 10px 20px 10px;
+                    <!--    padding     : 40px;   -->
+                        position    : running(header);
+                        font-size   : 13px;
+                }
+    
+                .footer {
+                        display     : block;
+                        padding     : 15px;
+                        position    : running(footer);
+                        font-size   : 11px;
+                }
+            
+            </style>
+        </head>
+        
+        <body>
+            
+            <!-- **START of FOOTER section here -->
+            <div class="footer">
+                <span>Generated on {!generatedDate}</span>              <!-- <span class="date">{!TODAY()}</span>  -->
+            </div>
+            <!-- **END here -->
+            
+            
+            <!-- **START of HEADER section here -->
+            <div class="header">
+                <span class="heading heading--title">Due Diligence: {!invoice.Name}</span>
+                <span style="float:right; text-align: right; font-size:12px;">Date: {!generatedDate}</span>
+            </div>
+
+            <br/><br/>
+            
+            
+            <!-- ADDED BY AMITABH on 21-Mar-23 -->
+            <!-- **START of CONTENT section here -->
+            <div class="container">
+       
+                <!-- ** START of DUE DILIGENCE DETAILS section here     -->
+                <div>
+                    <table style="border: 0;">
+                        <tr>
+                            <td class="label" style="width:20%;">Id</td>
+                            <td style="border: 0px;">: {!invoice.P360_Due_Diligence_Record_Id__c}</td>
+                            <td class="label" style="width:10%;">Valid from</td>
+                            <td><apex:outputText value="{0,date,MM-dd-yyyy}">
+    							<apex:param value="{!invoice.P360_Due_Diligence_Date__c}" /> 
+							</apex:outputText></td>
+                    <!--        <td style="border: 0px;">: DATEVALUE({!invoice.P360_Due_Diligence_Date__c})
+						</td>  
+                            <td style="border: 0px;">: String.valueOf({!invoice.P360_Due_Diligence_Date__c}).format("MM/DD/YYYY")</td> -->
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Name</td>
+                            <td style="border: 0px;">: {!invoice.Name}</td>
+                            <td class="label" style="width:10%;">Valid to</td>
+                    <!--        <td style="border: 0px;">: {!invoice.p360_Due_Diligence_Date_Valid_To__c}</td> -->
+                            <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!invoice.p360_Due_Diligence_Date_Valid_To__c}" /> 
+							</apex:outputText></td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Type</td>
+                            <td style="border: 0px;">: {!invoice.P360_Due_Diligence_Type__c}</td>
+                            <td class="label" style="width:10%;">Planned Assessment Start Date</td>
+                            <td style="border: 0px;">: {!invoice.p360_Planned_Assessment_Start_Date__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Coverholder/TPA Name</td>
+                            <td style="border: 0px;">: {!invoice.P360_CoverHolder_TPA_Name__r.Name}</td>
+                            <td class="label" style="width:10%;">Planned Assessment End Date</td>
+                            <td style="border: 0px;">: {!invoice.p360_Planned_Assessment_End_Date__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">DD Analyst</td>
+                            <td style="border: 0px;" colspan="3">: {!invoice.P360_DA_Analyst__r.Name}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Risk Score</td>
+                            <td style="border: 0px;" colspan="3">: {!invoice.P360_DD_Assessment_score__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;"><span><b>Approval Status</b></span></td>
+                            <td style="border: 0px;" colspan="3">: {!invoice.P360_Approval_Status__c}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- ** END OF DD Details here                          -->        
+                
+                
+                <!-- ** START of CATEGORY DETAILS section here  -->
+
+                <div style="page-break-before:always">&nbsp;</div> 
+                <span class="sublabel">{!invoice.Name}&nbsp;&nbsp;>>&nbsp;&nbsp;Category</span>
+            
+                <apex:variable value="{!1}" var="count"/>
+                <apex:variable value="{!1}" var="option"/>
+        
+                <div>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>  
+                                <th>Category Name</th> 
+                                <th>Assessment</th>
+                                <th>Assessment Status</th>      
+                                <th>Inherent Risk</th>
+                                <th>Summary and Final Assesment</th>
+                                <th>Completion Marker</th>
+                                <th>Commentary</th> 
+                            </tr>
+                        </thead>  
+                    
+                        <tbody>
+                            <apex:repeat value="{!invoiceLineItemList}" var="inl"  >                   
+                                <tr>
+                                    <td style="text-align:center; width:5%; ">{!count}<apex:variable value="{!count+1}" var="count" /></td>
+                                    <td style="width:10%">{!inl.Name}</td>
+                                    <td style="text-align:center; width:5%">{!inl.P360_Assessment__c}</td>
+                           <!--         <td style="text-align:center; width:5%"><img src = "{!$Resource.GreenCircle}" alt="Image" /></td>   -->
+                                    <td style="text-align:center; width:5%">
+                                        <apex:outputText value='{<img src={$Resource.RedCircle} />}' escape="true" />
+                             <!--           <apex:outputText value="
+                                                                {!IF(inl.P360_Assessment__c == 'Red', '<img src={$Resource.RedCircle} />', 
+                                                                If((inl.P360_Assessment__c == 'Green'), '<img src={$Resource.GreenCircle} />', '<img src={$Resource.AmberCircle} />') )}"
+                                           escape="true" />  -->
+                                    </td>
+                                    <td style="text-align:center; width:5%">{!inl.P360_Inherent_Risk__c}</td>
+                                    <td>{!inl.P360_Summary_Final_Assessment__c}</td>
+                                    <td style="width:10%">{!inl.P360_Completion_Marker__c}</td>
+                                    <td>{!inl.P360_Commentary__c}</td>    
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+        
+                
+                <!-- ** START of SUB-CATEGORY DETAILS section here  -->
+    
+                <div style="page-break-before:always">&nbsp;</div> 
+                <span class="sublabel">{!invoice.Name}&nbsp;&nbsp;>>&nbsp;&nbsp;Sub-Category</span>
+            
+                <apex:variable value="{!1}" var="count"/>
+                <apex:variable value="{!1}" var="option"/> 
+        
+                <div>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>  
+                                <th>Sub-Category Name</th> 
+                                <th>Parent Category Name</th>
+                                <th>Assessment</th>
+                                <th>Risk Score</th>
+                            </tr>
+                        </thead>                                    
+
+                        <tbody>
+                            <apex:repeat value="{!SubCategoryList}" var="sub"  >                   
+                                <tr>
+                                    <td style="text-align:center; width:5%">{!count}<apex:variable value="{!count+1}" var="count" /></td>
+                                    <td>{!sub.Name}</td>
+                                    <td>{!sub.P360_Category_Name__r.Name}</td>
+                                    <td style="text-align:center; width:5%">{!sub.P360_Assessment__c}</td>
+                                    <td style="text-align:right; width:8%; padding: 2px 6px 2px 1px;">{!sub.P360_SC_Assessment_Score1__c}</td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>         
+                    </table>
+                </div>
+                <!-- **END** of SUB-CATEGORIES details  -->
+
+            
+                <!-- ** START of REVIEW AREAS section here   -->
+                <div style="page-break-before:always">&nbsp;</div> 
+                <span class="sublabel">{!invoice.Name}&nbsp;&nbsp;>>&nbsp;&nbsp;Review Area</span>
+        
+                <apex:variable value="{!1}" var="count"/>
+                <apex:variable value="{!1}" var="option"/>
+ 
+                <div>
+                    <table border="1" style="border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>  
+                                <th>Review Area Name</th>  
+                                <th>Parent Sub Category Name</th>
+                                <th>Risk Score</th>
+                                <th>Completion Maker</th> 
+                                <th>Overall Score</th> 
+                            </tr>
+                        </thead>
+                
+                        <tbody>
+                            <apex:repeat value="{!ReviewAreaList}" var="rev"  >                   
+                                <tr>
+                                    <td style="text-align:center; width:5%;">{!count}<apex:variable value="{!count+1}" var="count" /></td>
+                                    <td>{!rev.Name}</td>
+                                    <td>{!rev.P360_DD_Sub_Category__r.Name}</td>
+                                    <td style="text-align:right; width:7%; padding: 2px 6px 2px 1px;">{!rev.P360_RA_Assessment_Score__c}</td>
+                                    <td>{!rev.P360_Completion_Marker__c}</td>
+                                    <td style="text-align:right; width:8%; padding: 2px 6px 2px 1px;">{!rev.P360_RA_Overall_Score__c}</td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- **END** of REVIEW AREAS details  -->
+            </div>
+        </body>
+    </html>
+</apex:page>

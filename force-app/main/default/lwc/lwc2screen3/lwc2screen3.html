@@ -1,0 +1,56 @@
+<template >
+    <lightning-card title="Review Area Records">
+        <div class=”slds-m-around_medium”>
+            <lightning-button variant="brand" label="Create New Record" onclick={actionToCreateAccountNav}></lightning-button>
+                  
+                   
+
+
+
+
+
+            <c-file-upload-datatable
+                        
+           
+         
+          
+       
+            show-row-number-column="false"
+            onrendercallback={handleImageRender}
+ 
+         
+            wrap-text-max-lines="3"
+         
+            style="max-height: 400px; overflow-y: scroll;"
+            wrap-text
+            width="50"
+      
+                    key-field="Id"                    data={data}
+                    columns={columns}
+                    hide-checkbox-column
+                    draft-values={draftValues}
+                    onsave={handleSave}
+                    onrowaction={handleRowAction}
+                    onuploadfinished={handleUploadFinished} 
+                    accept={acceptedFormats}
+          
+                onvalueselect={handleSelection}
+                conditional-row-class={datatableConditionalFormatting}
+                    oncellchange={handleCellChange}
+                
+                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-cell-wrap slds-table_col 
+                    "
+                    oncancel={handleCancel}
+                    onchange={handleIsLoading}
+         
+             
+                    > 
+
+                    
+          
+                </c-file-upload-datatable>
+            
+        </div>
+    </lightning-card>
+    
+</template>

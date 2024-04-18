@@ -1,0 +1,13 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" controller="PartyController">
+
+        <aura:attribute name="variant" type="String" /><!-- default="non-linear" -->
+       
+ <div class="slds-brand-band slds-brand-band_medium">
+        <lightning:path aura:id="path" recordId="{!v.recordId}"
+                        
+                        variant="{!v.variant}"
+                        hideUpdateButton="{!v.hideUpdateButton}"
+                        onselect="{!c.handleSelect}"
+        />
+    </div>
+</aura:component>

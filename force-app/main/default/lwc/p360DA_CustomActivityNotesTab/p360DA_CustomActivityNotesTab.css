@@ -1,0 +1,47 @@
+.header-container{
+    background: #f3f3f3;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+	padding: 12px;
+	border-bottom: 1px solid rgb(201, 201, 201);
+}
+.noteTitile{
+	color: black;
+}
+.noteTitile:hover{
+	color: #006dcc;
+}
+.slds-box{
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+}
+.slds-m-horizontal_medium, .slds-m-horizontal--medium{
+	margin: 0;
+}
+.slds-card{
+	/* padding: 13px; */
+	border: 1px solid rgb(201, 201, 201);
+	border-radius: 0.25rem;
+}
+/* lightning-tab{
+	margin-top: 10px;
+	border: 1px solid rgb(201, 201, 201);
+	border-radius: 0.25rem;
+} */
+.slds-tabs_default__content, .slds-tabs--default__content{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.noteData li{
+	padding: 12px;
+	border-bottom: 1px solid rgb(243, 243, 243);
+}
+.modifiedName:hover{
+	text-decoration: none;
+}
+.relatedName{
+	padding: 0.7rem;
+}

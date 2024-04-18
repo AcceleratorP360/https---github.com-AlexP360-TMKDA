@@ -1,0 +1,10 @@
+.THIS .slds-path__nav .slds-is-complete .slds-path__stage{
+    display: none !important;
+    text-overflow: ellipsis;
+    --sdls-c-path-text-overflow: ellipsis;
+}
+.THIS .slds-path__nav .slds-is-complete .slds-path__title {
+    display: contents !important;
+    text-overflow: ellipsis;
+    --sdls-c-path-title-text-overflow: ellipsis;
+}

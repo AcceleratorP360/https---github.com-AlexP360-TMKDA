@@ -1,0 +1,8 @@
+<apex:page standardController="Account" rendered="{!Account.P360_Coverholder_Stages__c == 'Gap Analysis'}">
+ <script type="text/javascript">
+    
+    { window.alert("Please Send the Email to Coverholder/Parties/TPA to gather Information for Due Diligence"); }
+    
+ </script>
+    
+</apex:page>

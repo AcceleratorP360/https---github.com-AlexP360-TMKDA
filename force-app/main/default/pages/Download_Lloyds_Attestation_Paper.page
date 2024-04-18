@@ -1,0 +1,723 @@
+<!--This VF page is for Llyod's Changes to Coverholder Permissions Attestation-->
+<apex:page extensions="GenerateAttestation" standardController="Account" applyHtmlTag="false" showHeader="false"  renderAs="PDF">
+    
+    <html>
+        <head>
+            <style>
+               @page {
+                    @top-left       {
+                        content     : element(header);
+                    }
+                
+                    @bottom-left    {
+                        content     : element(footer);
+                    }
+                    @bottom-right   {
+                        content     : "Page " counter(page) " of " counter(pages);
+                        font-family : Arial, Calibri, sans-serif;
+                        font-size   : 11px;
+                    }
+                }
+               
+                table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                vertical-align: top;
+                font-family: sans-serif;
+                align:left;
+                }
+                
+                td{
+                font-family: sans-serif; font-size:14px;  padding-left: 10px;
+                }
+                td:nth-child(odd) {
+  				background-color: #f2f2f2;
+				} 
+                td.bgc{
+                background-color: #dddddd;
+                }
+                th.bgc{
+                background-color: #dddddd;
+                }
+                div{
+                font-family: sans-serif; font-size:14px;  padding-left: 10px;}
+                }
+
+                        display     : block;
+                        padding     : 15px;
+                        position    : running(footer);
+                        font-size   : 11px;
+                }
+               
+            </style>
+        </head>
+        
+        <body>
+              <!-- Content for the light attestation form -->
+   		      <!--This VF page is for Llyod's Changes to Coverholder Permissions Attestation-->
+         <!--   <div style="{!IF(account.RecordTypeId == 'DCA', '', 'display:none')}"> -->
+           <div id="lightAttestationForm" style="{!IF(account.P360_Attestation_Type__c == 'Light', 'display:block', 'display:none')}">
+  
+            <!-- **START of HEADER section here -->
+            <div class="header">
+                <img src="{!$Resource.Llyods_Logo}" width="15%"/><h2 style="font-weight: bold;  font-size:20px; color:blue; text-align: Center;">Changes to Coverholder Permissions Attestation</h2>
+            </div>
+            
+            <br/><br/>
+
+            <!-- **START of CONTENT section here -->
+            <div>
+                
+                <!-- ** START of Party DETAILS section here     -->
+                <div>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:40%"><b>Coverholder/DCA Legal Name (The firm)</b></td>
+                            <td>{!account.Name}</td>
+                        </tr>
+                        <tr>
+                            <td><b>PIN</b></td>
+                            <td>{!account.P360_Lloyd_PIN__c}</td>
+                        </tr>
+                    <!--    <tr>
+                            <td><b>Sponsoring Service Provider(Managing Agent)</b></td>
+                            <td>{!account.P360_Sponsoring_Service_Provider_MGA__r[0].Name}</td>
+                        </tr> 
+                        <tr>
+                            <td><b>Lloyd's Syndicate Number</b></td>
+                            <td>{!account.TMKDA_Syndicate_Number__c}</td>--> <!--DY 26/02/24 - adding picklist field Syndicate number.{!account.P360_Syndicate_Number__c}-->
+                        <!--   </tr> 
+                        <tr>
+                            <td><b>Key Broker Contact</b></td>
+                            <td>{!account.TMKDA_Key_Broker_Contact__r.Name}</td>
+                        </tr>-->
+                        <tr>
+                            <td><b>{!IF(account.RecordTypeName__c == 'DCA', 'Key Broker Contact', 'Underwriter Contact')}</b></td>
+                            <td>{!IF(account.RecordTypeName__c == 'DCA', account.TMKDA_Key_Broker_Contact__r.Name, account.P360_DA_UnderWriter_Name__r.Name)}</td>
+                        </tr>
+                      <!--  <tr>
+                            <td><b>Sponsoring Broker</b></td>
+                            <td>{!account.P360_Sponsoring_Broker__r.Name}</td>
+                        </tr> -->
+                         <tr>
+                            <td><b>Type of change to permission?</b></td>
+                            <td>{!account.TMKDA_Type_of_change_to_Permission__c}</td>
+                        </tr>
+                    </table>  
+                     <br/>
+                    <br/>
+                     <b>As the sponsoring Managing Agent please confirm the following declaration for the proposed change to coverholder&#39;s permissions:</b>
+                    <br/>
+                    <br/>
+                    We have reviewed the submission on ATLAS and to the best of our knowledge the information within the task and any documentation uploaded is correct.
+                    <br/>
+                    <br/>
+                    We also confirm that in our opinion - 
+                    <br/>
+                    <br/>
+                    <ul>
+                        <li>We have fully completed our due diligence and we are satisfied that the coverholder is suitable for this change to their permissions.</li>
+                        <li>[Where applicable] If the firm will now be handling claims, we are satisfied that they have the requisite claims skills and resources to handle claims efficiently, effectively, and fairly</li>
+                    </ul>
+                    <br/>
+                    <br/>
+                </div>
+                    <div>
+                        <table style="width:100%">
+                            <tr>
+                                <th colspan="3" align="left">Attestation</th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">I confirm the coverholder has been assessed and reviewed against the points in this document and the firm meets the Managing Agent&#39;s and Lloyd&#39;s requirements.</td>
+                            </tr>
+                            <tr>
+                                <td height="70">Name and position:</td>
+                                <td>Signature:</td>
+                                <td>Date:</td>
+                            </tr>
+                        </table>
+                        <br/>
+                    <br/>
+                    In addition to the above attestation please confirm that:
+				<ul>
+                    <li>[Where applicable]. You have liaised with the relevant Lloyd&#39;s country manager(s) prior to submitting the change*.</li>
+                    <li>You have reviewed the referral criteria, identified any required referrals, and received Lloyd&#39;s prior approval where required.</li>
+                </ul>
+                    </div>
+                     <br/>
+                <br/>
+                 <br/>
+                <br/> 
+                <br/>
+                 <br/>
+                <div Class="footer">
+                 *You can find contact details of the Lloyd&#39;s country managers on Crystal 
+            	</div>
+                <br/>
+                <br/> 
+                <br/>
+                <br/> 
+                <br/>
+                    <table style="width:100%">
+                        <tr>
+                            <th colspan="3" align="left">Attestation</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">I confirm the above interactions and referrals have been made by the Managing Agent and we can evidence these referrals should this ever be required.</td>
+                        </tr>
+                        <tr>
+                            <td height="70">Name and position:</td>
+                            <td>Signature:</td>
+                            <td>Date:</td>
+                        </tr>
+                    </table> 
+           
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <table style="width:100%">
+                <tr>
+                    <th class="bgc" colspan="4" align="left">For Lloyd&#39;s Internal Use</th>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Regulatory referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Regulatory<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Underwriting referral<br/>
+                        required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Underwriting<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Customer oversight referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Customer<br/>
+                         oversight<br/>
+                         approval<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td  class="bgc" colspan="1" align="left">MED checks completed<br/>
+                        <br/>
+                    </td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Date submission processed:<br/>
+                         <br/>
+                         </td>
+                    <td  style="width:25%"></td>
+                    <td  class="bgc" style="width:25%">Name of<br/>
+                         reviewer and<br/>
+                         position:<br/></td>
+                    <td  style="width:25%"></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <!--  <footer>
+                 <span>Generated on {!generatedDate}</span>   
+            </footer>-->
+                 </div>
+            </div>   
+            
+            <!-- Content for the full attestation form -->
+            <!--This VF page is for Llyod's Coverholder Onboarding Attestation-->
+            
+           <div id="fullAttestationForm" style="{!IF(account.P360_Attestation_Type__c == 'Full', 'display:block', 'display:none')}">
+               
+           <!-- **START of HEADER section here -->
+            <div class="header">
+                <img src="{!$Resource.Llyods_Logo}" width="15%"/><h2 style="font-weight: bold;  font-size:20px; color:blue; text-align: Center;">Coverholder/DCA Onboarding Attestation</h2>
+            </div>
+            
+            <br/><br/>
+            
+            <!-- **START of CONTENT section here -->
+            <div>
+                
+                <!-- ** START of Party DETAILS section here     -->
+                
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:20%"><b> Coverholder/DCA Legal Name (The firm)</b></td>
+                            <td>{!account.Name}</td>
+                        </tr>
+                        <tr>
+                            <td><b>PIN</b></td>
+                            <td>{!account.P360_Lloyd_PIN__c}</td>
+                        </tr>
+                     <!--   <tr>
+                            <td><b>Sponsoring Managing Agent</b></td>
+                            <td>{!account.P360_Sponsoring_Service_Provider_MGA__r[0].Name}
+                            </td>
+                        </tr> -->
+                      <!--   <tr>
+                            <td><b>Lloyd's Syndicate Number</b></td>
+                            <td>{!account.TMKDA_Syndicate_Number__c}</td> --><!--DY 26/02/24 - adding picklist field Syndicate number.{!account.P360_Syndicate_Number__c}-->
+                    <!--    </tr> -->
+                       <!-- <tr>
+                            <!-- <td><b>Sponsoring Broker</b></td> Updated by DY on 5/3/24 as per new changes-->
+                        <!--    <td><b>Key Broker Contact</b></td>
+                            <td>{!account.TMKDA_Key_Broker_Contact__r.Name}</td>
+                        </tr>-->
+                        <tr>
+                            <td><b>{!IF(account.RecordTypeName__c == 'DCA', 'Key Broker Contact', 'Underwriter Contact')}</b></td>
+                            <td>{!IF(account.RecordTypeName__c == 'DCA', account.TMKDA_Key_Broker_Contact__r.Name, account.P360_DA_UnderWriter_Name__r.Name)}</td>
+                        </tr>
+                    </table>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <b>As the sponsoring Managing Agent please confirm the following declaration for the proposed coverholder:</b>
+                    <br/>
+                    <br/>
+                    We have reviewed the submission on ATLAS and to the best of our knowledge the information uploaded is correct, including the correct classes, regions, and level of authority.
+                    <br/>
+                    <br/>
+                    We also confirm that in our opinion - 
+                    <br/>
+                    <br/>
+                    <b>Business aligns with Lloyd&#39;s Performance Strategy</b>
+                    <br/>
+                    <ul>
+                        <li>The business proposed to be bound by the firm is likely to support sustained long-term profitability based upon a realistic business proposal</li>
+                        <li>We have made suitable enquiries regarding any prior performance of this business</li>
+                        <li>The firm is not sub delegating any of their underwriting abilities or systems to a third party other than with Lloyd&#39;s agreement</li>
+                        <li>Commissions are fair and reasonable, and the link between remuneration and profitability is strong and interests are aligned</li>
+                        <li>Fees are transparent and are proportionate with services delivered</li>
+                    </ul>
+                    <br/>
+                    <br/>
+                    <b>Third party firms uphold Lloyd&#39;s values, protects the brand and provides good value for policyholders</b>
+                    <br/>
+                    <br/>
+                    <ul>
+                        <li> The firm will provide a valuable product/service for the intended policyholders</li>
+                        <li> The firm and its key personnel have the experience, level of skill and understanding to write this proposed business</li>
+                        <li> The firm (and its staff where relevant) hold the correct licenses or authorisations required to trade and conduct the proposed activities that will be granted to it, and have sufficient knowledge of local laws and regulations</li>
+                        <li> The firm has suitable and effective underwriting systems and is able to provide the MA with data that enables adequate assessment of ongoing suitability and allows the MA to meet any applicable Lloyd&#39;s data requirements</li>
+                        <li>If the firm will be handling claims, we are satisfied that they have the requisite claims skills and resources to handle claims efficiently, effectively and fairly</li>
+                        <li> Insurance Documents and any marketing/website materials have been vetted/approved by us and are in line with any applicable Lloyd&#39;s expectations</li>
+                        <li> We have fully completed our due diligence with no outstanding actions on the proposed coverholder, its policies; procedures; systems; controls; and governance, the product, and the target market. We have no concerns about the firm&#39;s suitability to be a Lloyd&#39;s coverholder.</li>
+                    </ul>        
+                    <br/>
+                    <br/>
+                    <div>
+                        <table style="width:100%">
+                            <tr>
+                                <th colspan="3" align="left">Attestation</th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">I confirm the firm has been assessed and reviewed against the points in this document and the firm meets the Managing Agent and Lloyd&#39;s requirements.</td>
+                            </tr>
+                            <tr>
+                                <td height="70">Name and position:</td>
+                                <td>Signature:</td>
+                                <td>Date:</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    In addition to the above attestation please confirm that:
+                    <br/>
+                    <br/>
+                    You have liaised with the relevant Lloyd&#39;s country manager(s) prior to submitting this application*
+                    <br/>
+                    <br/>
+                    You have reviewed the referral criteria, identified any required referrals, and received Lloyd&#39;s prior approval where required.
+                <br/>
+                <br/>
+                    <table style="width:100%">
+                        <tr>
+                            <th colspan="3" align="left">Attestation</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">I confirm the above interactions and referrals have been made by the Managing Agent and we can evidence these referrals should this ever be required.</td>
+                        </tr>
+                        <tr>
+                            <td height="70">Name and position:</td>
+                            <td>Signature:</td>
+                            <td>Date:</td>
+                        </tr>
+                    </table>
+                <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+			<br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+                 <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+             <div class="footer">
+                <p>*You can find contact details of the Lloyd&#39;s country managers on Crystal</p>  
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <table style="width:100%">
+                <tr>
+                    <th class="bgc" colspan="4" align="left">For Lloyd&#39;s Internal Use</th>
+                </tr>
+                <tr>
+                    <td  class="bgc" style="width:25%"> Regulatory referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">  Regulatory<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%"> Underwriting referral<br/>
+                        required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">  Underwriting<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td  class="bgc"  style="width:25%"> Customer oversight referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%"> Customer<br/>
+                         oversight<br/>
+                         approval<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td   class="bgc" colspan="1" align="left"> Risk Screen Checks<br/></td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" colspan="1" align="left"> MED checks completed<br/>
+                        <br/>
+                    </td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" colspan="1" align="left"> Signed Undertaking<br/>
+                         received<br/></td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%"> Date submission processed:<br/>
+                         <br/>
+                         </td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">  Name of<br/>
+                         reviewer and<br/>
+                         position:<br/></td>
+                    <td  style="width:25%"></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+             <!-- <div class="footer">
+                <span>Generated on {!generatedDate}</span>   
+            </div> -->
+            </div>
+            </div>
+            
+           <!-- Content for the Light EU attestation form -->
+           <!--This VF page is for Lloyd’s Insurance Company Coverholder Onboarding – Service Provider Attestation-->
+            
+             <div id="ligthEUAttestationForm" style="{!IF(account.P360_Attestation_Type__c == 'Light EU', 'display:block', 'display:none')}">
+			 <!-- **START of HEADER section here -->
+            <div class="header">
+                <img src="{!$Resource.Llyods_Logo}" width="15%"/><h2 style="font-size:20px; color:blue; text-align: Center;">Lloyd’s Insurance Company Coverholder/DCA Onboarding – Service Provider Attestation</h2>
+            </div>
+            
+            <br/><br/>
+
+            <!-- **START of CONTENT section here -->
+            <div>
+                
+                <!-- ** START of Coverholder/DCA DETAILS section here     -->
+                
+                <div>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:40%"><b>Coverholder/DCA Legal Name (The firm)</b></td>
+                            <td>{!account.Name}</td>
+                        </tr>
+                        <tr>
+                            <td><b>PIN</b></td>
+                            <td>{!account.P360_Lloyd_PIN__c}</td>
+                        </tr>
+                      <!--  <tr>
+                            <td><b>Sponsoring Service Provider(Managing Agent)</b></td>
+                            <td>{!account.P360_Sponsoring_Service_Provider_MGA__r[0].Name}</td>
+                        </tr> -->
+                      <!--   <tr>
+                            <td><b>Lloyd's Syndicate Number</b></td>
+                            <td>{!account.TMKDA_Syndicate_Number__c}</td> -->
+                             <!--DY 26/02/24 - adding picklist field Syndicate number.{!account.P360_Syndicate_Number__c}-->
+                     <!--    </tr>
+                        <tr>
+                            <td><b>Lloyd's Europe Syndicate Number</b></td>
+                            <td>{!account.P360_Europe_Syndicate_Number__c}</td>
+                        </tr> 
+                        <tr>
+                            <td><b>Key Broker Contact</b></td>
+                            <td>{!account.TMKDA_Key_Broker_Contact__r.Name}</td>
+                        </tr> -->
+                        <tr>
+                            <td><b>{!IF(account.RecordTypeName__c == 'DCA', 'Key Broker Contact', 'Underwriter Contact')}</b></td>
+                            <td>{!IF(account.RecordTypeName__c == 'DCA', account.TMKDA_Key_Broker_Contact__r.Name, account.P360_DA_UnderWriter_Name__r.Name)}</td>
+                        </tr>
+                     <!--   <tr>
+                            <td><b>Sponsoring Broker</b></td>
+                            <td>{!account.P360_Sponsoring_Broker__r.Name}</td>
+                        </tr> -->
+                    </table>
+                    
+                
+                <br/>
+                <br/>
+                <b>As the sponsoring Managing Agent please confirm the following declaration for the proposed coverholder:</b>
+                    <br/>
+                    <br/>
+                    We have reviewed the submission on ATLAS and to the best of our knowledge the information uploaded is correct, including the correct classes, regions, and level of authority.
+                    <br/>
+                    <br/>
+                    We also confirm - 
+                    <br/>
+                    <br/>
+                    <b>Business aligns with Lloyd&#39;s Performance Strategy</b>
+                    <br/>
+                    <ul>
+                        <li>The business proposed to be bound by the firm is likely to support sustained long-term profitability based upon a realistic underwriting driven business proposal</li>
+                        
+                        <li>We have made suitable enquiries regarding any prior performance of this business</li>
+                        
+                        <li>The firm will not sub delegate any of its underwriting authorities or systems to a third party</li>
+
+                        <li>Commissions are fair and reasonable, and the link between remuneration and profitability is strong and interests are aligned</li>
+                      
+                        <li>Fees are transparent and are proportionate with services delivered</li>
+                    </ul>
+                    <br/>
+                    <b>Third party firms uphold Lloyd&#39;s values, protects the brand and provides good value for policyholders</b>
+                    <br/>
+                    <br/>
+                    <ul>
+                        <li> The firm will provide a valuable product/service for the intended policyholders</li>
+                        
+                        <li> The firm and its key personnel have the experience, level of skill and understanding to write this proposed business</li>
+                        
+                        <li> The firm (and its staff where relevant) hold the correct licenses or authorisations required to trade and conduct the proposed activities that will be granted to it, and have sufficient knowledge of local laws and regulations</li>
+                       
+                        <li> The firm has suitable and effective underwriting systems and is able to provide us with data that enables adequate assessment of ongoing suitability and allows the us to meet Lloyd&#39;s Insurance Company&#39;s reporting standards data requirements</li>
+                      
+                        <li> If the firm will be handling claims, we are satisfied that it has the requisite claims skills, conflict of interest policies and resources to handle claims efficiently, effectively and fairly</li>
+                        
+                        <li> Insurance documents, bordereaux and any marketing/website materials have been vetted/approved by us and are in line with any applicable Lloy&#39;s and Lloyd&#39;s Insurance company requirements</li>
+                        
+                        <li> We have fully completed our due diligence with no outstanding actions on the proposed coverholder, its policies; procedures; systems; controls; and governance, the product, and the target market. We have no concerns about the firm&#39;s suitability to be onboarded as a Lloyd&#39;s Insurance Company coverholder.</li>
+                    </ul>        
+                    <br/>
+                    <br/>
+                      <br/>
+                    <br/>
+                    
+                        <table style="width:100%">
+                            <tr>
+                                <th colspan="3" align="left">Attestation</th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">I confirm the firm has been assessed and reviewed against the points in this document and the firm meets the Service Provider&#39;s and Lloyd&#39;s Insurance Company&#39;s requirements.</td>
+                            </tr>
+                            <tr>
+                                <td height="70">Name and position:</td>
+                                <td>Signature:</td>
+                                <td>Date:</td>
+                            </tr>
+                        </table>
+                    
+                    <br/>
+                    <br/>
+                    In addition to the above attestation please confirm that:
+				<ul>
+                    <li>You have liaised with the relevant Lloyd&#39;s country manager(s) prior to submitting this application and have confirmation from them of their support for the firm to be approved</li>
+                    <li>You have liaised with Lloyd’s Europe and have met any additional requirements needed for its oversight and received its confirmation supporting the firm to be approved</li>
+                    <li>You have reviewed the referral criteria on, identified any required referrals and achieved approval from said individuals.</li>
+                </ul>
+                   
+                </div>
+                <br/>
+                <br/>
+                <div>
+                    <table style="width:100%">
+                        <tr>
+                            <th colspan="3" align="left">Attestation</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">I confirm the above interactions and referrals have been made by the Managing Agent and we can evidence these referrals should this ever be required.</td>
+                        </tr>
+                        <tr>
+                            <td height="70">Name and position:</td>
+                            <td>Signature:</td>
+                            <td>Date:</td>
+                        </tr>
+                    </table>                   
+                </div>
+            
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+           <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+            <div class="Footer">
+               *You can find contact details of the Lloyd’s country managers on Crystal 
+            </div>
+       		<br/>
+            <br/>
+                 <br/>
+            <br/>
+            <table style="width:100%">
+                <tr>
+                    <th class="bgc" colspan="4" align="left">For Lloyd&#39;s Internal Use</th>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Regulatory referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Regulatory<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Underwriting referral<br/>
+                        required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Underwriting<br/>
+                         referral<br/>
+                         confirmation<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Customer oversight referral<br/>
+                         required?<br/>
+                         <i>Y/N and reason</i></td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Customer<br/>
+                         oversight<br/>
+                         approval<br/>
+                         received?</td>
+                    <td  style="width:25%"></td>
+                </tr>
+                <tr>
+                    <td class="bgc"  colspan="1" align="left">Risk Screen Checks<br/></td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc"  colspan="1" align="left">MED checks completed<br/>
+                        <br/>
+                    </td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc"  colspan="1" align="left">Signed Undertaking<br/>
+                         received<br/></td>
+                    <td  colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="bgc" style="width:25%">Date submission processed:<br/>
+                         <br/>
+                         </td>
+                    <td  style="width:25%"></td>
+                    <td class="bgc" style="width:25%">Name of<br/>
+                         reviewer and<br/>
+                         position:<br/></td>
+                    <td  style="width:25%"></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>      
+        <!--    <div class="footer">
+                 <span>Generated on {!generatedDate}</span>   
+            </div>--->
+			</div>
+			 </div>
+          <!--  </div> -->
+        </body>
+    </html>
+</apex:page>

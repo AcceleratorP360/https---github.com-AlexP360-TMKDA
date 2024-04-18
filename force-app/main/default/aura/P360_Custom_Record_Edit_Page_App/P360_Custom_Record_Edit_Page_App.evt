@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Displays the record edit page of Due Deligence Records" >
+    <aura:attribute name="selectedRecordId" type="string" />
+    <aura:attribute name="selectedSobject" type="string" />
+</aura:event>

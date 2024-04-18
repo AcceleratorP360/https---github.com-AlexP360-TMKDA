@@ -1,0 +1,174 @@
+<template>
+	<div class="slds-card">
+		<!-- SPINNER -->
+		<lightning-spinner if:true={isLoading}></lightning-spinner>
+
+		<!-- NOTES HEADER HERE -->
+		<div class="header-container">
+			<div class="slds-box slds-m-horizontal_medium">
+				<lightning-icon icon-name="standard:note" size="small" class="header-icon"></lightning-icon>
+				<a class="noteTitile"
+					onclick={handleViewAll}><strong class="slds-var-m-left_medium">Notes ({totalNotesCount})</strong></a>
+			</div>
+			<div class="">
+				<div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+					<button class="slds-button slds-button_icon slds-button_icon-border-filled" aria-haspopup="true" aria-expanded="true" title="Show More" onclick={handleToggle}>
+                                <svg class="slds-button__icon" aria-hidden="true">
+                                <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Show More</span>
+                            </button>
+					<div class="slds-dropdown slds-dropdown_right" if:true={dropdown} onclick={handleToggleNew}>
+						<ul class="slds-dropdown__list" role="menu" aria-label="Show More">
+							<li class="slds-dropdown__item" role="presentation">
+								<a href="#" role="menuitem" tabindex="0">
+									<span class="slds-truncate" title="Menu Item One">New</span>
+								</a>
+							</li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- NOTES DATA SHOW HERE -->
+		<div class="noteData">
+			<template if:true={notes}>
+				<ul>
+					<template for:each={displayedItems} for:item="note">
+						<li key={note.id}>
+							<a onclick={handleUpdateNotes} data-userid={note.id}>{note.title}</a><br/>
+							{note.createdDate} by <a onclick={handleProfileClick} data-userid={note.modifiedById}
+								class="modifiedName">{note.modifiedByName}</a><br/>
+							<lightning-formatted-rich-text value={note.content}></lightning-formatted-rich-text>
+						</li>
+					</template>
+				</ul>
+			</template>
+		</div>
+
+
+		<!-- VIEW ALL BUTTON -->
+		<div class="viewButton">
+			<footer class="slds-card__footer" if:true={viewAllButton}>
+				<a class="slds-card__footer-action" onclick={handleViewAll}>View All
+					<span class="slds-assistive-text">Accounts</span>
+				</a>
+			</footer>
+		</div>
+
+		<!-- NEW BUTTON MODEL OPEN HERE -->
+		<div class="slds-docked_container" style="z-index: 100; margin-bottom: 0px;" if:true={newButtonDropBox}>
+			<section class="slds-docked-composer slds-grid slds-grid_vertical slds-is-open" role="dialog"
+				aria-labelledby="dialog-heading-id-1" aria-describedby="dialog-content-id-1">
+				<header class="slds-docked-composer__header slds-grid slds-shrink-none" aria-live="assertive">
+					<div class="slds-media slds-media_center slds-no-space">
+						<div class="slds-media__figure slds-m-right_x-small">
+							<span class="slds-icon_container">
+								<svg class="slds-icon slds-icon_small slds-icon-text-default" aria-hidden="true">
+								   <use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#note"></use>
+								</svg>
+							
+							</span>
+						</div>
+						<div class="header-title-name">
+							<span>{titleName}</span>
+						</div>
+					</div>
+					<div class="slds-col_bump-left slds-shrink-none">
+						<button class="slds-button slds-button_icon slds-button_icon" title="Close" onclick={handleCancleButton}>
+							<svg class="slds-button__icon" aria-hidden="true">
+							<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+							</svg>
+							<span class="slds-assistive-text">Close Composer Panel</span>
+						</button>
+					</div>
+				</header>
+
+				<div class="slds-docked-composer__body slds-docked-composer__body_form" id="dialog-content-id-1">
+					<fieldset class="slds-form-element slds-form_compound">
+						<legend class="slds-assistive-text">Log new task</legend>
+						<div class="slds-form-element__control">
+							<div class="slds-form-element__group">
+								<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-1">
+										<label class="slds-form-element__label" for="text-input-01">Title</label>
+										<div class="slds-form-element__control">
+											<input type="text" class="slds-input" id="text-input-01" value={titleValue} oninput={handleTitleChange}/>
+										</div>
+										</div>
+									</div>
+									<div class="slds-m-top_medium">
+										<lightning-input-rich-text placeholder="Enter a Note..." value={noteValue}
+											onchange={handleNoteChange}></lightning-input-rich-text>
+									</div>
+								</div>
+							</div>
+					</fieldset>
+				</div>
+				<div class="relatedName">
+					<div class="slds-grid slds-wrap">
+						<div class="slds-col slds-size_2-of-12 slds-align_absolute-center">
+							<span>Related to</span>
+						</div>
+						<div class="slds-col slds-size_10-of-12">
+							<span class="slds-pill slds-pill_link">
+								<span class="slds-pill__icon_container">
+									<span class="slds-icon_container slds-icon-standard-account" title="Account">
+									<svg class="slds-icon" aria-hidden="true">
+										<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+									</svg>
+									<span class="slds-assistive-text">Account</span>
+							</span>
+							</span>
+							<a href="#" class="slds-pill__action" title="Full pill label verbiage mirrored here">
+								<span class="slds-pill__label">{selectedRecord}</span>
+							</a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<footer class="slds-docked-composer__footer slds-shrink-none">
+					<!-- <button class="slds-button slds-button_neutral slds-size_1-of-2" onclick={handleDeleteButton}>Delete</button>
+                    <button class="slds-button slds-button_neutral slds-size_1-of-2" onclick={handleDoneButton}>Done</button> -->
+
+					<button class="slds-button slds-button_neutral" onclick={handleDeleteButton} if:true={isDeleteButtonVisible}>Delete</button>
+					<div class="slds-col_bump-left slds-text-align_right">
+						<button class="slds-button slds-button_neutral " onclick={handleDoneButton}>Done</button>
+					</div>
+				</footer>
+
+			</section>
+		</div>
+
+		<!-- DELETE BUTTON MODEL OPEN HERE -->
+		<div class="deleteModel" if:true={isDeleteButtonConformationModel}>
+			<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+				class="slds-modal slds-fade-in-open">
+				<div class="slds-modal__container">
+					<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleNoteRecordCancle}>
+						<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+						<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#close"></use>
+						</svg>
+						<span class="slds-assistive-text">Cancel and close</span>
+					</button>
+					<div class="slds-modal__header">
+						<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Delete note</h1>
+					</div>
+					<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+						<p class="slds-align_absolute-center">Are you sure you want to delete this note.</p>
+					</div>
+					<div class="slds-modal__footer">
+						<button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={handleNoteRecordCancle}>Cancel</button>
+						<button class="slds-button slds-button_brand" onclick={handleNoteRecordDelete}>Delete</button>
+					</div>
+				</div>
+			</section>
+			<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+		</div>
+
+
+	</div>
+</template>

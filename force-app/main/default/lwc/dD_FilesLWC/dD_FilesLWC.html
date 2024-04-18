@@ -1,0 +1,117 @@
+<template>
+    <lightning-card title={allDocs}>
+        <template if:true={loaded}>
+            <lightning-spinner alternative-text="Loading" class="slds-p-top_xx-large"></lightning-spinner>
+        </template>
+        <template if:true={fileResult}>
+            <div class="table-container">
+            <table
+                class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-table_fixed-layout">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="Title">Title
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="Title" title="Title" onclick={handleSort} data-column="docTitle">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="docDescription">Description
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="Description" title="Description" onclick={handleSort}
+                                    data-column="docDescription">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="Related">Related To
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="docRelated" title="docRelated" onclick={handleSort}
+                                    data-column="docRelated">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="Related">Related Object
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="DocRelatedId" title="DocRelatedId" onclick={handleSort}
+                                    data-column="DocRelatedId">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                        <!--<th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="docCreatedBy">Created By
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="docCreatedBy" title="docCreatedBy" onclick={handleSort}
+                                    data-column="docCreatedBy">
+                                </lightning-icon>
+                            </div>
+                        </th>-->
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="docModifiedBy">Updated By
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="DocModifiedBy" title="DocModifiedBy" onclick={handleSort}
+                                    data-column="DocModifiedBy">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-4" scope="col">
+                            <div class="slds-truncate" title="DocModifiedDate">Updated Date
+                                <lightning-icon class="slds-p-left_x-small" size="x-small" icon-name="utility:sort"
+                                    alternative-text="DocModifiedDate" title="DocModifiedDate" onclick={handleSort}
+                                    data-column="DocModifiedDate">
+                                </lightning-icon>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="scrollable">
+                    <template for:each={fileResult} for:item="file">
+                        <tr class="slds-hint-parent" key={file.docId}>
+                            <td data-label="docTitle">
+                                <div class="slds-truncate" title={file.docTitle}>
+                                    <a onclick={navigateToFile} data-id={file.docId}>{file.docTitle}</a>
+                                </div>
+                            </td>
+                            <td data-label="docDescription">
+                                <div class="slds-truncate" title={file.docDescription}>
+                                    {file.docDescription}
+                                </div>
+                            </td>
+                            <td data-label="docRelated">
+                                <div class="slds-truncate" title={file.docRelated}>
+                                    <a onclick={navigateToRelated} data-id={file.DocRelatedId}>{file.docRelated}</a>
+                                </div>
+                            </td>
+                            <td data-label="DocObjLabel">
+                                <div class="slds-truncate" title={file.DocObjLabel}>
+                                    {file.DocObjLabel}
+                                </div>
+                            </td>
+                            <!--<td data-label="docCreatedBy">
+                                <div class="slds-truncate" title={file.docCreatedBy}>
+                                    {file.docCreatedBy}
+                                </div>
+                            </td>-->
+                            <td data-label="docModifiedBy">
+                                <div class="slds-truncate" title={file.DocModifiedBy}>
+                                    {file.DocModifiedBy}
+                                </div>
+                            </td>
+                            <td data-label="Modified Date">
+                                <div class="slds-truncate" title={file.DocModifiedDate}>
+                                    <lightning-formatted-date-time value={file.DocModifiedDate} year="numeric"
+                                        month="numeric" day="numeric" hour="2-digit" minute="2-digit"
+                                        time-zone-name="short" hour12={ampm}>
+                                    </lightning-formatted-date-time>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,279 @@
+<template>
+    <lightning-spinner alternative-text="Loading" size="small" variant="brand" if:true={isSpinner}></lightning-spinner>
+
+    <div class="slds-card">
+        <div class="slds-p-around_small" style="border: 1px solid #c4c4c4;border-radius: 5px;box-shadow: 0px 0px 10px #e7e7e7c4;">
+            <lightning-input-rich-text placeholder="Share an update..." data-type="MAIN" onchange={handleInputChange}></lightning-input-rich-text>
+            <div class="slds-text-color_weak slds-text-body_small" style="text-align:right;">To link to a record, enter / then start typing the record name.</div>
+            <lightning-pill-container items={selectedFilesName} onitemremove={handleFilePillItemRemove}> </lightning-pill-container>
+            <div class="slds-m-vertical_small" style="display:flex; justify-content:space-between;">
+                <lightning-button-icon variant="base" size="x-small" icon-name="utility:attach" alternative-text="opne" onclick={handleAddFile}></lightning-button-icon>
+                <input type="file" onchange={openFileUpload} class="slds-hide" multiple />
+                <lightning-button variant="brand" label="Share" title="Share" if:true={contentBody} onclick={handleShareUpdate}></lightning-button>
+                <lightning-button variant="brand" label="Share" title="Share" if:false={contentBody} disabled="true"></lightning-button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-card">
+        <div style="display:flex;justify-content:space-between;">
+            <div>
+                {selectedFilterOption}
+                <lightning-button-menu alternative-text="Show menu" class="slds-m-left_x-small" icon-size="small" variant="bare" onselect={handleFilterSelection}>
+                    <lightning-menu-item value="Latest Post" label="Latest Post"></lightning-menu-item>
+                    <lightning-menu-item value="Most Recent" label="Most Recent Activity"></lightning-menu-item>
+                </lightning-button-menu>
+            </div>
+            <div style="display:flex;align-items: center;">
+                <lightning-input type="search" variant="label-hidden" name="search" placeholder="Search this feed..." data-type="SEARCH" onchange={handleInputChange} onkeypress={handleSearch}></lightning-input>
+                <lightning-button-icon if:false={isExpandAll} icon-name='utility:expand_all' class="slds-m-horizontal_small" alternative-text='expand_all' size='small' title='expand_all' data-type="Expand" onclick={handleFeedExpand}></lightning-button-icon>
+                <lightning-button-icon if:true={isExpandAll} icon-name='utility:collapse_all' class="slds-m-horizontal_small" alternative-text='collapse_all' size='small' title='collapse_all' data-type="Collapse" onclick={handleFeedExpand}></lightning-button-icon>
+                <lightning-button-icon icon-name='utility:refresh' alternative-text='refresh' size='small' title='refresh' onclick={handleRefreshFeed}></lightning-button-icon>
+            </div>
+        </div>
+
+        <!-- Feed List Start Here  -->
+        <div class="feed-list slds-m-vertical_medium">
+            <ul class="slds-feed__list">
+                <template for:each={filterdFeedRecords} for:item="feed">
+                    <li  key={feed.Id} style="list-style:none;"> <!--class="slds-feed__item"-->
+                        <article class="slds-summary-detail" data-id={feed.Id} style="display:block;">
+                            <header class="slds-post__header slds-media" style="align-items:center;">
+                                <button class="slds-button slds-button_icon slds-m-right_x-small" aria-controls="expando-unique-id" aria-expanded="true" data-id={feed.Id} onclick={handleToggleChatterDetail}>
+                                    <svg class="slds-button__icon slds-summary-detail__action-icon" aria-hidden="true">
+                                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
+                                    </svg>
+                                </button>
+                                <div class="slds-media__figure">
+                                    <a data-id={feed.CreatedBy.Id} onclick={handleViewUser} class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                        <img alt="Jason Rodgers" src="/apexpages/slds/latest/assets/images/avatar1.jpg" title="Jason Rodgers avatar" />
+                                    </a>
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                        <p>
+                                            <a data-id={feed.CreatedBy.Id} onclick={handleViewUser}>{feed.CreatedBy.Name}</a>
+                                        </p>
+                                        <div>
+                                            <span class="slds-m-right_x-small">{feed.formateDateTime}</span>
+                                            <!-- <lightning-button-menu alternative-text="Show menu" class="slds-m-left_small" icon-size="small" variant="bare">
+                                                <lightning-menu-item value="Edit" label="Edit"></lightning-menu-item>
+                                                <lightning-menu-item value="Delete" label="Delete"></lightning-menu-item>
+                                            </lightning-button-menu> -->
+
+											<div class="slds-dropdown-trigger">
+												<button class="slds-button slds-button_icon" aria-haspopup="true" aria-expanded="true" title="Show More">
+                                                    <svg class="slds-button__icon" aria-hidden="true">
+                                                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                                                    </svg>
+                                                    <span class="slds-assistive-text">Show More</span>
+                                                </button>
+												<div class="slds-dropdown slds-dropdown_right">
+													<ul class="slds-dropdown__list" role="menu" aria-label="Show More">
+														<li class="slds-dropdown__item" role="presentation">
+															<a role="menuitem" tabindex="0" data-type="MAIN" data-body={feed.Body} data-id={feed.Id} onclick={handleOpenEditModal}>
+																<span class="slds-truncate" >Edit</span>
+															</a>
+														</li>
+														<li class="slds-dropdown__item" role="presentation">
+															<a role="menuitem" tabindex="-1"  data-type="MAIN" data-id={feed.Id} onclick={handleOpenDeleteModal}>
+																<span class="slds-truncate">Delete</span>
+															</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+                                        </div>
+                                    </div>
+                                    <p class="slds-text-body_small">
+                                        <a href="#" title="Click for single-item view of this post" class="slds-text-link_reset">
+                                            <lightning-icon icon-name='standard:post' alternative-text='post' size='xx-small' class="slds-m-right_x-small" title='post'></lightning-icon>
+                                            
+                                            <span class="feed-title-expand" data-id={feed.Id}>To: Internal</span>
+                                            <span class="feed-title-collapse active" data-id={feed.Id}>{feed.title}</span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </header>
+                            <div class="slds-summary-detail__content slds-post__content slds-m-left_xx-large">
+                                <p>
+                                    <lightning-formatted-rich-text value={feed.Body}></lightning-formatted-rich-text>
+                                </p>
+                                <div style="display:flex;">
+                                    <template for:each={feed.FeedAttachments} for:item="attach">
+                                        <div class="slds-m-right_small slds-m-top_small" style="width:12rem" key={attach.Id}>
+                                            <div class="slds-file slds-file_card slds-has-title">
+                                                <!-- <figure onclick={handlePreviewDocument}> -->
+                                                <figure onclick={previewHandler}>
+                                                    <!-- <a class="slds-file__crop slds-file__crop_16-by-9" data-id={attach.RecordId}> -->
+                                                    <a class="slds-file__crop slds-file__crop_16-by-9" data-id={attach.ContentDocumentId}>
+                                                        <span class="slds-assistive-text">Preview:</span>
+                                                        <img src="https://www.lightningdesignsystem.com/assets/images/placeholder-img@16x9.jpg" alt="Description of the image" />
+                                                    </a>
+                                                    <figcaption class="slds-file__title slds-file__title_card">
+                                                        <div class="slds-media slds-media_small slds-media_center">
+                                                            <div class="slds-media__figure slds-line-height_reset">
+                                                                <span class="slds-icon_container" title="pdf">
+                                                                    <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                                                                        <use xlink:href="/assets/icons/doctype-sprite/svg/symbols.svg#pdf"></use>
+                                                                    </svg>
+                                                                    <span class="slds-assistive-text">pdf</span>
+                                                                </span>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <span class="slds-file__text slds-truncate">{attach.Title}</span>
+                                                            </div>
+                                                        </div>
+                                                    </figcaption>
+                                                </figure>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="slds-m-vertical_small">
+                                    <lightning-button label="Comment" icon-name="utility:comments" variant="base" icon-position="left" data-id={feed.Id} onclick={handleToggleCommentSection}></lightning-button>
+                                    <span style="color:var(--slds-g-color-palette-blue-50);"> ( {feed.CommentCount} )</span>
+                                </div>
+
+                                <div class="slds-feed__item-comments feed-comments-section" data-id={feed.Id}>
+                                    <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid" if:true={feed.CommentCount}>
+                                        <button class="slds-button_reset slds-text-link">More comments</button>
+                                        <span class="slds-text-body_small slds-col_bump-left">1 of {feed.CommentCount}</span>
+                                    </div>
+                                    <ul>
+                                        <template for:each={feed.FeedComments} for:item="comment">
+                                            <li class="slds-m-vertical_small" key={comment.Id}>
+                                                <article class="slds-comment slds-media slds-hint-parent">
+                                                <div class="slds-media__figure">
+                                                    <a data-id={comment.CreatedBy.Id} onclick={handleViewUser} class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                                        <img alt="Jenna Davis" src="/apexpages/slds/latest/assets/images/avatar2.jpg" title="Jenna Davis avatar" />
+                                                    </a>
+                                                </div>
+                                                <div class="slds-media__body">
+                                                    <header class="slds-media slds-media_center">
+                                                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                                        <p class="slds-truncate" title="Jenna Davis">
+                                                            <a data-id={comment.CreatedBy.Id} onclick={handleViewUser}>{comment.CreatedBy.Name}</a>
+                                                        </p>
+                                                        <!-- <lightning-button-menu alternative-text="Show menu" class="slds-m-left_small" icon-size="small" variant="bare">
+                                                            <lightning-menu-item value="Edit" label="Edit"></lightning-menu-item>
+                                                            <lightning-menu-item value="Delete" label="Delete"></lightning-menu-item>
+                                                        </lightning-button-menu> -->
+                                                        <div class="slds-dropdown-trigger">
+                                                            <button class="slds-button slds-button_icon" aria-haspopup="true" aria-expanded="true" title="Show More">
+                                                                <svg class="slds-button__icon" aria-hidden="true">
+                                                                    <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                                                                </svg>
+                                                                <span class="slds-assistive-text">Show More</span>
+                                                            </button>
+                                                            <div class="slds-dropdown slds-dropdown_right">
+                                                                <ul class="slds-dropdown__list" role="menu" aria-label="Show More">
+                                                                    <li class="slds-dropdown__item" role="presentation">
+                                                                        <a role="menuitem" tabindex="0" data-type="COMMENT" data-body={comment.CommentBody} data-id={comment.Id} onclick={handleOpenEditModal}>
+                                                                            <span class="slds-truncate">Edit</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="slds-dropdown__item" role="presentation">
+                                                                        <a role="menuitem" tabindex="-1"  data-type="COMMENT" data-id={comment.Id} onclick={handleOpenDeleteModal}>
+                                                                            <span class="slds-truncate">Delete</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </header>
+                                                    <div class="slds-comment__content slds-text-longform">
+                                                        <lightning-formatted-rich-text value={comment.CommentBody}></lightning-formatted-rich-text>
+                                                    </div>
+                                                    <footer>
+                                                    <ul class="slds-list_horizontal slds-has-dividers_right slds-text-body_small">
+                                                        <!-- <li class="slds-item">
+                                                            <button class="slds-button_reset slds-text-color_weak" title="Like this item" aria-pressed="false">Like</button>
+                                                        </li> -->
+                                                        <li class="slds-item">{comment.formateDateTime}</li>
+                                                    </ul>
+                                                    </footer>
+                                                </div>
+                                                </article>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                    <div class="slds-media slds-comment slds-hint-parent">
+                                        <div class="slds-media__figure">
+                                            <a class="slds-avatar slds-avatar_circle slds-avatar_medium" href="#">
+                                            <img alt="Person name" src="/apexpages/slds/latest/assets/images/avatar2.jpg" title="User avatar" />
+                                            </a>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <lightning-input-rich-text placeholder="Write a comment..." data-type="COMMENT" data-feed={feed.Id} onchange={handleInputChange}></lightning-input-rich-text>
+
+                                            <div class="slds-text-color_weak slds-text-body_small" style="text-align:right;">To link to a record, enter / then start typing the record name.</div>
+                                            <div class="slds-m-vertical_small" style="display:flex; justify-content:end;">
+                                                <!-- <lightning-button-icon variant="base" size="x-small" icon-name="utility:attach" alternative-text="opne"></lightning-button-icon> -->
+                                                <lightning-button variant="brand" label="Comment" title="Comment" data-feed={feed.Id} onclick={handleShareComment} disabled="true"></lightning-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </article>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <template if:true={isEditModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseEditModal}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Edit Feed</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning-input-rich-text placeholder="Share an update..." value={selectedRecord.body} onchange={handleEditInputChange}></lightning-input-rich-text>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={handleCloseEditModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleEditRecord}>Update</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+
+    <!-- Delete Modal -->
+    <template if:true={isDeleteModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-02"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseDeleteModal}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Delete Feed</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <p class="slds-text-align_center" style="font-weight:bold;">Are you sure you want to delete ?</p>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={handleCloseDeleteModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleDeleteRecord}>Delete</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+</template>

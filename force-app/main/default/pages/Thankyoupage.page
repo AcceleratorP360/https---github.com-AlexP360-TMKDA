@@ -1,0 +1,47 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false">
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                .thank-you-text {
+                    color: black;                   <!-- /* Changing text color to black */  -->
+                    font-size: 25px;
+                    font-weight: lighter;           <!-- /* Removed bold -- normal*/ -->
+                    font-stretch: ultra-condensed;
+                    font-family: Bahnschrift;
+                }
+                .logo-image {
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    width: 70px;
+                    height: 50px;
+                }
+            </style>
+        </head>
+        <body>
+            
+            <div>
+                <table style="border:0px; margin:0px; padding:0px;">
+                    <tr><td style="border:0px;">&nbsp;</td>
+                        <td style="border:0px;"><apex:image url="{!$Resource.TMK_Logo}"  width="100" height="90"/></td>
+                    </tr>
+                </table>
+                 
+            </div>
+            <br/><br/><br/><br/>
+            <div class="thank-you-text" style="text-align: center;">
+       <!--         <apex:image id="theImage" value="{!$Resource.TMK_Logo}" styleClass="logo-image" alt="Description of image here"/>   -->
+                Thank you for submitting your response!<br/> <!-- IT HAS BEEN RECORDED! -->  <!-- DY 18/1/24 >> changed fro responses to response -->
+            </div>
+        </body>
+    </html>
+</apex:page>

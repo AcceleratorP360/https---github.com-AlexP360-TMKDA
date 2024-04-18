@@ -1,0 +1,595 @@
+<template>
+	<lightning-button-group>
+		<div class="slds-box"
+			style="padding:0px;padding-left: 15px;padding-right: 15px;padding-top: 3px;border-bottom-right-radius: 0px;border-top-right-radius: 0px;border-color: #747474;cursor: pointer;">
+			<lightning-icon icon-name="standard:log_a_call" size="small" alternative-text="log_a_call"
+				title="log_a_call" onclick={openLogACallPage}></lightning-icon>
+		</div>
+
+		<!-- ======================================================================================================================= -->
+		<template if:true={callLog}>
+			<div class="slds-docked_container" style="z-index: 100; margin-bottom: 0px;">
+				<section class="slds-docked-composer slds-grid slds-grid_vertical slds-is-open" role="dialog"
+					aria-labelledby="dialog-heading-id-1" aria-describedby="dialog-content-id-1">
+					<header class="slds-docked-composer__header slds-grid slds-shrink-none" aria-live="assertive">
+						<div class="slds-media slds-media_center slds-no-space">
+							<div class="slds-media__body" style="display: flex; align-items: center;">
+								<lightning-icon icon-name='utility:log_a_call' alternative-text='log_a_call'
+									size='x-small' title='log_a_call'></lightning-icon>
+								<h2 class="slds-truncate" id="dialog-heading-id-3" title="Log Call" style="margin: 0;">
+									{value}</h2>
+							</div>
+
+
+						</div>
+						<div class="slds-col_bump-left slds-shrink-none">
+							<button class="slds-button slds-button_icon slds-button_icon" style="margin-right : 10px" title="Minimize window">
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#minimize_window"></use>
+								</svg>
+								<span class="slds-assistive-text">Minimize Composer Panel</span>
+							</button>
+							<button class="slds-button slds-button_icon slds-button_icon" style="margin-right : 10px" title="Expand Composer">
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#expand_alt"></use>
+								</svg>
+								<span class="slds-assistive-text">Expand Composer Panel</span>
+							</button>
+							<button class="slds-button slds-button_icon slds-button_icon" title="Close" onclick={closeTask}>
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use
+										xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close">
+									</use>
+								</svg>
+								<span class="slds-assistive-text">Close Composer Panel</span>
+							</button>
+						</div>
+					</header>
+					<div class="slds-docked-composer__body slds-docked-composer__body_form" id="dialog-content-id-1">
+						<template if:true={isLoading}>
+							<lightning-spinner variant="brand" size="large"> </lightning-spinner>
+						</template>
+						<fieldset class="slds-form-element slds-form_compound">
+							<legend class="slds-assistive-text">Log new task</legend>
+							<div class="slds-form-element__control">
+								<div class="slds-form-element__group">
+									<div class="slds-form-element__row">
+										<div class="slds-form-element slds-size_1-of-1">
+
+											<lightning-combobox name="progress" label="Subject" value={value}
+												placeholder="-Select-" options={picklistvalue} onchange={handleChange}>
+											</lightning-combobox>
+
+										</div>
+									</div>
+
+									<div class="slds-form-element">
+										<label class="slds-form-element__label" for="textarea-id-01">Comments</label>
+										<div class="slds-form-element__control">
+											<textarea id="textarea-id-01" class="slds-textarea" oninput={getComment} value={callComment}></textarea>
+										</div>
+									</div>
+
+								</div>
+
+
+							</div>
+
+							<div class="slds-form-element__row">
+								<div class="slds-form-element slds-size_1-of-2">
+									<label class="slds-form-element__label" for="combobox-unique-id-24">Related to</label>
+									<div class="slds-form-element__control">
+										<div class="slds-combobox_container slds-has-object-switcher">
+											<div
+												class="slds-listbox_object-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+												<button class="slds-button slds-button_icon" aria-haspopup="true" title="Select object to search in">
+												<span class="slds-icon_container slds-icon-standard-account" title="Accounts">
+												<svg class="slds-icon slds-icon_small" aria-hidden="true">
+													<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+												</svg>
+												<span class="slds-assistive-text">Searching in: Accounts</span>
+												</span>
+												<svg class="slds-button__icon slds-button__icon_x-small slds-m-left_xxx-small" aria-hidden="true">
+												<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+												</svg>
+											</button>
+											</div>
+											<div
+												class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+												<a href="#" class="slds-pill__action"
+													title="Full pill label verbiage mirrored here"
+													style="border:none;padding-top:5px">
+													<span class="slds-pill__label">{selectedRecord}</span>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<c-p360-d-a_-custom-look-up onupdate={handleMessage}></c-p360-d-a_-custom-look-up>
+						</fieldset>
+					</div>
+
+					<footer class="slds-docked-composer__footer slds-shrink-none">
+						<button id="saveButton" class="slds-button slds-button_brand slds-col_bump-left" name='call' onclick={handleSaveButtonClick}>Save</button>
+					</footer>
+
+				</section>
+			</div>
+		</template>
+
+		<!-- ======================================================================================================================= -->
+
+
+		<lightning-button-menu alternative-text="Show menu" variant="border-filled" disabled>
+			<lightning-menu-item label="Menu Item 1" value="item1" onclick={handleMenuItemClick}></lightning-menu-item>
+			<lightning-menu-item label="Menu Item 2" value="item2" onclick={handleMenuItemClick}></lightning-menu-item>
+		</lightning-button-menu>
+
+	</lightning-button-group>
+
+	<lightning-button-group>
+		<div class="slds-box"
+			style="padding:0px;padding-left: 15px;padding-right: 15px;padding-top: 3px;border-bottom-right-radius: 0px;border-top-right-radius: 0px;border-color: #747474;cursor: pointer;">
+			<lightning-icon icon-name="standard:task" size="small" alternative-text="task" title="task"
+				onclick={openTaskPage}></lightning-icon>
+		</div>
+		<lightning-button-menu alternative-text="Show menu" variant="border-filled">
+			<lightning-menu-item label="New task" value="item1" onclick={handleMenuItemClick}></lightning-menu-item>
+		</lightning-button-menu>
+
+	</lightning-button-group>
+
+	<!-- ======================================================================================================================= -->
+	<template if:true={newTask}>
+		<div class="slds-docked_container" style="z-index: 100; margin-bottom: 0px;">
+			<section class="slds-docked-composer slds-grid slds-grid_vertical slds-is-open" role="dialog"
+				aria-labelledby="dialog-heading-id-1" aria-describedby="dialog-content-id-1">
+				<header class="slds-docked-composer__header slds-grid slds-shrink-none" aria-live="assertive">
+					<div class="slds-media slds-media_center slds-no-space">
+						<div class="slds-media__body" style="display: flex; align-items: center;">
+							<lightning-icon icon-name='utility:task' alternative-text='task' size='xx-small'
+								title='task' style="margin-right: 0.3rem;"></lightning-icon>
+							<h2 class="slds-truncate" id="dialog-heading-id-2" title="New Task" style="margin: 0;">New
+								Task</h2>
+						</div>
+
+					</div>
+					<div class="slds-col_bump-left slds-shrink-none">
+						<button class="slds-button slds-button_icon slds-button_icon"  style="margin-right : 10px" title="Minimize window">
+								<svg class="slds-button__icon" aria-hidden="true" >
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#minimize_window"></use>
+								</svg>
+								<span class="slds-assistive-text">Minimize Composer Panel</span>
+							</button>
+						<button class="slds-button slds-button_icon slds-button_icon" style="margin-right : 10px" title="Expand Composer">
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#expand_alt"></use>
+								</svg>
+								<span class="slds-assistive-text">Expand Composer Panel</span>
+							</button>
+						<button class="slds-button slds-button_icon slds-button_icon" title="Close" onclick={closeTask}>
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use
+										xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close">
+									</use>
+								</svg>
+								<span class="slds-assistive-text">Close Composer Panel</span>
+							</button>
+					</div>
+				</header>
+				<div class="slds-docked-composer__body slds-docked-composer__body_form" id="dialog-content-id-4">
+					<template if:true={isLoading}>
+						<lightning-spinner variant="brand" size="large"> </lightning-spinner>
+					</template>
+					<fieldset class="slds-form-element slds-form_compound">
+						<legend class="slds-assistive-text">Log new task</legend>
+						<div class="slds-form-element__control">
+							<div class="slds-form-element__group">
+
+								<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-1">
+										<div class="slds-form-element__control">
+											<lightning-combobox name="progress" label="Subject" value={value}
+												placeholder="-Select-" options={picklistvalue} onchange={handleChange}>
+											</lightning-combobox>
+										</div>
+									</div>
+								</div>
+
+								<div class="slds-form-element__row">
+									<lightning-input type="date" variant="standard" name="duedate" label="Due Date"
+										onchange={getduedata} value={dueData}></lightning-input>
+								</div>
+
+
+								<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-2">
+										<label class="slds-form-element__label" for="combobox-unique-id-24">Assigned To</label>
+										<div class="slds-form-element__control">
+											<div class="slds-combobox_container slds-has-object-switcher">
+												<div
+													class="slds-listbox_object-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+													<button class="slds-button slds-button_icon" aria-haspopup="true" title="Select object to search in">
+														<span class="slds-icon_container slds-icon-standard-account" title="Accounts">
+														<svg class="slds-icon slds-icon_small" aria-hidden="true">
+															<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+														</svg>
+														<span class="slds-assistive-text">Searching in: Accounts</span>
+														</span>
+														<svg class="slds-button__icon slds-button__icon_x-small slds-m-left_xxx-small" aria-hidden="true">
+														<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+														</svg>
+													</button>
+												</div>
+												<div
+													class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+													<a href="#" class="slds-pill__action"
+														title="Full pill label verbiage mirrored here"
+														style="border:none;padding-top:5px;display:grid;">
+														<span class="slds-pill__label">{username}</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-2">
+										<label class="slds-form-element__label" for="combobox-unique-id-24">Related to</label>
+										<div class="slds-form-element__control">
+											<div class="slds-combobox_container slds-has-object-switcher">
+												<div
+													class="slds-listbox_object-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+													<button class="slds-button slds-button_icon" aria-haspopup="true" title="Select object to search in">
+														<span class="slds-icon_container slds-icon-standard-account" title="Accounts">
+														<svg class="slds-icon slds-icon_small" aria-hidden="true">
+															<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+														</svg>
+														<span class="slds-assistive-text">Searching in: Accounts</span>
+														</span>
+														<svg class="slds-button__icon slds-button__icon_x-small slds-m-left_xxx-small" aria-hidden="true">
+														<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+														</svg>
+													</button>
+												</div>
+												<div
+													class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+													<a href="#" class="slds-pill__action"
+														title="Full pill label verbiage mirrored here"
+														style="border:none;padding-top:5px;display:grid;">
+														<span class="slds-pill__label">{selectedRecord}</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<c-p360-d-a_-custom-look-up onupdate={handleMessage}></c-p360-d-a_-custom-look-up>
+
+							</div>
+						</div>
+					</fieldset>
+				</div>
+
+				<footer class="slds-docked-composer__footer slds-shrink-none">
+					<button id="saveButton1" class="slds-button slds-button_brand slds-col_bump-left" name='task' onclick={handleSaveButtonClick}>Save</button>
+				</footer>
+
+			</section>
+		</div>
+	</template>
+	<!-- ======================================================================================================================= -->
+
+	<lightning-button-group>
+		<div class="slds-box"
+			style="padding:0px;padding-left: 15px;padding-right: 15px;padding-top: 3px;border-bottom-right-radius: 0px;border-top-right-radius: 0px;border-color: #747474;cursor: pointer;">
+			<lightning-icon icon-name="standard:event" size="small" alternative-text="event" title="event"
+				onclick={openEventPage}></lightning-icon>
+		</div>
+		<lightning-button-menu alternative-text="Show menu" variant="border-filled">
+			<lightning-menu-item label="View Calendar" value="item1" onclick={handleCalendarOpen}></lightning-menu-item>
+		</lightning-button-menu>
+	</lightning-button-group>
+
+	<article class="slds-card" style="margin-left:-11px;padding-left:0%">
+		<div class="slds-card__body slds-card__body_inner" style="padding:0%">
+			<article class="slds-card">
+				<ul class="slds-accordion">
+					<template if:true={isLoading}>
+						<lightning-spinner variant="brand" size="large"> </lightning-spinner>
+					</template>
+					<template for:each={data} for:item="e" for:index="pindex">
+						<template if:false={e.hideSection}>
+							<div style="text-align:center" key={e.id}>
+								{e.error}
+							</div>
+						</template>
+
+						<template if:true={e.hideSection}>
+							<li class="slds-accordion__list-item" key={e.id}>
+								<section class="slds-accordion__section slds-is-open" onclick={opensection}>
+									<div class="slds-accordion__summary">
+										<h2 class="slds-accordion__summary-heading sectionColor"
+											style="background-color:#F3F3F3;padding: 5px; border-radius: 5px;">
+											<button class="slds-button slds-button_reset slds-accordion__summary-action" aria-controls="referenceId-14" aria-expanded="ture" title="Accordion summary">
+													<svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+													<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#switch"></use>
+													</svg>
+													<span class="slds-accordion__summary-content" style="font-weight:bold;width:100%">
+														<div class="slds-grid slds-gutters slds-grid_align-spread">
+															<div class="slds-col">
+																<span class="summary-name">{e.summary}</span>
+															</div>
+															<div class="slds-col">
+																<span>{e.info}</span>
+															</div>
+														</div>
+													</span>
+												</button>
+										</h2>
+									</div>
+									<div class="slds-accordion__content" id="referenceId-14">
+										<ul class="slds-timeline">
+											<template for:each={e.Tast_evet_data} for:item="d" for:index="index">
+												<li key={d.id}>
+													<div class={d.classline} onclick={opentimeline}>
+														<span class="slds-assistive-text">task</span>
+														<div class="slds-media">
+															<div class="slds-media__figure">
+																<button class="slds-button slds-button_icon" name={pindex}  title={index} aria-controls="task-item-expanded-89" aria-expanded="true">
+																	<svg class="slds-button__icon slds-timeline__details-action-icon" aria-hidden="true">
+																		<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#switch"></use>
+																	</svg>
+																	<span class="slds-assistive-text">Toggle details for Review proposals for EBC deck with larger team and have marketing review this</span>
+																	</button>
+																<div class={d.className} title="task">
+																	<svg class="slds-icon slds-icon_small"
+																		aria-hidden="true">
+																		<use xlink:href={d.iconeClass}>
+																		</use>
+																	</svg>
+																</div>
+															</div>
+
+															<div class="slds-media__body">
+																<div
+																	class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+																	<div
+																		class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+																		<h3 class="slds-truncate"
+																			title="Review proposals for EBC deck with larger team and have marketing review this">
+																			<a href="#" name={d.id} type={d.subtype}
+																				onclick={viewRecord}>
+																				<strong>{d.subject}</strong>
+																			</a>
+																		</h3>
+																	</div>
+
+																	<div class="slds-dropdown-trigger slds-dropdown-trigger_click menu1"
+																		name={pindex} title={index}>
+																		<div
+																			class="slds-timeline__actions slds-timeline__actions_inline">
+																			<p class="slds-timeline__date">
+																				{d.dateTimeData}
+																			</p>
+
+																			<button class="slds-button slds-button_icon slds-button_icon-x-small slds-button_icon-border-filled" onclick={showMenu}  name={pindex}  title={index} >
+																				<svg class="slds-button__icon" aria-hidden="true">
+																				<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+																				</svg>
+																				<span class="slds-assistive-text">Show More</span>
+																			</button>
+
+																			<div class="slds-dropdown slds-dropdown_right slds-dropdown_actions"
+																				style="margin-left: 50%;">
+																				<ul class="slds-dropdown__list"
+																					role="menu" aria-label="Show More">
+																					<li class="slds-dropdown__item"
+																						role="presentation">
+																						<a href="#" role="menuitem"
+																							tabindex="0" idv={d.id}
+																							name={d.subtype}
+																							onclick={opentaskhandler}>
+																							<span class="slds-truncate" title="edit">Edit</span>
+																						</a>
+																					</li>
+																					<li class="slds-dropdown__item"
+																						role="presentation">
+																						<a href="#" role="menuitem"
+																							tabindex="0" idv={d.id}
+																							name={d.subtype}
+																							onclick={deleteTaskHandler}>
+																							<span class="slds-truncate" title="Delete">Delete</span>
+																						</a>
+																					</li>
+																				</ul>
+																			</div>
+																		</div>
+																	</div>
+
+																</div>
+																<p class="slds-m-horizontal_xx-small">
+																	<lightning-formatted-rich-text value={d.titleName}>
+																	</lightning-formatted-rich-text>
+
+																</p>
+
+																<template if:true={d.display}>
+																	<c-p360-d-a_-custom-activity-tab-option value={d}>
+																	</c-p360-d-a_-custom-activity-tab-option>
+																</template>
+
+
+															</div>
+
+														</div>
+													</div>
+												</li>
+											</template>
+										</ul>
+										<div style="text-align:center" key={e.id}>
+											{e.error}
+										</div>
+									</div>
+								</section>
+							</li>
+						</template>
+					</template>
+				</ul>
+			</article>
+
+		</div>
+		<footer class="slds-card__footer"></footer>
+	</article>
+
+
+	<!-- Event Utility Bar Open Here-->
+	<template if:true={eventUtitlityBar}>
+		<div class="slds-docked_container" style="z-index: 100; margin-bottom: 0px;">
+			<section class="slds-docked-composer slds-grid slds-grid_vertical slds-is-open" role="dialog"
+				aria-labelledby="dialog-heading-id-3" aria-describedby="dialog-content-id-1" style="height: 600px;">
+				<header class="slds-docked-composer__header slds-grid slds-shrink-none" aria-live="assertive">
+					<div class="slds-media slds-media_center slds-no-space">
+						<div class="slds-media__body" style="display: flex; align-items: center;">
+							<lightning-icon icon-name='utility:event' alternative-text='event' size='x-small'
+								title='event'></lightning-icon>
+							<h2 class="slds-truncate" id="dialog-heading-id-1" title="Log Call"
+								style="margin: 0; padding-left:3px">
+								{e_value}</h2>
+						</div>
+
+
+					</div>
+					<div class="slds-col_bump-left slds-shrink-none">
+						<button class="slds-button slds-button_icon slds-button_icon" style="margin-right : 10px" title="Minimize window">
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#minimize_window"></use>
+								</svg>
+								<span class="slds-assistive-text">Minimize Composer Panel</span>
+							</button>
+						<button class="slds-button slds-button_icon slds-button_icon" style="margin-right : 10px" title="Expand Composer">
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#expand_alt"></use>
+								</svg>
+								<span class="slds-assistive-text">Expand Composer Panel</span>
+							</button>
+						<button class="slds-button slds-button_icon slds-button_icon" title="Close" onclick={eventCloseButton}>
+								<svg class="slds-button__icon" aria-hidden="true">
+									<use
+										xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close">
+									</use>
+								</svg>
+								<span class="slds-assistive-text">Close Composer Panel</span>
+							</button>
+					</div>
+				</header>
+				<div class="slds-docked-composer__body slds-docked-composer__body_form" id="dialog-content-id-2">
+					<template if:true={isLoading}>
+						<lightning-spinner variant="brand" size="large"> </lightning-spinner>
+					</template>
+					<fieldset class="slds-form-element slds-form_compound">
+						<legend class="slds-assistive-text">Log new task</legend>
+						<div class="slds-form-element__control">
+							<div class="slds-form-element__group">
+
+								<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-1">
+										<lightning-combobox 
+										name="progress" 
+										label="Subject" 
+										value={e_value}
+										placeholder="-Select-"
+										options={eventsubjectV}
+										onchange={handleChangeevent}>
+										</lightning-combobox>
+									</div>
+								</div>
+
+								<div class="slds-form-element slds-p-top_medium">
+									<label class="slds-form-element__label" for="textarea-id-02">Description</label>
+									<div class="slds-form-element__control">
+										<textarea id="textarea-id-02" class="slds-textarea" oninput={getdiscrption} value={event_Description}></textarea>
+									</div>
+								</div>
+
+
+								<div class="slds-grid slds-gutters slds-p-top_medium">
+									<div class="slds-col">
+										<lightning-input type="datetime" name="startDate" label={startDateLabel}
+											value={startDate} onchange={handleStartDateChange}>
+										</lightning-input>
+									</div>
+									<div class="slds-col">
+										<lightning-input type="datetime" name="endDate" label={endDateLabel}
+											value={endDate} onchange={handleEndDateChange}>
+										</lightning-input>
+									</div>
+								</div>
+
+								<div class="slds-form-element slds-p-top_medium">
+									<label class="slds-form-element__label" for="text-input-id-26">Location</label>
+									<div
+										class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+										<input type="text" id="text-input-id-26" class="slds-input" value={locationValue} onchange={handleLocationChange}/>
+									</div>
+								</div>
+
+								<div class="slds-p-top_medium">
+									<c-p360-d-a_-custom-look-up onupdate={handleMessage}>
+										</c-p360-d-a_-custom-look-up>
+								</div>	
+
+								<div class="slds-p-top_medium">
+									<div class="slds-form-element__row">
+									<div class="slds-form-element slds-size_1-of-2">
+										<label class="slds-form-element__label" for="combobox-unique-id-25">Related to</label>
+										<div class="slds-form-element__control">
+											<div class="slds-combobox_container slds-has-object-switcher">
+												<div
+													class="slds-listbox_object-switcher slds-dropdown-trigger slds-dropdown-trigger_click">
+													<button class="slds-button slds-button_icon" aria-haspopup="true" title="Select object to search in">
+														<span class="slds-icon_container slds-icon-standard-account" title="Accounts">
+														<svg class="slds-icon slds-icon_small" aria-hidden="true">
+															<use xlink:href="/_slds/icons/standard-sprite/svg/symbols.svg#account"></use>
+														</svg>
+														<span class="slds-assistive-text">Searching in: Accounts</span>
+														</span>
+														<svg class="slds-button__icon slds-button__icon_x-small slds-m-left_xxx-small" aria-hidden="true">
+														<use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#down"></use>
+														</svg>
+													</button>
+												</div>
+												<div
+													class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+													<a href="#" class="slds-pill__action"
+														title="Full pill label verbiage mirrored here"
+														style="border:none;padding-top:5px;display:grid;">
+														<span class="slds-pill__label">{selectedRecord}</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								 </div>
+								</div>
+
+
+							</div>
+						</div>
+
+					</fieldset>
+				</div>
+
+				<footer class="slds-docked-composer__footer slds-shrink-none">
+					<button id="saveButton2" class="slds-button slds-button_brand slds-col_bump-left" name='event' onclick={handleEventSaveButtonClick}>Save</button>
+				</footer>
+
+			</section>
+		</div>
+	</template>
+
+</template>

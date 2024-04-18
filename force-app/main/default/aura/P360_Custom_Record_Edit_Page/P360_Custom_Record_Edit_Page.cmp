@@ -1,0 +1,98 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <lightning:navigation aura:id="navService"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:P360_Custom_Record_Edit_Page_App" action="{!c.handleDetailPage}"/>
+    <aura:attribute name="selectedRecId" type="String" />
+    <aura:attribute name="selectedObject" type="String" />
+     <aura:attribute name="recordName" type="String" />
+    <aura:attribute name="fields" type="String[]" default="" />
+    <aura:attribute name="dueDeligencefields" type="String[]" default="['P360_CoverHolder_TPA_Name__c','P360_Due_Diligence_Type__c',
+                                                                       'P360_Due_Diligence_Connection__c',
+                                                                       'P360_Approval_Status__c',
+                                                                       'P360_Due_Diligence_Record_Id__c',
+                                                                       'TMKDA_Domicile__c',
+                                                                       'P360_DD_Total_EPI__c',
+                                                                       'TMKDA_Previous_Committee_Date__c',
+                                                                       'TMKDA_DD_Connection_Status__c',
+                                                                       'P360_DD_Number_of_Run_Off_Binders__c',
+                                                                       'P360_DD_Risk_Location__c',
+                                                                       'TMKDA_Overview__c',
+                                                                       'TMKDA_Primary_Due_Diligence_record__c',
+                                                                       'P360_DD_Coverholder_or_DCA__c',
+                                                                       'TMKDA_Binder_Renewal_Date__c',
+                                                                       'P360_DD_Coverholder_Live_Date__c',
+                                                                       'P360_DD_Line_of_Business__c',
+                                                                       'P360_DD_Number_of_Live_Binders__c',
+                                                                       'P360_DD_Customer_Domicile__c']" />
+    <aura:attribute name="catFields" type="String[]" default="['Name','P360_DA_Category_ID__c','P360_Completion_Marker__c',
+                                                              
+                                                              'Sub_category_Completion_status__c']" />
+    <aura:attribute name="subCatFields" type="String[]" default="['Name','P360_DA_Sub_Category_ID__c',
+                                                                 'P360_DD_Child_COmpletion_Status__c',
+                                                                 'P360_Completion_Marker__c']" />
+    <aura:attribute name="reviewAreaFields" type="String[]" default="['P360_DA_Review_Area_Name__c',
+                                                                     'P360_RA_Category__c','Due_Diligence__c',
+                                                                     'P360_CoverHolder_Name__c',
+                                                                     'TMKDA_Answer__c',
+                                                                     'TMKDA_Severity__c',
+                                                                     'P360_Completion_Marker__c',
+                                                                     'P360_Comment__c']" />
+    
+    <lightning:card footer="" title="">
+        
+        <aura:if isTrue="{!v.selectedRecId}"> 
+            <div class="slds-clearfix">
+                <div class="slds-p-around_xx-small">
+                    <p class="slds-float_right"> <lightning:button variant="brand" label="Open Detail Page" title="" onclick="{! c.handleNavigateToDetailPage }" /> </p>
+                    <p class="slds-align_absolute-left"><strong>{!v.recordName}</strong> </p>
+                </div>
+                
+            </div>
+            <div class="slds-p-around_xx-small">
+                <div class="slds-box slds-box_x-small">
+                   <aura:if isTrue="{!v.selectedObject == 'P360_Due_Diligence__c'}">
+                    <lightning:recordForm
+                                          aura:id="myRecordForm"
+                                          recordId="{!v.selectedRecId}"
+                                          objectApiName="{!v.selectedObject}"
+                                          fields="{!v.dueDeligencefields}"
+                                          columns="2"
+                                          mode="view"
+                                          onsubmit="{!c.handleSubmit}" />
+                    </aura:if>
+                    <aura:if isTrue="{!v.selectedObject == 'P360_DD_Category__c'}">
+                    <lightning:recordForm
+                                          aura:id="myRecordForm"
+                                          recordId="{!v.selectedRecId}"
+                                          objectApiName="{!v.selectedObject}"
+                                          fields="{!v.catFields}"
+                                          columns="2"
+                                          mode="view"
+                                          onsubmit="{!c.handleSubmit}" />
+                    </aura:if>
+                    <aura:if isTrue="{!v.selectedObject == 'P360_DD_Sub_Category__c'}">
+                    <lightning:recordForm
+                                          aura:id="myRecordForm"
+                                          recordId="{!v.selectedRecId}"
+                                          objectApiName="{!v.selectedObject}"
+                                          fields="{!v.subCatFields}"
+                                          columns="2"
+                                          mode="view"
+                                          onsubmit="{!c.handleSubmit}" />
+                    </aura:if>
+                    <aura:if isTrue="{!v.selectedObject == 'P360_Review_Area__c'}">
+                 <lightning:recordForm
+                                          aura:id="myRecordForm"
+                                          recordId="{!v.selectedRecId}"
+                                          objectApiName="{!v.selectedObject}"
+                                          fields="{!v.reviewAreaFields}"
+                                          columns="2"
+                                          mode="view"
+                                          onsubmit="{!c.handleSubmit}" /> 
+                    </aura:if>
+                </div>
+            </div>
+        </aura:if>
+    </lightning:card>
+</aura:component>

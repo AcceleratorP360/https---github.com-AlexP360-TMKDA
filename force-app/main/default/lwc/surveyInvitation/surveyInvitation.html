@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Due Diligence Attestations" icon-name="standard:survey">
+        <template if:true={surveys}>
+            <div class="slds-m-around_medium">
+                <lightning-datatable
+                    key-field="Id"
+                    data={surveys}
+                    columns={columns}
+                    hide-checkbox-column="true"
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+    </lightning-card>
+</template>

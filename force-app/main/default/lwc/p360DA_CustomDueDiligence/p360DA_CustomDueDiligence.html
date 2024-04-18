@@ -1,0 +1,68 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+    <div class="slds-card slds-grid slds-wrap lgc-bg">
+        <div class="sidebar slds-split-view_container slds-m-top_x-small slds-is-closed close-panel" data-my-id="leftPanel" style="float: left">
+            <lightning-button-icon onclick={togglePanel} variant="bare" icon-name="utility:left"
+                class="slds-button slds-button_icon slds-button_icon slds-split-view__toggle-button sidebar-button"
+                aria-controls="split-view-id" aria-expanded="true">
+            </lightning-button-icon>
+            <article aria-hidden="false" id="split-view-id" class="slds-split-view slds-grid slds-grid_vertical slds-grow"
+                style="padding-right: 7px">
+                <lightning-tree items={items} header="Due Diligence" class="scroll-container slds-m-top_small left-pan" onselect={handleTreeItemSelect}></lightning-tree>
+            </article>
+        </div>
+        <div style="float:right;" data-my-id="rightPanel" class="expand-panel">
+            <article class="slds-grid slds-grid_vertical slds-grow slds-scrollable_none slds-m-top_x-small slds-m-bottom_x-large">
+                <div class=" slds-grid slds-grid_vertical slds-scrollable_y">
+                    <div class="slds-p-left_small">
+
+                        <div class="scroll-container">
+                            <template if:true={isLoadDataTable}>
+                                <lightning-datatable
+                                        key-field="id"
+                                        data={ddList}
+                                        columns={columns}
+                                        hide-checkbox-column="true"
+                                        onrowselection={handleRowClick}
+                                        onrowaction={handleRowAction}>
+                                </lightning-datatable>
+                            </template>
+                        </div>
+
+                        <!-- ObjName:: P360_Due_Diligence__c Found Details Page -->
+                        <template if:true={isDdRecordFound}>
+                            <c-p360-d-a_-custom-due-diligence-layout record-id={recordId} object-api-name={objectApiName}></c-p360-d-a_-custom-due-diligence-layout>
+                        </template>
+
+                        <!-- ObjName:: P360_DD_Category__c Found Details Page -->
+
+                        <template if:true={isDdCategoryRecordFound}>
+                            <c-p360-d-a_-custom-category-layout record-id={recordId} object-api-name={objectApiName} main-record-id={mainRecordId} is-editable={isEditable}></c-p360-d-a_-custom-category-layout>
+                        </template>
+
+                        <!-- ObjName:: P360_DD_Sub_Category__c Found Details Page -->
+
+                        <template if:true={isDdSubCategoryRecordFound}>
+                            <c-p360-d-a_-custom-sub-category-layout record-id={recordId} object-api-name={objectApiName} main-record-id={mainRecordId} is-editable={isEditable}></c-p360-d-a_-custom-sub-category-layout>
+                        </template>
+
+                        <!-- ObjName:: P360_Review_Area__c Found Details Page -->
+
+                        <template if:true={isReviewRecordFound}>
+                            <c-p360-d-a_-custom-review-area-layout record-id={recordId} object-api-name={objectApiName}  main-record-id={mainRecordId} is-editable={isEditable}></c-p360-d-a_-custom-review-area-layout>
+                        </template>
+
+                        <template if:false={isLoadDataTable}>
+                            <div class="slds-box">
+                                <c-p360-d-a_-custom-activity record-id={recordId} object-api-name={objectApiName}></c-p360-d-a_-custom-activity>
+                            </div>
+                            
+                        </template>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</template>

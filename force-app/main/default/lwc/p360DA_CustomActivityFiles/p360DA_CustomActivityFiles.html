@@ -1,0 +1,112 @@
+<template>
+    <div class="slds-box" style="padding:0px !important;">
+        <lightning-spinner alternative-text="Loading" size="small" variant="brand" if:true={isSpinner}></lightning-spinner>
+        <div class="slds-grid slds-m-bottom_none" style="background:var(--slds-g-color-neutral-base-95);">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate slds-m-around_x-small">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-file" title="file">
+                        <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                            <use xlink:href="/apexpages/slds/latest/assets/icons/standard-sprite/svg/symbols.svg#file"></use>
+                        </svg>
+                        
+                        <span class="slds-assistive-text">file</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                    <a class="slds-card__header-link slds-truncate" title="files">
+                        <span>Files ({fileCount})</span>
+                    </a>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <button class="slds-button slds-button_neutral" onclick={handleAddFile}>Add Files</button>
+                    <input type="file" onchange={openFileUpload} class="slds-hide" multiple />
+                </div>
+            </header>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+
+            <!-- File Upload -->
+            <template if:false={filesList.length}>
+                <div class="slds-form-element">
+                    <!-- <span class="slds-form-element__label" id="file-selector-primary-label-113">Attachment</span> -->
+                    <div class="slds-form-element__control">
+                        <div class="slds-file-selector slds-file-selector_images">
+                        <div class="slds-file-selector__dropzone">
+                            <!-- accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf" -->
+                            <input type="file" class="slds-file-selector__input slds-assistive-text file-selector" onchange={openFileUpload} id="file-upload-input-115" aria-labelledby="file-selector-primary-label-113 file-selector-secondary-label114" multiple />
+                            <label class="slds-file-selector__body" for="file-upload-input-115" id="file-selector-secondary-label114">
+                                <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
+                                    </svg>Upload Image</span>
+                                <span class="slds-file-selector__text slds-medium-show">or Drop Image</span>
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Related files list -->
+            <template if:true={filesList.length}>
+
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={filesList} for:item="file">
+                        <li class="slds-m-vertical_small" style="display:flex;align-items: center;" key={file.Id}>
+                            <lightning-icon icon-name='utility:file' alternative-text='file' size='small' title='file' class="slds-m-right_small"></lightning-icon>
+                            <div style="display: flex;flex-direction: column;">
+                                <a onclick={previewHandler} data-id={file.Id}>{file.Title}</a>
+                                <span>{file.date} • {file.size} • {file.FileExtension}</span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+        </div>
+
+        <footer class="slds-card__footer" if:true={filesList.length}>
+            <a class="slds-card__footer-action" onclick={handleViewAll}>View All
+            <span class="slds-assistive-text">Accounts</span>
+            </a>
+        </footer>
+    </div>
+
+    <template if:true={isFilesListModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={handleCloseModal}>
+                    <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                        <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Selected Files</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <ul class="slds-has-dividers_bottom-space">
+                        <template for:each={selectedFilesName} for:item="file" for:index="index">
+                            <li class="slds-m-vertical_small" style="display:flex;justify-content:space-between;" key={file}>
+                                <div>
+                                    <lightning-icon icon-name='standard:file' alternative-text='file' size='small' title='file' class="slds-m-right_small"></lightning-icon>
+                                    <span>{file}</span>
+                                </div>
+                                <lightning-icon icon-name='utility:close' alternative-text='close' size='x-small' title='close' style="float:right;" data-index={index} onclick={handleRemoveSelectedFile}></lightning-icon>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                <div class="slds-modal__footer" style="display: flex;justify-content: center;">
+                    <button class="slds-button slds-button_neutral slds-m-right_small" aria-label="Cancel and close" onclick={handleCloseModal} >Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleSelectedFilesUpload}>Upload</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>

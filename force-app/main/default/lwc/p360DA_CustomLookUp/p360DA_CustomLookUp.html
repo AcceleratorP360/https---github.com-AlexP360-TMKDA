@@ -1,0 +1,114 @@
+<template>
+	<div class="slds-form-element">
+		<label class="slds-form-element__label" for="combobox-id-1">{label}</label>
+		<div class="slds-form-element__control slds-box" style="padding:1px;">
+			<div class="slds-combobox-group">
+				<!-- Object Selection Section -->
+				<div class="slds-combobox_object-switcher slds-combobox-addon_start" if:false={isValueSelected}>
+					<div class="slds-form-element">
+						<label class="slds-form-element__label slds-assistive-text" for="combobox-id-1" id="combobox-label-id-32">Filter Search by:</label>
+						<div class="slds-form-element__control">
+							<div class="slds-combobox_container" onmouseleave={openObjectDropdown}  data-source="objectContainer">
+								<div class="objectInputContainer slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-controls="primary-combobox-id-1">
+									<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+										<div onclick={openObjectDropdown} style="width:auto;border: none;" data-source="objectDropdown" role="combobox" tabindex="0" class="slds-input_faux slds-combobox__input slds-combobox__input-value" aria-labelledby="combobox-label-id-32 combobox-id-1-selected-value" id="combobox-id-1-selected-value" aria-controls="objectswitcher-listbox-id-1"
+										aria-expanded="false" aria-haspopup="listbox">
+											<span class="slds-truncate" id="combobox-value-id-35"><lightning-icon icon-name={iconName} size="small"></lightning-icon> </span>
+										</div>
+										<span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+											<lightning-icon icon-name="utility:down" size="x-small"></lightning-icon>
+										</span>
+									</div>
+									<div id="objectswitcher-listbox-id-1" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_x-small slds-dropdown_left" role="listbox" aria-label="Placeholder for Dropdown Items" tabindex="0" aria-busy="false">
+										<ul class="slds-listbox slds-listbox_vertical" role="group" aria-label="Placeholder for Dropdown Options" >
+											<!--<template for:each={objectNameList} for:item="obj">
+												<li role="presentation" class="slds-listbox__item" key={obj}>
+													<div onclick={handlesObjectSelection} aria-checked="true" id="option227" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-is-selected" role="option">
+														<span class="slds-media__body" title={obj}>
+															<span class="slds-truncate" title={obj}><lightning-icon size="x-small"></lightning-icon>{obj}</span>
+														</span>
+													</div>
+												</li>
+											</template>-->
+											<template for:each={arrayOfObjects} for:item="obj">
+												<li role="presentation" class="slds-listbox__item" key={obj}>
+													<div onclick={handlesObjectSelection} aria-checked="true" id="option227" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-is-selected" role="option">
+														<span class="slds-media__body" title={obj.objName}>
+															<span class="slds-truncate" title={obj.objName}><lightning-icon icon-name={obj.iconName} title={obj.objName} size="x-small"></lightning-icon> {obj.objName}</span>
+														</span>
+													</div>
+												</li>
+											</template>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Input Section -->
+				<div class="slds-form-element" onmouseleave={openDropdown} style="width: -webkit-fill-available;" data-source="lookupContainer">      
+					<div class="slds-combobox_container slds-has-selection">
+						<div class="lookupInputContainer slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox"> 
+
+							<!-- Search Input -->
+							<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" if:false={isValueSelected}>
+								<div class="searchBoxWrapper" >
+									<!--Lookup Input Field-->
+									<lightning-input                  
+										type="search"
+										data-source="searchInputField"
+										class="input-no-border"
+										onclick={openDropdown}
+										onchange={handleKeyChange}
+										is-loading={isSearchLoading}
+										value={searchKey}
+										variant="label-hidden"
+										placeholder={placeholder}
+									></lightning-input>  
+								</div>
+							</div>
+
+							<!-- Selected value -->
+							<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" if:true={isValueSelected}>
+								<span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon" title="Account">
+									<lightning-icon icon-name={iconName} size="x-small" alternative-text="icon"></lightning-icon>
+								</span>
+								<div role="combobox" tabindex="0" class="slds-input_faux slds-combobox__input-value" style="border:none;" aria-labelledby="combobox-label-id-33 combobox-id-5-selected-value" id="combobox-id-5-selected-value" aria-controls="listbox-id-5" aria-expanded="false"
+									aria-haspopup="listbox">
+									<span class="slds-truncate" id="combobox-value-id-20">{selectedRecord.Name}</span>
+								</div>
+								<button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Remove selected option" if:false={disabled}>
+									<lightning-icon icon-name="utility:close" size="x-small" alternative-text="close icon" onclick={handleRemove}></lightning-icon> 
+								</button>
+							</div>  
+							<!-- Search Result List -->
+							<div style="margin-top:0px" id="listbox-id-5" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+								<ul class="slds-listbox slds-listbox_vertical" role="presentation">
+									<template for:each={lstResult} for:item="obj">
+										<li key={obj.Id} role="presentation" class="slds-listbox__item">
+											<div data-recid={obj.Id} onclick={handelSelectedRecord} class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+												<span style="pointer-events: none;" class="slds-media__figure slds-listbox__option-icon" >
+													<span class="slds-icon_container">
+														<lightning-icon icon-name={iconName} size="small" alternative-text="icon" ></lightning-icon>  
+													</span>
+												</span>
+												<span style="pointer-events: none;margin-top:5px;" class="slds-media__body" >
+													<span  class="slds-listbox__option-text slds-listbox__option-text_entity" >{obj.Name}</span>
+												</span>
+											</div>
+										</li>
+									</template>
+									<!--ERROR msg, if there is no records..-->
+									<template if:false={hasRecords}>
+										<li class="slds-listbox__item" style="text-align: center; font-weight: bold;">No Records Found....</li>
+									</template>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>

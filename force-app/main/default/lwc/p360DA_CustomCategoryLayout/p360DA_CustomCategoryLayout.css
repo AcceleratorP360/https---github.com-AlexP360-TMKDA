@@ -1,0 +1,7 @@
+.datatable-container {
+    overflow-x: auto;
+}
+
+.datatable-scroller {
+    width: 140%; /* Ensure the scroller takes the full width of the container */
+}

@@ -1,0 +1,22 @@
+<template>
+    <lightning-card>
+         <lightning-spinner alternative-text="Loading" size="medium" variant="brand" if:true={isUploadSpinner}></lightning-spinner>
+        <div class="slds-m-around_small">
+            <p><b>{selectedRecord}</b></p>
+            <lightning-tabset>
+                <lightning-tab label="Activity">
+                    <c-p360-d-a_-custom-activity-tab record-id={recordId}></c-p360-d-a_-custom-activity-tab>
+                </lightning-tab>
+                <lightning-tab label="Chatter">
+                    <c-p360-d-a_-custom-activity-chatter-tab record-id={recordId}></c-p360-d-a_-custom-activity-chatter-tab>
+                </lightning-tab>
+                <lightning-tab label="Notes">
+                    <c-p360-d-a_-custom-activity-notes-tab record-id={recordId}></c-p360-d-a_-custom-activity-notes-tab>
+                </lightning-tab>
+                <lightning-tab label="Files">
+                    <c-p360-d-a_-custom-activity-files record-id={recordId}></c-p360-d-a_-custom-activity-files>
+                </lightning-tab>
+            </lightning-tabset>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,988 @@
+<template>
+    <lightning-tabset>
+        <div class="slds-size_1-of-12" style="position: absolute;top: 21px;right: 10px;">
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <span class="slds-icon_container" style="cursor: pointer;" onclick={handleOpenRecords}>
+                        <lightning-icon icon-name="utility:new_window" size="x-small"></lightning-icon>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <lightning-tab label="Information">
+            <template if:false={isEnableEditRecord}>
+                <div class="scroll-container">
+                    <lightning-record-view-form record-id={recordId} object-api-name={objectApiName}>
+                        <div class="">
+                            <div class="slds-section slds-is-open main_container">
+
+                                <!-- Coverholder / DCA Information -->
+
+                                <lightning-accordion allow-multiple-sections-open active-section-name={section}> 
+
+                                    <lightning-accordion-section name="A" label="Coverholder / DCA Information">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <template for:each={listleftSideFieldWrapperCoverHolder} for:item="field">
+                                                    <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                        <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                            <div class="slds-size_11-of-12">
+                                                                <lightning-output-field field-name={field.label}></lightning-output-field>
+                                                            </div>
+                                                            <div class="slds-size_1-of-12">
+                                                                <template if:true={field.fieldWritable}>
+                                                                    <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <template for:each={listrightSideFieldWrapperCoverHolder} for:item="field">
+                                                    <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                        <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                            <div class="slds-size_11-of-12">
+                                                                <lightning-output-field field-name={field.label}></lightning-output-field>
+                                                            </div>
+                                                            <div class="slds-size_1-of-12">
+                                                                <template if:true={field.fieldWritable}>
+                                                                    <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div><br/>
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="B" label="Audit Summary">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_DD_Last_Audit_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_DD_Next_Audit_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+                                        <div class="slds-m-bottom_medium">
+                                            <c-auditdatatable ></c-auditdatatable>
+                                        </div>
+
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="C" label="Summary">
+
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_12-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Due_Diligence_Summary__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 65%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Recommendation__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 65%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Approval_Method__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 65%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="D" label="Sign Off and Review">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <template for:each={listleftSideFieldWrapperReview} for:item="field">
+                                                    <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                        <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                            <div class="slds-size_11-of-12">
+                                                                <lightning-output-field field-name={field.label}></lightning-output-field>
+                                                            </div>
+                                                            <div class="slds-size_1-of-12">
+                                                                <template if:true={field.fieldWritable}>
+                                                                    <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <template for:each={listrightSideFieldWrapperReview} for:item="field">
+                                                    <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                        <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                            <div class="slds-size_11-of-12">
+                                                                <lightning-output-field field-name={field.label}></lightning-output-field>
+                                                            </div>
+                                                            <div class="slds-size_1-of-12">
+                                                                <template if:true={field.fieldWritable}>
+                                                                    <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                        <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div><br/>
+
+                                    </lightning-accordion-section>
+                                </lightning-accordion>
+                            </div>
+                        </div>
+                    </lightning-record-view-form>
+                </div>
+                
+            </template>
+            
+            <template if:true={isEnableEditRecord}>
+                <lightning-record-edit-form record-id={recordId} object-api-name={objectApiName} onsubmit={handleSubmit} onerror={handleError}  onsuccess={handleSuccess} oncancel={handleCancel}>
+                    <div class="slds-box">
+                        <div class="slds-section slds-is-open main_container scroll-container" style="border-bottom:1px solid black;">
+                            <!-- Coverholder / DCA Information -->
+                            <lightning-accordion allow-multiple-sections-open active-section-name={section}> 
+                                <lightning-accordion-section name="A" label="Coverholder / DCA Information">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <template for:each={listleftSideFieldWrapperCoverHolder} for:item="field">
+                                                <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_12-of-12">
+                                                            <lightning-input-field field-name={field.label}></lightning-input-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <template for:each={listrightSideFieldWrapperCoverHolder} for:item="field">
+                                                <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_12-of-12">
+                                                            <lightning-input-field field-name={field.label}></lightning-input-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+                                
+                                <lightning-accordion-section name="B" label="Audit Summary">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_12-of-12">
+                                                        <lightning-input-field field-name="P360_DD_Last_Audit_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_12-of-12">
+                                                        <lightning-input-field field-name="P360_DD_Next_Audit_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+                                    <div class="slds-m-bottom_medium">
+                                        <c-auditdatatable ></c-auditdatatable>
+                                    </div>
+                                </lightning-accordion-section>
+
+                                <lightning-accordion-section name="C" label="Summary">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_12-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_12-of-12">
+                                                        <lightning-input-field field-name="P360_Due_Diligence_Summary__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_12-of-12">
+                                                        <lightning-input-field field-name="P360_Recommendation__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_12-of-12">
+                                                        <lightning-input-field field-name="P360_Approval_Method__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+
+                                <lightning-accordion-section name="D" label="Sign Off and Review">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <template for:each={listleftSideFieldWrapperReview} for:item="field">
+                                                <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_12-of-12">
+                                                            <lightning-input-field field-name={field.label}></lightning-input-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <template for:each={listrightSideFieldWrapperReview} for:item="field">
+                                                <div key={field} style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_12-of-12">
+                                                            <lightning-input-field field-name={field.label}></lightning-input-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+                            </lightning-accordion>
+                            
+                            
+
+                            
+                        </div>
+                        <lightning-messages></lightning-messages>
+                        <div class="slds-m-top_medium">
+                            <center>
+                                <lightning-button variant="brand" class="slds-m-right_small" type="submit" label="Save"></lightning-button>
+                                <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+                            </center>
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="Related">
+            <template if:true={isAccRelatedCon}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom67">
+                                            <lightning-icon icon-name="custom:custom67" alternative-text="custom67" title="custom67"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>DD Categories ( {ddRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <!-- <lightning-datatable
+                                key-field="id"
+                                data={ddRelatedtList}
+                                columns={columns}
+                                hide-checkbox-column="true"
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable> -->
+
+                            <c-p360-d-a_-custom-datatable
+                                key-field="id"
+                                data={ddRelatedtList}
+                                columns={columns}
+                                onsort={handleSort}
+                                sorted-by={sortedBy}
+                                sorted-direction={sortedDirection}
+                                hide-checkbox-column="true"
+                                onrowaction={handleRowAction}>
+                            </c-p360-d-a_-custom-datatable>
+
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="Additional Information">
+            <template if:false={isEnableEditRecord}>
+                <div class="scroll-container">
+                    <lightning-record-view-form record-id={recordId} object-api-name={objectApiName}>
+                        <div class="">
+                            <div class="slds-section slds-is-open main_container">
+
+                                <!-- Approval Details -->
+
+                                <lightning-accordion allow-multiple-sections-open active-section-name={section}> 
+
+                                    <lightning-accordion-section name="A" label="Approval Details">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Approved_By__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="TMKDA_Approved_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="RecordTypeId"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Approval_Status__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+                                    </lightning-accordion-section>
+                                    
+                                    <lightning-accordion-section name="B" label="Due Diligence Dates">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Due_Diligence_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="p360_Due_Diligence_Date_Valid_To__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="p360_Planned_Assessment_Start_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="p360_Planned_Assessment_End_Date__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="C" label="Renewal Details">
+
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Is_Due_Diligence_Renewed__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_Renewed_Due_Diligence__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="D" label="Risk Assessment Overrides">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_wouldyouliketooverride_assessment__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_DD_Override_reason__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="P360_DD_Override_assessment__c"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+
+                                    </lightning-accordion-section>
+
+                                    <lightning-accordion-section name="E" label="System Information">
+                                        <div class="slds-section__content slds-grid slda-wrap">
+                                            <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="CreatedById"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                                <div style="border-bottom: 1px solid #d8d8d8;">
+                                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                        <div class="slds-size_11-of-12">
+                                                            <lightning-output-field field-name="LastModifiedById"></lightning-output-field>
+                                                        </div>
+                                                        <div class="slds-size_1-of-12">
+                                                            <span class="slds-icon_container" style="margin-top:50%;margin-left: 40%;cursor: pointer;margin-bottom:10px;" onclick={enableEditMode}>
+                                                                <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><br/>
+
+                                    </lightning-accordion-section>
+
+                                </lightning-accordion>
+                            </div>
+                        </div>
+                    </lightning-record-view-form>
+                </div>
+            </template>
+
+            <template if:true={isEnableEditRecord}>
+                <lightning-record-edit-form record-id={recordId} object-api-name={objectApiName} onsubmit={handleSubmit} onsuccess={handleSuccess} onerror={handleError} oncancel={handleCancel}>
+                    <div class="slds-box">
+                        <div class="slds-section slds-is-open main_container scroll-container" style="border-bottom:1px solid black;">
+                            
+                            <lightning-accordion allow-multiple-sections-open active-section-name={section}> 
+
+                                <lightning-accordion-section name="A" label="Approval Details">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_Approved_By__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="TMKDA_Approved_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="RecordTypeId"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_Approval_Status__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+                                
+                                <lightning-accordion-section name="B" label="Due Diligence Dates">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_Due_Diligence_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="p360_Due_Diligence_Date_Valid_To__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="p360_Planned_Assessment_Start_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="p360_Planned_Assessment_End_Date__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+
+                                <lightning-accordion-section name="C" label="Renewal Details">
+
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_Is_Due_Diligence_Renewed__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_Renewed_Due_Diligence__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+                                </lightning-accordion-section>
+
+                                <lightning-accordion-section name="D" label="Risk Assessment Overrides">
+                                    <div class="slds-section__content slds-grid slda-wrap">
+                                        <div class="slds-size_6-of-12 slds-p-right_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_wouldyouliketooverride_assessment__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_DD_Override_reason__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-size_6-of-12 slds-p-left_x-small">
+                                            <div style="border-bottom: 1px solid #d8d8d8;">
+                                                <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap">
+                                                    <div class="slds-size_11-of-12">
+                                                        <lightning-input-field field-name="P360_DD_Override_assessment__c"></lightning-input-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><br/>
+
+                                </lightning-accordion-section>
+
+                            </lightning-accordion>
+                        </div>
+                        <lightning-messages></lightning-messages>
+                        <div class="slds-m-top_medium">
+                            <center>
+                                <lightning-button variant="brand" class="slds-m-right_small" type="submit" label="Save"></lightning-button>
+                                <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+                            </center>
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="PRAs">
+            <template if:true={isAccRelatedAction}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom5">
+                                            <lightning-icon icon-name="custom:custom5" alternative-text="custom5" title="custom5"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>Actions ( {ddActionRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <lightning-datatable
+                                key-field="id"
+                                data={ddActionRelatedtList}
+                                columns={columnsAction}
+                                onsort={handleSortPRAs}
+                                sorted-by={sortedByPRAs}
+                                sorted-direction={sortedDirectionPRAs}
+                                hide-checkbox-column="true"
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="Binders">
+            <template if:true={isAccRelatedBinders}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom5">
+                                            <lightning-icon icon-name="custom:custom5" alternative-text="custom5" title="custom5"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>Binders ( {ddBinderRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <lightning-datatable
+                                key-field="id"
+                                data={ddBinderRelatedtList}
+                                columns={columnsBinder}
+                                hide-checkbox-column="true"
+                                onsort={handleSortBinders}
+                                sorted-by={sortedByBinders}
+                                sorted-direction={sortedDirectionBinders}
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="Attestations">
+            <template if:true={isAccRelatedAttestations}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom87">
+                                            <lightning-icon icon-name="custom:custom87" alternative-text="custom87" title="custom87"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>Attestations ( {ddAttestationsRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <lightning-datatable
+                                key-field="id"
+                                data={ddAttestationsRelatedtList}
+                                columns={columnsAttestations}
+                                hide-checkbox-column="true"
+                                onsort={handleSortAtt}
+                                sorted-by={sortedByAtt}
+                                sorted-direction={sortedDirectionAtt}
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="DAMO / PUGC">
+            <template if:true={isAccRelatedDamo}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom61">
+                                            <lightning-icon icon-name="custom:custom61" alternative-text="custom61" title="custom61"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>DAMO / PUGC ( {ddDamoRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <lightning-datatable
+                                key-field="id"
+                                data={ddDamoRelatedtList}
+                                columns={columnsDamo}
+                                hide-checkbox-column="true"
+                                onsort={handleSortDAMO}
+                                sorted-by={sortedByDAMO}
+                                sorted-direction={sortedDirectionDAMO}
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+
+        <lightning-tab label="BPAs">
+            <template if:true={isAccRelatedSummary}>
+                <div class="slds-box" style="padding:0px !important;">
+                    <div class="slds-page-header slds-page-header_record-home" style="border-radius: 0px !important;border-bottom: 1px solid #d8d8d8;">
+                        <div class="slds-page-header__row">
+                            <div class="slds-page-header__col-title">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container slds-icon-custom-custom87">
+                                            <lightning-icon icon-name="custom:custom87" alternative-text="custom87" title="custom87"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-page-header__name">
+                                            <div class="slds-page-header__name-title">
+                                                <h1 style="line-height: 2 !important;font-size: medium;">
+                                                    <b>Summary Header ( {ddSummaryRelatedCount} )</b> 
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <div class="datatable-scroller">
+                            <lightning-datatable
+                                key-field="id"
+                                data={ddSummaryRelatedtList}
+                                columns={columnsSummary}
+                                hide-checkbox-column="true"
+                                onsort={handleSortBPAs}
+                                sorted-by={sortedByBPAs}
+                                sorted-direction={sortedDirectionBPAs}
+                                onrowaction={handleRowAction}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </lightning-tab>
+    </lightning-tabset>
+</template>

@@ -1,0 +1,1606 @@
+<apex:page controller="DD_Attestation_Scoping_Controller" applyHtmlTag="false" showHeader="false" lightningStylesheets="true" sidebar="false" cache="true" > 
+    <!-- contentType="application/vnd.ms-excel" ...contentType="application/vnd.ms-excel" // application/msword -->
+    <html>
+        <style type="text/css">
+            
+            a.btn {
+            color: #DAA520;
+            }
+            .full-width-table {
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+            vertical-align: top;
+            font-family: sans-serif;
+            align:left; 
+            }
+            
+            .table-tr{
+             border: 1px solid black;
+                border-collapse: collapse;
+                vertical-align: top;
+                font-family: sans-serif;
+                align:left;
+            }
+            <!--  .radioinput input[type="radio"]{float:left;}
+
+.radioinput label{display:block;} -->
+            .one td input[type="radio"],
+            .one label {
+            display: inline-block;
+            vertical-align: middle;
+            }
+            
+            .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: 1px solid black;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+            }
+            
+            .active, .accordion:hover {
+            background-color: #ccc;
+            }
+            
+            .panel {
+            width:100%
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            }
+            
+            body .pbBody table.list tr.dataRow th, body .pbBody table.list tr.dataRow td {
+            border-bottom-width:0px;
+            }
+            
+            .full-width-table {
+            width: 100%;
+            }
+            
+           <!-- }  
+            .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            }
+            
+            .active, .collapsible:hover {
+            background-color: #;
+            }
+            
+            .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+            } -->
+           
+        </style>
+        
+       <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var acc = document.querySelectorAll(".accordion");
+        var panels = document.querySelectorAll(".panel");
+
+        for (var i = 0; i < acc.length; i++) {
+            panels[i].style.maxHeight = panels[i].scrollHeight + "px";
+
+            acc[i].addEventListener("click", function() {
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    });
+</script>
+
+        <body style="text-align:center; font-weight: lighter; font-stretch: ultra-condensed; font-family: Bahnschrift;">
+            <apex:form >
+                <apex:slds />
+                <apex:messages /> 
+                <div class="slds-grid">
+                    <div class="slds-col">
+                        <!-- Table with TMK logo and title -->
+                        <table width="100%" style="text-align: center; margin-top: 25px; margin-bottom: 20px;">
+                            <tr style="width:20%; text-align: center; margin-top: 25px; margin-bottom: 20px;">
+                                <td rowspan="2" style="border-right: 0.5px; text-align:center;">
+                                    <apex:image id="theImage" value="{!$Resource.TMK_Logo}" width="90" height="80" alt="TMK Logo" style="padding:10px"/> <!-- DY - 18/1/24 - added padding -->
+                                </td>
+                                <td style="width:50%; border-top: 0.5px; text-align: center; font-size: 20px;">  <!-- padding-right: 190px; -->
+                                    <p style="font-size: 25px; font-weight:bold; color:#00BFFF;">
+                                        Due Diligence Attestation for&nbsp;{!ddAttestationScoping.Name}
+                                    </p>
+                                </td>
+                                <td style="width:30%">&nbsp;</td>
+                            </tr>
+                            
+                            <tr> 
+                                <td>
+                                    
+                                    <span style="font-size: 12px; font-weight:semi-bold; color:#DAA520;">
+                                        TMK's delegated partners are subject to due diligence before appointment, at renewal and as appropriate throughout the period of the contract. 
+                                        In order to assist TMK's Delegated Authority team with ongoing oversight, please complete the following attestation questionnaire. 
+                                        Please note we may further contact you for additional information or clarity on some the answers provided where applicable, 
+                                        please confirm the information answered below covers all grouped entities <br/><br />
+                                        
+                                        Please send any new or updated documents to <a href = "mailto: DATeam@tokiomarineklin.com" class="btn"><b>DATeam@tokiomarineklin.com</b></a>
+                                    </span>  
+                                </td>
+                                <td style="width:30%">&nbsp;</td>
+                            </tr>
+                        </table>
+                        
+                        <p style="font-size: 15px; font-weight:bold; color:#FF0000; text-align:right;">
+                            *All questions are mandatory
+                        </p> 
+                        
+                        <!--Policies & Procedures Section --> <!--height:20px;padding-left:1%;padding-bottom:1%" -->
+                        <div class="accordion" style="border: 1px solid black;">
+                            <b>Policies &amp; Procedures</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                    <tr>
+                                        <td style="text-align:left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'}">
+                                                <label style="font-size:16px">Has a new TCF policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'}">
+                                                <apex:selectRadio value="{!acc.TMKDA_ATT_001__c}" rendered="{!acc.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'}" value="{!acc.TMKDA_UserComments_ATT_001__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_002__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Complaints policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_002__c != 'true'}">
+                                                <apex:selectRadio value="{!acc.TMKDA_ATT_002__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_002__c != 'true'}"
+                                                                  required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_002__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_002__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_003__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Financial Crime policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_003__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_003__c != 'true'}"
+                                                                  label="Has a new Financial Crime policy been introduced in the last 12 months?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_003__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_003__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_003__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <label style="font-size:16px">Has a new Conflicts of Interest policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <apex:selectRadio label="Has a new Conflicts of Interest policy been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_004__c}"
+                                                                  rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_004__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <label style="font-size:16px">Has a new Succession Plan been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Is_Succession_Planning_in_Scope__c != 'No'
+                                                                        && acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <apex:selectRadio label="Has a new Succession Plan been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_005__c}"
+                                                                  rendered="{!acc.TMKDA_Is_Succession_Planning_in_Scope__c != 'No'
+                                                                            && acc.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Is_Succession_Planning_in_Scope__c != 'No'
+                                                                          && acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_005__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_006__c != 'true'}">
+                                                <label style="font-size:16px">Has a new BCP been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_006__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_006__c != 'true'}"
+                                                                  label="Has a new BCP been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_006__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_006__c != "true"}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_006__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_007__c != 'true'}">
+                                                <label style="font-size:16px">Has a new DRP been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_007__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_007__c != 'true'}"
+                                                                  label="Has a new DRP been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_007__c}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_007__c != "true"}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_007__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_008__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Outsourcing arrangement been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_008__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_008__c != 'true'}"
+                                                                  label="Has a new Outsourcing arrangement been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_008__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_008__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_008__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Is_Whistleblowing_in_Scope__c != 'No'
+                                                                        && acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <label style="font-size:16px">Has a new Whistleblowing policy been introduced in the last 12 months?"</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Is_Whistleblowing_in_Scope__c != 'No'
+                                                                        && acc.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_Is_Whistleblowing_in_Scope__c != 'No'
+                                                                            && acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                  label="Has a new Outsourcing arrangement been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_009__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Is_Whistleblowing_in_Scope__c != 'No'
+                                                                          && acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_009__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_ATT_010__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Data Protection policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_ATT_010__c != 'true'}">
+                                                <apex:selectRadio rendered="{!ddAttestationScoping.TMKDA_ATT_010__c != 'true'}"
+                                                                  label="Has a new Outsourcing arrangement been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_010__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_ATT_010__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_010__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_011__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Information Security policy been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_011__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_011__c != 'true'}"
+                                                                  label="Has a new Outsourcing arrangement been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_011__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_011__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_011__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}">
+                                                <label style="font-size:16px">Has a new Claims procedure been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}"
+                                                                  label="Has a new Claims procedure been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_012__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_012__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}">
+                                                <label style="font-size:16px">Are the loss funds segregated from company operating accounts?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}"
+                                                                  label="Are the loss funds segregated from company operating accounts?" 
+                                                                  value="{!acc.TMKDA_ATT_013__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Claims_Handling__c != 'No'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_013__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_014__c != 'true'}">
+                                                <label style="font-size:16px">Has a new Accounting procedure been introduced in the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_014__c != 'true'}">
+                                                <apex:selectRadio rendered="{!acc.TMKDA_ATT_014__c != 'true'}"
+                                                                  label="Has a new Accounting procedure been introduced in the last 12 months?" 
+                                                                  value="{!acc.TMKDA_ATT_014__c}" required="true">
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_014__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_014__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </table>
+                        </div>
+						
+                        <!--Atlas Section -->
+                        <div class="accordion">
+                            <b>Atlas</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black;width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                    <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">
+                                    <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">
+                                                    <label style="font-size:16px">When is the PI policy due to expire?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                        <td style="border: 1px solid black; width: 150px;">                            
+                                            <apex:inputField rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}"
+                                                             label="When is the PI policy due to expire?" 
+                                                             value="{!ddAttestationScoping.TMKDA_ATT_028__c}"
+                                                             id="ATT028" styleClass="dateField"
+                                                             required="true" ignoreEditPermissionForRendering="true"/>
+                                            <apex:outputPanel layout="none">
+                                              <script>
+                                              var today = new Date();
+                                              var day = today.getDate().toString().padStart(2, '0');
+                                              var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                              var year = today.getFullYear();
+                                              var formattedDate =  day + '/' + month + '/' + year ;
+                                              document.getElementById('{!$Component.ATT028}').value = formattedDate;
+                                              </script>
+                                          </apex:outputPanel>
+
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}" value="{!acc.TMKDA_UserComments_ATT_028__c}" rows="2" cols="100"/>
+                                        </td>
+                                        </tr>
+                                        <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">
+                                                    <label style="font-size:16px">Is the Reputation &amp; Standing declaration free of any adverse information?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">
+                                                    <apex:selectRadio label="Is the Reputation & Standing declaration free of any adverse information?" 
+                                                                      rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}"
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_029__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}"
+                                                                    value="{!acc.TMKDA_UserComments_ATT_029__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">
+                                                    <label style="font-size:16px">Financials YOA</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}">                          
+                                                    <apex:selectRadio label="Financials YOA" 
+                                                                      rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}"
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_030__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'}"
+                                                                    value="{!acc.TMKDA_UserComments_ATT_030__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                    </apex:outputPanel>
+                                </apex:repeat>
+                            </table>
+                        </div>
+                        
+                        <!--Additional Information -->
+                        <div class="accordion" style="border: 1px solid black;">
+                            <b>Additional Information</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                        && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <label style="font-size:16px">Binders requiring Binder Product Attestation (BPA)</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                        && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}" >
+                                                
+                                                <apex:selectRadio label="Binders requiring Binder Product Attestation (BPA)" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_015__c}"
+                                                                  rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                            && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                            && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                            && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                           && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                           && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                           && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_015__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                        && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                        && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}">
+                                                <label style="font-size:16px">Have you introduced or changed any financial promotions relating to TMK products?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}" >
+                                                
+                                                <apex:selectRadio label="Have you introduced or changed any financial promotions relating to TMK products?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_016__c}"
+                                                                  rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                                                && ddAttestationScoping.TMKDA_Company_Type__c != 'DCA'
+                                                                && ddAttestationScoping.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_016__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0171__c != 'true'}">
+                                                <label style="font-size:16px">Have staff maintained an appropriate level of training for Financial Crime(Anti Bribery &amp; Corruption, Anti Money Laundering, Sanctions)?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0171__c != 'true'}" >
+                                                <apex:selectRadio label="Have staff maintained an appropriate level of training for Financial Crime<br/>(Anti Bribery &amp; Corruption, Anti Money Laundering, Sanctions)?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_0171__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_0171__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_0171__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_0171__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0172__c != 'true'}">
+                                                <label style="font-size:16px">Have staff maintained an appropriate level of training for Complaints?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0172__c != 'true'}" >
+                                                <apex:selectRadio label="Have staff maintained an appropriate level of training for Complaints?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_0172__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_0172__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_0172__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_0172__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0173__c != 'true'}">
+                                                <label style="font-size:16px">Have staff maintained an appropriate level of training for Treating Customers Fairly?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0173__c != 'true'}" >
+                                                <apex:selectRadio label="Have staff maintained an appropriate level of training for Treating Customers Fairly?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_0173__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_0173__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_0173__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_0173__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0174__c != 'true'}">
+                                                <label style="font-size:16px">Have staff maintained an appropriate level of training for IDD?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_0174__c != 'true'}" >
+                                                <apex:selectRadio label="Have staff maintained an appropriate level of training for IDD?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_0174__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_0174__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_0174__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_0174__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_018__c != 'true'}">
+                                                <label style="font-size:16px">Have you introduced or replaced any business system(s)?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_018__c != 'true'}" >
+                                                <apex:selectRadio label="Have you introduced or replaced any business system(s)?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_018__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_018__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_018__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_018__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_019__c != 'true'}">
+                                                <label style="font-size:16px">Has company ownership changed within the last 12 months?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_019__c != 'true'}" >
+                                                <apex:selectRadio label="Have you introduced or replaced any business system(s)?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_019__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_019__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_019__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_019__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}">
+                                                    <label style="font-size:16px">When was the Licenses and Permits declaration made?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                        <td style="border: 1px solid black; width: 150px;">                            
+                                            <apex:inputField rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}"
+                                                             label="When was the Licenses and Permits declaration made?" 
+                                                             value="{!ddAttestationScoping.TMKDA_ATT_020__c}"
+                                                             id="ATT020" styleClass="dateField"
+                                                             required="true" ignoreEditPermissionForRendering="true"/>
+                                            <apex:outputPanel layout="none">
+                                              <script>
+                                              var today = new Date();
+                                              var day = today.getDate().toString().padStart(2, '0');
+                                              var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                              var year = today.getFullYear();
+                                              var formattedDate =  day + '/' + month + '/' + year ;
+                                              document.getElementById('{!$Component.ATT020}').value = formattedDate;
+                                              </script>
+                                          </apex:outputPanel>
+
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}" value="{!acc.TMKDA_UserComments_ATT_020__c}" rows="2" cols="100"/>
+                                        </td>
+                                        </tr>
+                                    <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}">
+                                                    <label style="font-size:16px">When was the last Reputation &amp; Standing declaration made?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                        <td style="border: 1px solid black; width: 150px;">                            
+                                            <apex:inputField rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}"
+                                                             label="When was the last Reputation &amp; Standing declaration made?" 
+                                                             value="{!ddAttestationScoping.TMKDA_ATT_021__c}"
+                                                             id="ATT021" styleClass="dateField"
+                                                             required="true" ignoreEditPermissionForRendering="true"/>
+                                            <apex:outputPanel layout="none">
+                                              <script>
+                                              var today = new Date();
+                                              var day = today.getDate().toString().padStart(2, '0');
+                                              var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                              var year = today.getFullYear();
+                                              var formattedDate =  day + '/' + month + '/' + year ;
+                                              document.getElementById('{!$Component.ATT021}').value = formattedDate;
+                                              </script>
+                                          </apex:outputPanel>
+
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}" value="{!acc.TMKDA_UserComments_ATT_021__c}" rows="2" cols="100"/>
+                                        </td>
+                                        </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_022__c != 'true'}">
+                                                <label style="font-size:16px">Has your Business Continuity Plan been tested?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_022__c != 'true'}" >
+                                                <apex:selectRadio label="Has your Business Continuity Plan been tested?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_022__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_022__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_022__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_022__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_023__c != 'true'}">
+                                                <label style="font-size:16px">Have any BCP issues/improvements been identified in testing?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_023__c != 'true'}" >
+                                                <apex:selectRadio label="Have any BCP issues/improvements been identified in testing?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_023__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_023__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_023__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_023__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_024__c != 'true'}">
+                                                <label style="font-size:16px">Has your Disaster Recovery Plan been tested?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_024__c != 'true'}" >
+                                                <apex:selectRadio label="Has your Disaster Recovery Plan been tested?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_024__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_024__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_024__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_024__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_025__c != 'true'}">
+                                                <label style="font-size:16px">Have any DRP issues/improvements been identified in testing?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_025__c != 'true'}" >
+                                                <apex:selectRadio label="Have any DRP issues/improvements been identified in testing?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_025__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_025__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_025__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_025__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_026__c != 'true'}">
+                                                <label style="font-size:16px">Are any material business functions outsourced?</label>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:outputPanel rendered="{!acc.TMKDA_ATT_026__c != 'true'}" >
+                                                <apex:selectRadio label="Are any material business functions outsourced?" 
+                                                                  value="{!ddAttestationScoping.TMKDA_ATT_026__c}"
+                                                                  rendered="{!acc.TMKDA_ATT_026__c != 'true'}" required="true" >
+                                                    <apex:selectOptions value="{!yesNoOptions}" />
+                                                </apex:selectRadio>
+                                            </apex:outputPanel>
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_ATT_026__c != 'true'}"
+                                                                value="{!acc.TMKDA_UserComments_ATT_026__c}" rows="2" cols="100"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </table>
+                        </div>
+                        
+                        <!--Document Request Section -->
+                        <div class="accordion">
+                            <b>Document Request</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black;width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMDKA_ATT_031__c != 'true'}">
+                                                    <label style="font-size:16px">Has a complaints log been provided?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!acc.TMDKA_ATT_031__c != 'true'}">
+                                                    <apex:selectRadio label="Has a complaints log been provided?" 
+                                                                      rendered="{!acc.TMDKA_ATT_031__c != 'true'}"
+                                                                      value="{!ddAttestationScoping.TMDKA_ATT_031__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!acc.TMDKA_ATT_031__c != 'true'}"
+                                                                    value="{!acc.TMKDA_UserComments_ATT_031__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" >
+                                                    <label style="font-size:16px">Has a Conflicts of Interest Log been provided?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" >                          
+                                                    <apex:selectRadio label="Has a Conflicts of Interest Log been provided?" 
+                                                                      rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_032__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" 
+                                                                    value="{!acc.TMKDA_UserComments_ATT_032__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" >
+                                                    <label style="font-size:16px">Has a Gifts &amp; Entertainment Log been provided?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" >
+                                                    <apex:selectRadio label="Has a Gifts &amp; Entertainment Log been provided?" 
+                                                                       rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}" 
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_033__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!acc.TMKDA_Review_Scope__c != 'Run-Off'}"
+                                                                    value="{!acc.TMKDA_UserComments_ATT_033__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}">
+                                                    <label style="font-size:16px">When is the PI policy due to expire?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                        <td style="border: 1px solid black; width: 150px;">                            
+                                            <apex:inputField rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}"
+                                                             label="When is the PI policy due to expire?" 
+                                                             value="{!ddAttestationScoping.TMKDA_ATT_034__c}"
+                                                             id="ATT034" styleClass="ATT034"
+                                                             required="true" ignoreEditPermissionForRendering="true"/>
+                                            <apex:outputPanel layout="none">
+                                              <script>
+                                              var today = new Date();
+                                              var day = today.getDate().toString().padStart(2, '0');
+                                              var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                              var year = today.getFullYear();
+                                              var formattedDate =  day + '/' + month + '/' + year ;
+                                              document.getElementById('{!$Component.ATT034}').value = formattedDate;
+                                              </script>
+                                          </apex:outputPanel>
+
+                                        </td>
+                                        <td style="border: 1px solid black; width: 150px;">
+                                            <apex:inputTextarea rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}" value="{!acc.TMKDA_UserComments_ATT_034__c}" rows="2" cols="100"/>
+                                        </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}">
+                                                    <label style="font-size:16px">Financials YOA</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}">
+                                                    <apex:selectRadio label="Financials YOA" 
+                                                                      rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}"
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_035__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!acc.TMKDA_Company_Type__c != 'Coverholder'}"
+                                                                    value="{!acc.TMKDA_UserComments_ATT_035__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Is_IDD_in_scope__c != 'Yes'}">
+                                                    <label style="font-size:16px">Has an employee training log been provided, demonstrating appropriate training activity has been carried out and tracked?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel rendered="{!acc.TMKDA_Is_IDD_in_scope__c != 'Yes'}" >                          
+                                                    <apex:selectRadio label="Has an employee training log been provided, demonstrating appropriate training activity has been carried out and tracked?" 
+                                                                      rendered="{!acc.TMKDA_Is_IDD_in_scope__c != 'Yes'}" 
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_036__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea rendered="{!acc.TMKDA_Is_IDD_in_scope__c != 'Yes'}" 
+                                                                    value="{!acc.TMKDA_UserComments_ATT_036__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                </apex:repeat>
+                            </table>
+                        </div> 
+                        
+                        <!--Confirmation Statements Section -->
+                        <div class="accordion">
+                            <b>Confirmation Statements</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black;width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">There have been no breaches of local regulatory requirements in the last 12 months?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="There have been no breaches of local regulatory requirements in the last 12 months" 
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_037__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_UserComments_ATT_037__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">You will notify TMK of all Financial Crime suspicions and incidents in the first instance to determine next steps?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >                          
+                                                    <apex:selectRadio label="You will notify TMK of all Financial Crime suspicions and incidents in the first instance to determine next steps?" 
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_038__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_UserComments_ATT_038__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Are processes in place to ensure any data breaches are escalated to TMK?</label>
+                                                </apex:outputPanel>
+                                         </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >                          
+                                                    <apex:selectRadio label="Are processes in place to ensure any data breaches are escalated to TMK?" 
+                                                                      value="{!ddAttestationScoping.TMKDA_ATT_039__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_UserComments_ATT_039__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                </apex:repeat>
+                            </table>
+                        </div>
+                        
+                        <!--LMA Basic Posture Assessment Section-->
+                        <div class="accordion">
+                            <b>LMA Basic Posture Assessment</b>
+                        </div>
+                        <div class="panel">
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                            <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                              <label style="font-size:16px">Cyber Security Contact Name :
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="border: 1px solid black; width: 150px;">
+                                         <apex:inputTextarea label="Cyber Security Contact Name" value="{!ddAttestationScoping.TMKDA_ATT_040__c}" rows="2" cols="150"/>
+                                      </td>
+                                     </tr>
+                                     <tr>
+                                         <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                             <apex:outputPanel >
+                                                 <label style="font-size:16px">
+                                                     Cyber Security Contact Email Address :
+                                                 </label>
+                                             </apex:outputPanel>
+                                             </td>
+                                      <td style="border: 1px solid black; width: 150px;">
+                                         <apex:inputTextarea label="Cyber Security Contact Email Address" value="{!ddAttestationScoping.TMKDA_ATT_041__c}" rows="2" cols="150"/>
+                                      </td>
+                                  </tr>
+                                     <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                              <label style="font-size:16px">
+                                                  Highest Level of Data Under TMK Binder : 
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="border: 1px solid black; width: 150px;">
+                                         <apex:inputTextarea label="Highest Level of Data Under TMK Binder" value="{!ddAttestationScoping.TMKDA_ATT_042__c}" rows="2" cols="150"/>
+                                      </td>
+                                  </tr>
+                            </apex:repeat>
+                            </table>
+                            <table class="full-width-table" style="border:1px solid black;width=100%">
+                                <tr>
+                                    <th style="text-align: center;border: 1px solid black;background-color:#DAA520;"><b>Attestation Question</b></th>
+                                    <th style="text-align: center;border: 1px solid black;width: 150px;background-color:#DAA520;"><b>Answer</b></th>
+                                    <th style="text-align: center;border: 1px solid black; width: 150px;background-color:#DAA520;"><b>Comments</b></th>
+                                </tr>
+                                <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Does your organisation have a formal Information Security Policy?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Does your organisation have a formal Information Security Policy?" 
+                                                                      value="{!acc.TMKDA_LMA_Q1__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q1_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Is there someone responsible for Security in your organisation?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Is there someone responsible for Security in your organisation?" 
+                                                                      value="{!acc.TMKDA_LMA_Q2__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q2_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Do you have a vulnerability management programme in place that identifies and remediates vulnerabilities in a timely manner?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Do you have a vulnerability management programme in place that identifies and remediates vulnerabilities in a timely manner?" 
+                                                                      value="{!acc.TMKDA_LMA_Q3__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q3_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Have you defined a set standards against which to assess the security posture of your third-party business partners, 
+                                                        and do you assess third parties prior to doing business with them and thereafter on a frequency communsurate with the risk?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Have you defined a set standards against which to assess the security posture of your third-party business partners,<br/> 
+                                                        and do you assess third parties prior to doing business with them and thereafter on a frequency communsurate with the risk?" 
+                                                                      value="{!acc.TMKDA_LMA_Q4__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q4_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Is mulit-factor auhtentication enforced for all connections company resources over the internet?
+                                                        This includes connections to remote workstations and Software-as-a-Service(SaaS) applications.</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Is mulit-factor auhtentication enforced for all connections company resources over the internet?<br/>
+                                                        This includes connections to remote workstations and Software-as-a-Service(SaaS) applications." 
+                                                                      value="{!acc.TMKDA_LMA_Q5__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q5_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Are your systems covered by an up-to-date anti-malware solution?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Are your systems covered by an up-to-date anti-malware solution?" 
+                                                                      value="{!acc.TMKDA_LMA_Q6__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q6_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">If you are handling company data(e.g.,email) on mobile devices, do you have technical measures to control it?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="If you are handling company data(e.g.,email) on mobile devices, do you have technical measures to control it?" 
+                                                                      value="{!acc.TMKDA_LMA_Q7__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q7_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+								     <td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Do you restrict the use of administrator privileges to IT specialists?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Do you restrict the use of administrator privileges to IT specialists?" 
+                                                                      value="{!acc.TMKDA_LMA_Q8__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q8_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Is all Sensitive and Confidential information (e.g., PII, PHI, commercially sensitive) in scope encrypted at rest and in transit using best practice methodologies?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Is all Sensitive and Confidential information (e.g., PII, PHI, commercially sensitive) in scope encrypted at rest and in transit using best practice methodologies?" 
+                                                                      value="{!acc.TMKDA_LMA_Q9__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q9_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Does the organisation provide staff with on-going training and awareness on information and information security, including how to prevent social engineering, phishing, and ransomware?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Does the organisation provide staff with on-going training and awareness on information and information security, including how to prevent social engineering, phishing, and ransomware?" 
+                                                                      value="{!acc.TMKDA_LMA_Q10__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q10_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Does your organisation implement monitoring of all your systems in scope for the purpose of detection and prevention?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Does your organisation implement monitoring of all your systems in scope for the purpose of detection and prevention?" 
+                                                                      value="{!acc.TMKDA_LMA_Q11__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q11_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Does your organisation have a documented incident management process, which is practiced or reviewed at least annually?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Does your organisation have a documented incident management process, which is practiced or reviewed at least annually?" 
+                                                                      value="{!acc.TMKDA_LMA_Q12__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q12_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Does the organisation have cybersecurity insurance or cyber liability insurance?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Does the organisation have cybersecurity insurance or cyber liability insurance?" 
+                                                                      value="{!acc.TMKDA_LMA_Q13__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q13_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Can you confirm your organisation has not had a data breach in the past 3 years? A data breach is a security violation, in which sensitive, protected or confidential data is copied, transmitted, viewed, stolen or used by an individual unauthorised to do so.</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Can you confirm your organisation has not had a data breach in the past 3 years? A data breach is a security violation, in which sensitive, protected or confidential data is copied, transmitted, viewed, stolen or used by an individual unauthorised to do so." 
+                                                                      value="{!acc.TMKDA_LMA_Q14__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q14_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Is there someone responsible for Security in your organisation?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Do you have a business continuity plan in place that is reviewed and tested at least annually?" 
+                                                                      value="{!acc.TMKDA_LMA_Q15__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q15_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Do you have a disaster recovery plan, including backups, that allow you to recover in line with your business continuity plans that is reviewed and tested at least annually?</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Do you have a disaster recovery plan, including backups, that allow you to recover in line with your business continuity plans that is reviewed and tested at least annually?" 
+                                                                      value="{!acc.TMKDA_LMA_Q16__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q16_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                     <tr>
+										<td style="text-align: left; border: 1px solid black;padding-left:1%;">
+                                                <apex:outputPanel >
+                                                    <label style="font-size:16px">Do you have any recognised information security certifications or audit reports? (e.g., ISO27001, Cyber Essentials, SOC II)</label>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">   
+                                                <apex:outputPanel >
+                                                    <apex:selectRadio label="Do you have any recognised information security certifications or audit reports? (e.g., ISO27001, Cyber Essentials, SOC II)" 
+                                                                      value="{!acc.TMKDA_LMA_Q17__c}" required="true" >
+                                                        <apex:selectOptions value="{!yesNoOptions}" />
+                                                    </apex:selectRadio>
+                                                </apex:outputPanel>
+                                            </td>
+                                            <td style="border: 1px solid black; width: 150px;">
+                                                <apex:inputTextarea value="{!acc.TMKDA_LMA_Q17_Comments__c}" rows="2" cols="100"/>
+                                            </td>
+                                        </tr>
+                                </apex:repeat>
+                            </table>
+                        </div>  
+                        
+                       <!--Signoff Section -->
+                        <div class="accordion">
+                            <b>Signoff</b>
+                        </div>
+                        <div class="panel">
+                             <table class="full-width-table" style="border:1px solid black;width=100%">
+                              <apex:repeat value="{!ddAttestationScoping}" var="acc">
+                                  <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                                 <label style="font-size:16px">Name : 
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black;">
+                                      <apex:outputPanel >
+                                                 <label style="font-size:16px">
+                                          <apex:inputText label="Name" value="{!acc.TMKDA_Name__c}" style="text-align: left; width: 100%;" />
+                                          </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                                 <label style="font-size:16px">Position : 
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black;">
+                                          <apex:outputPanel >
+                                                 <label style="font-size:16px">
+                                          <apex:inputText label="Position" value="{!ddAttestationScoping.TMKDA_Position__c}" style="text-align: left; width: 100%;" />
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                                 <label style="font-size:16px"> Date : 
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:inputField label="Date" value="{!ddAttestationScoping.TMKDA_Date__c}"
+                                                           id="dateField" styleClass="dateField"
+                                                           ignoreEditPermissionForRendering="true"/>
+                                          <apex:outputPanel layout="none">
+                                              <script>
+                                              var today = new Date();
+                                              var day = today.getDate().toString().padStart(2, '0');
+                                              var month = (today.getMonth() + 1).toString().padStart(2, '0');
+                                              var year = today.getFullYear();
+                                              var formattedDate =  day + '/' + month + '/' + year ;
+                                              document.getElementById('{!$Component.dateField}').value = formattedDate;
+                                              </script>
+                                          </apex:outputPanel>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td style="width: 50%; text-align: left; border: 1px solid black; padding-left: 1%;">
+                                          <apex:outputPanel >
+                                                 <label style="font-size:16px">Comments : 
+                                              </label>
+                                          </apex:outputPanel>
+                                      </td>
+                                      <td style="border: 1px solid black; width: 150px;">
+                                         <apex:inputTextarea label="Comments" value="{!ddAttestationScoping.TMKDA_Signoff_Comments__c}" rows="2" cols="150"/>
+                                      </td>
+                                  </tr>
+                                 </apex:repeat>
+                            </table>
+                            </div>
+                      
+                         <!--   File Upload Section -->
+                        <div class="accordion">
+                            <b>File Upload</b>
+                        </div> 
+                        <div class="panel">
+                            <table class="full-width-table" style="border: 1px solid black; width: 100%;">
+                                <tr>
+                                    <td style="width: 50%; text-align: right; border: 1px solid black; padding-right: 1%;">
+                                        <b>Title: </b>
+                                    </td>
+                                    <td style="width: 50%; text-align: left; border: 1px solid black;">
+                                        <apex:inputText value="{!title}"/>
+                                        <!--<input type="text" value="{!title}" style="width: 100%;" />-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%; text-align: right; border: 1px solid black; padding-right: 1%;">
+                                        <b>Attach File: </b>
+                                    </td>
+                                    <td style="width: 50%; text-align: left; border: 1px solid black;">
+                                        <outputPanel>
+                                            <apex:inputFile value="{!file}" fileName="{!fileName}" /> 
+                                        </outputPanel>
+                                    <!--    <input type="file" value="{!file}" name="{!fileName}" />-->
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                             <div class="slds-m-top_medium" align="Center">
+                                            <apex:commandbutton style="font-size: 18px; margin-bottom: 20px; background-color:#DAA520;color:white;" 
+                                                                                                     action="{!upload}" value="Upload" status="status" rendered="false" />
+                        </div>
+                        </div> 
+                    <br/> 
+                      
+                        
+                <!--   <apex:pageBlock > <div style="width:100%; text-align:left;" align="Left">
+                                    <apex:pageBlockSection title="Documents" columns="2" >
+                                        
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputLabel >Title</apex:outputLabel>
+                                            <apex:inputText value="{!title}"/>
+                                        </apex:pageBlockSectionItem>
+                                        <apex:pageBlockSectionItem >
+                                            <apex:outputLabel >File Upload</apex:outputLabel>
+                                            <apex:inputFile value="{!file}" fileName="{!fileName}" /> 
+                                        </apex:pageBlockSectionItem> 
+                            </apex:pageBlockSection>
+                        </div> </apex:pageBlock> -->
+                    </div>
+                </div>
+            </apex:form> 
+        </body>
+    </html>
+</apex:page>

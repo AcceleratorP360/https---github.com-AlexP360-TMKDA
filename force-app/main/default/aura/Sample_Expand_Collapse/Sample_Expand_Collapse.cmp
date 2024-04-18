@@ -1,0 +1,51 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	
+    
+    <div class="slds slds-p-horizontal--medium" style="font-size:11px;">        
+        <div class="slds-scrollable--x"> 
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-no-row-hover episodicTbl" style="border:1px #ddd solid;">
+                <thead style="font-size:11px;">
+                    <tr>
+                        <th><div style="width:20px;"><span class="slds-m-right--x-small listRow" id="listRow" onclick="{!c.moreDataInfo}"><lightning:icon iconName="utility:add" variant="inverse" size="xx-small" class="addIcon" style="cursor:pointer;"/> <lightning:icon iconName="utility:dash" variant="inverse" size="xx-small" class="dashIcon" style="cursor:pointer;"/></span></div></th>
+                        <th style="width:15%;">Student Name</th>
+                        <th style="width:15%;">Father Name</th>
+                        <th style="width:15%;">Phone</th>    
+                        <th style="width:15%;">Email</th>
+                        <th style="width:40%;">Address</th>   
+                        <th><div style="width:100px;"></div></th>
+                    </tr>
+                </thead>
+                <tbody id="loadDataInfo" class="loadDataInfo">                    
+                    <tr class="rowDetail" id="reportCardRow0">  
+        <td>
+            <span class="slds-m-right--x-small listRow" name="reportCardRow0" aura:id="spanIcon" onclick="{!c.detailInfo}"><lightning:icon iconName="utility:add" class="addIcon"  size="xx-small" style="cursor:pointer;" /> <lightning:icon iconName="utility:dash" size="xx-small" class="dashIcon" style="cursor:pointer;"/></span>
+        </td>
+        <td>            
+            <div class="rowSplit">
+                <div class="rowCol"><ui:inputText class="slds-input" value="" /></div>
+            </div>
+        </td>
+        <td>
+            <div class="rowCol"><ui:inputPhone class="slds-input" value="" /></div>
+        </td>
+        <td>
+            <div class="rowCol"><ui:inputEmail class="slds-input" value=""/> </div>
+        </td>
+        <td>
+            <div class="rowCol"><ui:inputText class="slds-input" value=""/></div>
+        </td>
+ 
+        <td><ui:inputTextArea class="slds-textarea textArea" aura:id="title" value="" rows="1"/></td>
+        <td>
+            <div class="actBtnOver">   
+ 			<h1>TESTSTSTS</h1>
+            </div>            
+        </td>  
+    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+        
+</aura:component>

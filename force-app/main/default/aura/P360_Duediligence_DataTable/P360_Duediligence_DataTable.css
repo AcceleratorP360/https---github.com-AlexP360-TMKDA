@@ -1,0 +1,15 @@
+.THIS .box{
+    height: 25px;
+    width: 25px;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 0.25rem;
+    /*
+    /*added to test for align column text in line  by vardhani on 20-02-2024
+    margin-left: 0px; /*changes made 10Px to 0 Px
+    padding: 0px;	
+    border-spacing: 0px; 
+    
+    */
+  
+}

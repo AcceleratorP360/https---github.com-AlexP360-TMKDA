@@ -1,0 +1,57 @@
+<template>
+    <lightning-formatted-rich-text value={value}></lightning-formatted-rich-text>
+
+    <!-- create folder card -->
+  
+    <lightning-card>
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-folder" title="Category Records">
+            <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#Category Records"></use>
+              </svg>
+              <span class="slds-assistive-text">Category Records</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                            <span>Category Records</span>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning-button variant="brand" label="Create New Record" onclick={actionToCreateAccountNav}></lightning-button>
+                </div>
+            </header>
+        </div>
+        <!-- loader -->
+        <div if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading..." variant="brand"></lightning-spinner>
+        </div>
+        <!-----/loader-------->
+        <div class=".newspaper">
+            <template if:true={data}>
+                <c-l-w-c-custom-datatable-type
+                    key-field="Id"
+                    data={data}
+                    columns={columns}
+                    class="datatable-full-size"
+                    onvalueselect={handleSelection}
+                    draft-values={draftValues}
+                    show-row-number-column="false"
+                    onrendercallback={handleImageRender}
+                    oncellchange={handleCellChange}
+                    onrowaction={handleRowAction}
+                    wrap-text-max-lines="3"
+                    onsave={handleSave}
+                    oncancel={handleCancel}
+                    style="max-height: 400px; overflow-y: scroll;"
+                    wrap-text
+                    width="50"
+                    hide-checkbox-column
+                >
+                </c-l-w-c-custom-datatable-type>
+            </template>
+        </div>
+    </lightning-card>
+</template>

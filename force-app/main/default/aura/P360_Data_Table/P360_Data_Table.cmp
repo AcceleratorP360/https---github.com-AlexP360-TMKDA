@@ -1,0 +1,310 @@
+<aura:component implements="force:hasSObjectName,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:appHostable" 
+                access="global" controller="P360_Review_Area_Table_Controller" >
+    
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+    <aura:attribute name="recordId" type="String" />
+   <!-- <aura:attribute name="recordCount" type="Integer" default = "200"/>   commented default = "11" is changed to display 200 records by vardhani 29/02/2024-->
+    <aura:attribute name="recordCount" type="Integer"/>
+    <aura:attribute name="wrapperObject" type="Object[]" />
+    <aura:attribute name="reviewAreaCount" type="String" />
+    <aura:attribute name="rCount" type="String" />
+    
+
+    <aura:attribute name="editAll" type="Boolean" default="false"/>  <!-- added default by VA 11/03 -->
+    <aura:attribute name="showViewAll" type="Boolean"/>
+
+    <lightning:navigation aura:id="navService"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+  <!--  <aura:handler event="force:refreshView" action="{!c.doInit}" />  added by VA to refresh view All 07/03/2024 -->
+  
+    
+    <aura:handler name="P360_dataTableSaveEvent" event="c:P360_dataTableSaveEvent" action="{!c.saveTableRecords}"/>
+    <!-- <lightning:navigation aura:id="navService"/>  added by VA 08/03/2024  -->
+
+    <aura:registerEvent name="P360_EditAll_ButtonClicked" type="c:P360_EditAll_ButtonClicked"/>
+  <!--<aura:handler event="aura:locationChange" action="{!c.handleLocationChange}" />     added by VA 11/03/2024  not worked-->
+
+    
+    <aura:attribute name="isViewAll" type="Boolean" default="false"/>
+    <aura:attribute name="isFromCategory" type="Boolean" default="false"/>
+    <aura:attribute name="dueDeligence" type="String" default="Due Diligence"/>
+    <aura:attribute name="category" type="String" default="Category"/>
+    <aura:attribute name="parentRecName" type="String" default=""/>
+    
+    <!-- Amitabh: 27/02 ** Added for Links on CARD  -->
+    <aura:attribute name="parentDDId" type="String" default=""/>
+    <aura:attribute name="parentCatName" type="String" default=""/>	
+    <aura:attribute name="parentCatId" type="String" default=""/>
+    <!-- Amitabh: 27/02 ** Ends here -->
+    
+    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="storeObjectName" type="String" />
+    <aura:attribute name="duedeligenceObj" type="String" default="P360_Due_Diligence__c" />
+    <aura:attribute name="catObj" type="String" default="P360_DD_Category__c" />
+    <aura:attribute name="rAreaCatNames" type="String[]" />
+    <aura:attribute name="selectedCat" type="String" />
+    <aura:attribute name="showFilter" type="Boolean" />
+
+    <!-- Commented by AMITABH on 27/02    
+    <aura:if isTrue="{!!v.recordId}">
+        <div class="slds-p-around_xxx-small">
+            <div class="slds-box slds-box_x-small slds-theme_shade">
+                <div>                    
+
+                    <aura:if isTrue="{!v.storeObjectName == v.duedeligenceObj}">
+                        <table style="border:0px; ">                         
+                            <tr>
+                                <td style="width:2%;padding:0px;"><lightning:icon iconName="custom:custom31" size="medium"/></td>
+                               
+                                <td style="width:98%;text-align:left;padding:0px;">&nbsp;&nbsp;&nbsp;{!v.dueDeligence} <br/>
+                                    <span style="font-size:16px; font-weight:bold">&nbsp;&nbsp;{!v.parentRecName}</span></td>
+                            </tr>
+                        </table>
+                    </aura:if>
+                    
+                    <aura:if isTrue="{!v.storeObjectName == v.catObj}">
+                        <table style="border:0px; ">
+                            <tr>
+                            	<td style="width:2%;padding:0px;"><lightning:icon iconName="custom:custom31" size="medium"/></td>
+                                <td style="width:98%;text-align:left;">&nbsp;&nbsp;&nbsp;{!v.category} <br/>
+                                    <span style="text-align:left;font-size:16px; font-weight:bold">&nbsp;&nbsp;{!v.parentRecName}</span></td>
+                            </tr>
+                        </table>
+                    </aura:if>
+                </div>
+            </div>
+       </div>
+    </aura:if>
+	-->
+    
+    <lightning:card title="">   
+        
+        
+        <aura:if isTrue="{!v.data.length > 0}">
+            
+            <div class="slds-box slds-box_x-small slds-theme_shade">
+                <div>
+                    <!--
+                      <div class="slds-float_right">
+                        <div class="slds-p-right_xx-small">	  slds-p-right_x-small 
+                         
+                                   <div class="slds-align_absolute-center">                                     
+                                    <lightning:button class="slds-m-right_xx-small" label="New"  onclick="{!c.createReviewArea}" /> 
+                                      
+                                 </div>
+                              </div>
+                         </div> 
+                  -->
+                    <!-- Not required commented by VA 28/03/24 -->
+                    <!-- Added by AR 27/02 
+                    <aura:if isTrue="{!v.storeObjectName == v.duedeligenceObj}">
+    	                <span><a href="/lightning/o/P360_Due_Diligence__c/home">Due Diligence</a></span>&nbsp;>
+        	            <span><a href="{!v.parentDDId}">{!v.parentRecName}</a></span><br/>
+                    </aura:if>        
+
+                    <aura:if isTrue="{!v.storeObjectName == v.catObj}">
+    	                <span><a href="/lightning/o/P360_Due_Diligence__c/home">Due Diligence</a></span>&nbsp;>
+        	            <span><a href="{!v.parentDDId}">{!v.parentRecName}</a></span>&nbsp;>
+                        <span><a href="{!v.parentCatId}">{!v.parentCatName}</a></span>
+                        <br/>
+                    </aura:if> 
+                    -->
+                    
+                    <br></br>
+                    
+                    <!-- ends here -->
+                    
+                    <aura:if isTrue="{!v.showFilter}">
+	                    <div class="slds-float_right">
+    	                    <div class="slds-p-right_x-small">
+        	                    <div class="">
+                                    <div class="slds-align_absolute-center">
+                                        <aura:if isTrue="{!!v.recordId}">
+                							<aura:if isTrue="{!v.storeObjectName == v.duedeligenceObj}">
+                                        	<!-- <div class="slds-float_right"> -->
+                                        		<div class="slds-p-right_x-small">
+                                            		<lightning:select aura:id="" value="{!v.selectedCat}" onchange="{!c.handleCatChange}" 
+                                                                  name="" label="Please Select Category" required="" class="">
+	                                                	<option value="">--None--</option>
+	    	
+	                                                    <aura:iteration items="{!v.rAreaCatNames}" var="ind" indexVar="key">
+    	                                                	<option text="{!ind.value}" value="{!ind.value}" selected="{!ind.key==ind.value}" />
+	    	                                            </aura:iteration>
+    	    	                                    </lightning:select>
+        	    	                            </div>
+	                	                    </aura:if>
+    	                	            </aura:if>
+        	                	    </div>
+                                </div>
+                        	</div>
+                    	</div>
+                   	</aura:if>
+                    
+                   
+                    
+           <!--         <span><lightning:icon iconName="custom:custom47" size="small"/></span>&nbsp;&nbsp; <strong>{!v.reviewAreaCount}</strong>  -->
+           
+                    <aura:if isTrue="{!!v.recordId}">
+                    <!-- Added by AR 27/02 -->
+                        <!-- Commented by VA 01/03/2024
+	                    <aura:if isTrue="{!v.storeObjectName == v.duedeligenceObj}">
+                            <span style="padding:0px 0px 0px 35px;"><a href="/lightning/o/P360_Due_Diligence__c/home">Due Diligence</a></span>&nbsp;>
+        		            <span><a href="{!v.parentDDId}">{!v.parentRecName}</a></span><br/>
+            	        </aura:if>        
+
+                	    <aura:if isTrue="{!v.storeObjectName == v.catObj}">
+    	            	    <span><a href="/lightning/o/P360_Due_Diligence__c/home">Due Diligence</a></span>&nbsp;>
+        	            	<span><a href="{!v.parentDDId}">{!v.parentRecName}</a></span>&nbsp;>
+	                        <span><a href="{!v.parentCatId}">{!v.parentCatName}</a></span>
+    	                    <br/>
+        	            </aura:if>   
+                 --> 
+                        
+            	        <span><lightning:icon iconName="custom:custom47" size="small"/></span>&nbsp;&nbsp; <strong>{!v.reviewAreaCount}</strong>
+                        
+                	    <aura:set attribute="else">
+                    		<span><lightning:icon iconName="custom:custom47" size="small"/></span>&nbsp;&nbsp; <strong>{!v.reviewAreaCount}</strong>
+                            
+                 <!--	<span slot="footer" class="slds-align_absolute-center" style="text-align:center; padding: 0px 0px 0px 4px;">
+							<a href="/lightning/n/Review_Area">View All</a></span>   -->
+                            
+    					</aura:set>
+                    <!-- ends here -->
+                        
+                   <!--
+                        
+                        <div class="slds-float_right">
+        	                <div class="slds-p-right_xx-small">
+            	               
+                	                <div class="slds-align_absolute-center">
+                                		<lightning:buttonIcon iconName="utility:filterList"  variant="border-filled" onclick="{! c.handleFilter }" />
+                                	</div>
+                                   
+                            	
+                        	</div>
+                          </div>
+                    	
+                        <! added by VA to show when click viewAll  01/03/2024
+                        <div class="slds-float_right">
+                            <div class="slds-p-right_xx-small">		                        
+                                     <div class="slds-align_absolute-center">
+                                        <lightning:buttonIcon iconName="utility:edit"  variant="border-filled" onclick="{! c.handleEditAll }" />                                    
+                	                 </div>
+                                 
+                           </div> 
+                     </div> 
+                        -->
+                    </aura:if>
+                    <!--  commented by VA to hide edit button andto  show when click viewAll  01/03/2024
+                    <div class="slds-float_right">
+                        <div class="slds-p-right_small">
+		                    <div class="box">
+        	                    <div class="slds-align_absolute-center">
+                                   <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{! c.handleEditAll }" /> 
+                                    
+                	             </div>
+                            </div>    
+                        </div>
+                    </div>
+               -->
+    
+                    
+                    <div class="slds-float_right">
+                        <div class="slds-p-right_xx-small">	<!--  slds-p-right_x-small -->
+                            
+                                <div class="slds-align_absolute-center">
+                                     
+                                     <div class="slds-align_absolute-center">                                     
+                                    <lightning:button class="slds-m-right_xx-small" label="Add"  onclick="{!c.createReviewArea}" /> 
+                                      
+                                 </div>
+                                    <div class="slds-align_absolute-center">  
+                                    <lightning:buttonIcon iconName="utility:refresh" class="slds-m-right_xx-small" variant="border-filled" onclick="{! c.handleRefresh }" />
+                                    </div>
+                                    
+        	                   		                        
+                                     <div class="slds-align_absolute-center">
+                                        <lightning:buttonIcon iconName="utility:edit"  class="slds-m-right_xx-small" variant="border-filled" onclick="{! c.handleEditAll }" />                                    
+                	                 </div>
+                                 
+                           
+                              
+                                   
+                                    
+                              
+                            </div>
+                        </div>
+                   </div>
+                        
+                 
+                    
+                   
+                  
+                </div>
+               
+                
+                
+                <div class="slds-p-around_xxx-small">
+                    <span style="font-size:12px;">{!v.rCount}</span>
+                </div>
+                
+                 
+            </div>
+            <!-- not required commented by VA 28/03/2024
+             added to have veiw all on header by vardhani 26/02/2024
+            <aura:if isTrue="{!v.data.length > 0}">
+            	<aura:if isTrue="{!v.showViewAll}">
+                	<c:navigateToReviewArea ></c:navigateToReviewArea>
+                </aura:if>
+           	</aura:if>
+           	<! end by vardhani
+           -->
+            
+            
+
+            
+            <!-- <div class="slds-box slds-theme_shade">  commented by VA 28/03/2024-->
+            
+                <div class="slds-border_right slds-border_left" >
+                    
+              	<c:P360_Review_Area_Data_Table aura:id="datatableId" auraId="datatableId" 
+                                               isViewAll="{!v.isViewAll}" columns="{!v.columns}" 
+                                               data="{!v.data}" showRowNumberColumn="true" />
+            </div>
+
+            
+            
+            <aura:set attribute="else">
+                <div class="slds-box slds-box_x-small slds-theme_shade">
+                    <div>
+                        <span><lightning:icon iconName="custom:custom47" size="small"/></span>&nbsp;&nbsp; <strong>{!v.reviewAreaCount}</strong>
+                    </div>
+                    
+                    
+                    
+                </div>
+ <!--                    <p slot="footer" style="text-align:center; padding: 4px;"><a href="/lightning/n/Review_Area">View All</a></p>  -->
+            </aura:set>
+            
+
+        </aura:if>
+        
+       
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner alternativeText="Loading.." variant="brand"/>
+        </aura:if>
+        <!-- Not required commented by VA 28/03/2024
+        <aura:if isTrue="{!v.data.length > 0}">
+            <aura:if isTrue="{!v.showViewAll}">
+                <c:navigateToReviewArea ></c:navigateToReviewArea>
+            </aura:if>
+        </aura:if>
+ --> 
+            
+        
+    </lightning:card>
+</aura:component>

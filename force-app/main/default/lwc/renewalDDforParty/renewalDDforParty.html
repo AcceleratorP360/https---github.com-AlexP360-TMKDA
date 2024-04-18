@@ -1,0 +1,30 @@
+<template>
+    <div class="spinner">
+        <template if:true={isSpinner}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+             Loading...
+        </template>
+    </div>
+    <lightning-quick-action-panel header="Due Diligence for Renewal Party record">
+        <template if:true={data}>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input type="text" label="Renewed Due Diligence Name"  value=" " ></lightning-input>
+                </div>
+                <!--<div class="slds-col">
+
+                    <c-custom-look-up label="Coverholder / TPA Name" selected-icon-name="standard:account"
+                    object-api-name="Account" field-api-name="Name"
+                    onvalueselected={handleValueSelectedOnAccount} name={coverHolder} required onchange={handleCoverHolderChange}></c-custom-look-up>
+                
+                    <lightning-input type="date" label="Due Diligence Valid to" value={expectedEndDate} onchange={handleExpectedEndDate}></lightning-input>
+                </div> -->
+            </div>
+            <div slot="footer">
+                <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+                <lightning-button variant="brand" class="slds-m-left_x-small" label="Renew" type="submit" onclick={handleSubmit}></lightning-button>
+            </div>
+    </template>
+    </lightning-quick-action-panel>
+</template>

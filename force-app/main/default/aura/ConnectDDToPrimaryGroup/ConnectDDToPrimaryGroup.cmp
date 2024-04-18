@@ -1,0 +1,353 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" 
+                access="global" controller="ConnectDDToPrimaryGroup_Controller" >
+    
+    <aura:html tag="style">
+        .slds-modal__container { 	min-width:100vw; height: auto; 	}
+    </aura:html> 
+    
+    <aura:attribute name="primaryDeligenceOptions" type="List" default="[]"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="selectedPrimaryDueDeligence" type="String" />
+    <aura:attribute name="wrapperObject" type="Object[]" />
+    <aura:attribute name="subCatValue" type="String" />
+    <aura:attribute name="reviewAreaValue" type="String" />
+    <aura:attribute name="showHelperText" type="Boolean" default="true"/>
+    <aura:attribute name="primarySelectedId" type="String" />
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:attribute name="tooltip" type="boolean" default="false" />
+    <aura:attribute name="selectedCatId" type="String" />
+    <aura:attribute name="selectedSubCatId" type="String" />
+    <aura:attribute name="selectedReviewAreaId" type="String" />
+    <aura:attribute name="noRecordsFound" type="Boolean" default="false" />
+    <aura:attribute name="subCatReviewDisable" type="Boolean" />
+    <aura:attribute name="reviewDisable" type="String" />
+    <aura:attribute name="isSelectionSelected" type="Boolean" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="options"   	type="List"   
+                    default="[{'label': ' Link ', 'value': 'Link'},  
+                             {'label': ' Copy ', 'value': 'Copy'}, 
+                             {'label': ' Create ', 'value': 'Create'},
+                             {'label': ' NA', 'value': 'NA'}]"/> 
+    
+    <aura:attribute name="selectedCategory" 	type="String" />     
+    <aura:attribute name="selectedSubCategory" 	type="String"  />   
+    <aura:attribute name="selectedReviewArea" 	type="String"  />   
+    
+    <aura:attribute name="isCatModalOpen" 		type="boolean" 	default="false"/>
+    <aura:attribute name="issubCatModalOpen" 	type="boolean" 	default="false"/>
+    <aura:attribute name="isreviewAreaModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isSummaryModalOpen" 	type="boolean" 	default="false"/>
+    <aura:attribute name="isCommentModalOpen" 	type="boolean" 	default="false"/>
+    
+    <lightning:navigation aura:id="navService"/>
+    
+    <aura:attribute name="activeSections" type="List" default="['A','C']" />
+    <aura:attribute name="activeSectionsMessage" type="String" default="" />
+    
+    
+    <aura:attribute name="showHide" type="String" default="Show"/> 
+    <aura:attribute name="showBoxCatId" type="String" />
+    
+    
+    <aura:attribute name="showSubCatSection" type="boolean" default="false"/>
+    <aura:attribute name="showrevireAreaSection" type="boolean" default="false"/>
+    
+    <aura:attribute name="expand_CollapseCatId" type="String" />
+    <aura:attribute name="expand_CollapseSubCatId" type="String" />
+    <aura:attribute name="expandAll" type="boolean" default="false"/>
+    <aura:attribute name="expandedCategories" type="String[]" default=""/>
+    <aura:attribute name="expandedSubCategories" type="String[]" default=""/>
+    <aura:attribute name="expandedCat" type="Boolean" default=""/>
+    
+    <aura:if isTrue="{!! v.noRecordsFound }">
+    <!--    <strong class="slds-align_absolute-center "><span class="scrhdr">Select Primary DD Record to Link to Secondary</span></strong>  --> <!--commented by AMITABH -->
+    <strong class="slds-align_absolute-center "><span class="scrhdr">Connect to Primary Process</span></strong>
+    <strong class="slds-align_absolute-center "><span class="subhdr">(Linking Secondary Connection Type DD record to Primary Connection Type DD)</span></strong>
+    
+    <aura:if isTrue="{! v.showSpinner }">
+        <div>
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="large"/>
+        </div>
+    </aura:if>
+    
+        <div  class="slds-align_absolute-center">
+            <lightning:layoutItem flexibility="auto" class="slds-p-top_small slds-p-bottom_small"  size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="vertical-medium">  
+                <lightning:layout verticalAlign="center" multipleRows="true">
+                    <lightning:layoutItem flexibility="auto" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="horizontal-medium" > 
+                        
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:combobox name="" 
+                                                    label="Select Primary CH's Due Diligence Record" 
+                                                    aura:id="primaryDueDeligence"
+                                                    value="{!v.selectedPrimaryDueDeligence}"
+                                                    placeholder="" 
+                                                    options="{! v.primaryDeligenceOptions }" 
+                                                    onchange="{! c.handleDueDeligenceSelection }"/>
+                            </div>       
+                            <div class="slds-col slds-size_1-of-2">
+                                <aura:if isTrue="{!v.showHelperText}">
+                                    <p class="slds-float_right slds-p-around_x-small"><br/><I>
+                                        (The Latest Approved DD record for the Primary CH is autoselected. You may choose another DD record.)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</I></p>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <br></br>
+                
+                <lightning:layout verticalAlign="center" multipleRows="true" class="slds-align_absolute-center">
+                    <table class="slds-table slds-table_bordered slds-table_col-bordered slds-border_right slds-border_left" style="width:100%">
+                        <thead class ="border">
+                            <tr style="background: aliceblue;">
+                                <th style="width:5%; background: aliceblue; text-align: center;">
+                                    <div style="cursor: pointer;" onclick="{!c.expandAllCollapseAll}" >
+                                        <section class="slds-clearfix">
+                                            <div class="slds-float--center ">
+                                                <aura:if isTrue="{!!v.expandAll}"> 
+                                                    <lightning:icon iconName="utility:expand_all" size="small" alternativeText="Indicates add"/>   <!-- utility:all   -->
+                                                </aura:if>
+                                                <aura:if isTrue="{!v.expandAll}">
+                                                    <lightning:icon iconName="utility:collapse_all" size="small" alternativeText="Indicates add"/>		 <!-- utility:dash  -->
+                                                </aura:if>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </th>
+                                <th style="max-width:27%;  background: aliceblue;">Section</th>
+                                <th style="width:18%; background: aliceblue;">Selection</th> 
+                                <th style="width:5%; background: aliceblue;">Severity</th>
+                                 <!--<th style="width:5%; background: aliceblue;">Material</th> -->
+                                <th style="width:10%; background: aliceblue;">Assessment</th>
+                                <th style="width:25%; background: aliceblue;">Summary / Comment </th>
+                                <th style="width:10%; background: aliceblue;">Answer</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <aura:iteration items="{!v.wrapperObject}" var="wrp" indexVar="catIndex">
+                                <tr  class ="border" style="background: #dddbda;">
+                                    <td style="white-space: inherit; text-align: center;"> 
+                                        <div style="cursor: pointer;" 		onclick="{!c.sectionOne}" 		data-index="{!catIndex}"
+                                             data-recId="{!wrp.cat.Id}"		value="{!wrp.cat.Id}">
+                                            <section class="slds-clearfix">
+                                                <div class="slds-float--center " data-recId="{!wrp.cat.Id}">
+                                                    <aura:if isTrue="{!!wrp.cat.Expand_Category__c}">
+                                                        <lightning:icon  aura:id="{!wrp.cat.Id}" iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!wrp.cat.Expand_Category__c}">
+                                                        <lightning:icon  aura:id="{!wrp.cat.Id}" iconName="utility:dash" size="x-small" alternativeText="Indicates add"/>
+                                                    </aura:if>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </td>
+                                    <!--     <td style="white-space: inherit;width: 15%;">   -->
+                                    <td style="white-space:inherit; font-weight:bold;">
+                                        {!wrp.cat.Name}			<!-- Added by Amitabh 12/12/2023 -->
+                                        
+                                        <!-- This *aura* block shows CATEGORY related data and MOUSE OVER event
+                                    <a  href="" 			onclick="{!c.handleOpenDetailPage}" 	data-recId="{!wrp.cat.Id}" 	data-index="{!catIndex}"
+                                        target="_blank" 	onmouseover="{!c.catShowToolTip}" 		onmouseout="{!c.catHideToolTip}"  text-decoration="none" 
+                                        tabindex="-1">{!wrp.cat.Name}
+                                        
+                                     
+                                     <aura:if  isTrue="{!AND(v.isCatModalOpen, wrp.cat.Id==v.selectedCatId)}"> 
+                                            <div class="slds-box"> 
+                                                <lightning:recordViewForm recordId="{!v.selectedCatId}" objectApiName="P360_DD_Category__c">
+                                              <div class="slds-grid">
+                       <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="P360_Completion_Marker__c" /></div>
+                       <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="Sub_category_Completion_status__c" /></div>
+                   </div>
+                                                </lightning:recordViewForm> 
+                                            </div>    
+                                        </aura:if> 
+                                    </a>  -->
+                                    </td>
+                                    
+                                    <td style="white-space: inherit;text-align: left;">  <!--  width: 20%; -->
+                                        <lightning:radioGroup label="" 
+                                                              name="{!wrp.cat.Id}"
+                                                              id="{!wrp.cat.Id}"
+                                                              options="{!v.options }"  
+                                                              value="{!wrp.cat.Connect_Copy_Options__c }"  
+                                                              type="radio"  
+                                                              aura:id = "{!wrp.cat.Id}"
+                                                              onchange="{!c.handleCategoryChange}"
+                                                              style="display:inline-block !important"/>			<!-- variant="label-inline"  * removed by Amitabh -->
+                                    </td>
+                                    <td>&nbsp;</td>
+                                   <!-- <td>&nbsp;</td>-->
+                                    <td>&nbsp;</td>
+                                    
+                                    <td><div class="showmore"  style="width: 350px">{!wrp.cat.P360_Summary_Final_Assessment__c}</div></td>
+                                    
+                                    <!-- This *aura* block shows CATEGORY SUMMARY PREVIEW on MOUSE CLICK event
+                                   <td style="white-space: inherit;">
+                                    <a href="" 		onclick="{!c.summaryShowToolTip}"		data-recId="{!wrp.cat.Id}" 		data-index="{!catIndex}"
+                                           target="_blank"							tabindex="-1">View
+                                        
+                                     <aura:if  isTrue="{!AND(v.isSummaryModalOpen, wrp.cat.Id==v.selectedCatId)}"> 
+                                            <div class="slds-box"> 
+                                                <lightning:recordViewForm recordId="{!v.selectedCatId}" objectApiName="P360_DD_Category__c">
+                                              <div class="slds-grid">
+                       <div class="slds-col slds-size_1-of-1"><lightning:outputField fieldName="P360_Summary_Final_Assessment__c"  variant="label-hidden" /></div>
+                   </div>
+                                                </lightning:recordViewForm> 
+                                            </div>    
+                                        </aura:if> 
+                                        <aura:if  isTrue="{!AND(v.isSummaryModalOpen, wrp.cat.Id==v.selectedCatId)}"> 
+                                            <div class="slds-box"> 
+                                                <lightning:recordViewForm recordId="{!v.selectedCatId}" objectApiName="P360_DD_Category__c">
+                                                    <lightning:outputField fieldName="P360_Summary_Final_Assessment__c" variant="label-hidden"/>
+                                                </lightning:recordViewForm> 
+                                            </div>    
+                                        </aura:if>
+                                    </a>
+                                </td>             -->
+                                    
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <aura:if isTrue="{!wrp.cat.Expand_Category__c}">
+                                    <aura:iteration items="{!wrp.subCatList }" var="subCat" indexVar="subCatIndex">
+                                        <tr class="border" style="background: #ecebea;">
+                                            <td style="white-space: inherit; text-align: right;"> <!-- width: 5%;  -->
+                                                <div style="cursor: pointer;" 	onclick="{!c.sectionTwo}" 		data-index="{!subCatIndex}"	
+                                                     data-recId ="{!subCat.Id}"		value="{!subCat.Id}">
+                                                    <section class="slds-clearfix">
+                                                        <div class="slds-float--right ">
+                                                            <aura:if isTrue="{!!subCat.Expand_Sub_Catgeory__c}">
+                                                                <lightning:icon  aura:id="{!wrp.cat.Id}" iconName="utility:add" size="xx-small" alternativeText="Indicates add"/>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!subCat.Expand_Sub_Catgeory__c}">
+                                                                <lightning:icon  aura:id="{!wrp.cat.Id}" iconName="utility:dash" size="xx-small" alternativeText="Indicates add"/>
+                                                            </aura:if>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </td>
+                                            <td style="white-space: inherit; padding-left: 25px">   <!-- width: 15%;  -->
+                                                <aura:if isTrue="{!(subCat.P360_Category_Name__c == wrp.cat.Id)}">
+                                                    {!subCat.Name}
+                                                    
+                                                    
+                                                    <!-- This *aura* block shows SUB-CATEGORY related data on MOUSE OVER event 
+                                                <a class="slds-p-left_medium slds-p-left_medium" href="" onclick="{!c.handleOpenDetailPage}"
+                                                   data-recId="{!subCat.Id}"
+                                                   target="_blank" onmouseover="{!c.subCatShowToolTip}" onmouseout="{!c.subCatHideToolTip}" 
+                                                   tabindex="-1">{!subCat.Name}
+                                        
+                                        
+                                        <aura:if  isTrue="{!AND(v.issubCatModalOpen, subCat.Id==v.selectedSubCatId)}"> 
+                                               <div class="slds-box"> 
+                                                   <lightning:recordViewForm recordId="{!v.selectedSubCatId}" objectApiName="P360_DD_Sub_Category__c">
+                                                 <div class="slds-grid">
+                          <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="P360_Completion_Marker__c" /></div>
+                          <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="P360_DD_Child_COmpletion_Status__c" /></div>
+                      </div>
+                                                   </lightning:recordViewForm> 
+                                               </div>    
+                                           </aura:if>  -->
+                                                    <!--           <aura:if  isTrue="{!AND(v.issubCatModalOpen, subCat.Id==v.selectedSubCatId)}"> 
+                                                        <div class="slds-box"> 
+                                                            <lightning:recordViewForm recordId="{!v.selectedSubCatId}" objectApiName="P360_DD_Sub_Category__c">
+                                                                <lightning:outputField fieldName="P360_Completion_Marker__c" />
+                                                                <lightning:outputField fieldName="P360_DD_Child_COmpletion_Status__c" />
+                                                            </lightning:recordViewForm> </div>   
+                                                    </aura:if>  
+                                                </a>  -->
+                                                </aura:if>
+                                            </td>
+                                            <td style="white-space: inherit;">
+                                                <lightning:radioGroup label=""  		         	id="{subCat.Id}"						name="{!subCat.Id}"
+                                                                      options="{!v.options }"  		value="{!subCat.P360_Connect_Copy_Options__c }"  
+                                                                      type="radio" 					disabled = "{!subCat.P360_Is_Connection_Enable__c}"
+                                                                      aura:id = "{!wrp.cat.Id}"		onchange="{!c.handlesubCategoryChange}"
+                                                                      style="display:inline-block !important"/>
+                                            </td>
+                                            <td colspan="5">&nbsp;</td>
+                                        </tr>
+                                        
+                                        <!-- 	This block displays **REVIEW AREA records** when the **SUB-CATEGORY** record is expanded 	-->
+                                        <aura:if isTrue="{!subCat.Expand_Sub_Catgeory__c}">
+                                            <aura:iteration items="{!wrp.reviewAreaList }" var="rArea" indexVar="rAreaIndex">
+                                                <tr>				<!--  style="font-size: 12px;" -->
+                                                    <aura:if isTrue="{!(rArea.P360_DD_Sub_Category__c == subCat.Id)}">
+                                                        <td style="white-space: inherit;"></td>
+                                                        <!--        <td style="white-space: pre-wrap; padding-left: 50px;">{!rArea.P360_Review_Point__c}</td>
+                                         
+                                          This *aura* block shows REVIEW AREA related data and MOUSE OVER event
+                                                     <td>   <a class="slds-p-left_large slds-cell-wrap slds-line-clamp" 		
+                                                               href="" 					onclick="{!c.handleOpenDetailPage}"					
+                                                               data-recId="{!rArea.Id}"						target="_blank" 									
+                                                               onmouseover="{!c.reviewAreaShowToolTip}" 		onmouseout="{!c.reviewAreaHideToolTip}" 			
+                                                               tabindex="-1">{!rArea.P360_Review_Point__c}
+
+                                          <aura:if  isTrue="{!AND(v.isreviewAreaModalOpen, rArea.Id==v.selectedReviewAreaId)}"> 
+                                                 <div class="slds-box"> 
+                                                     <lightning:recordViewForm recordId="{!v.selectedReviewAreaId}" objectApiName="P360_Review_Area__c">
+                                                   <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="P360_Assessment__c" /></div>
+                            <div class="slds-col slds-size_1-of-2"><lightning:outputField fieldName="P360_Completion_Marker__c" /></div>
+                        </div>
+                                                     </lightning:recordViewForm> 
+                                                 </div>    
+                                             </aura:if> 
+                                                        </a> 
+                                                    </td>    ** AMITABH on WORD TRUNCATION --> 
+                                                        <td><div class="showmore" style="padding-left: 50px; width: 400px">{!rArea.P360_Review_Point__c}</div></td>	  
+                                                        <td style="white-space: inherit;">
+                                                            <lightning:radioGroup label="" 						name="{!rArea.Id}"				id="{rArea.Id}"
+                                                                                  options="{!v.options }"  		value="{!rArea.Connect_Copy_Options__c }"  
+                                                                                  type="radio"  				disabled ="{!rArea.P360_Is_Connection_Enable__c}"
+                                                                                  aura:id="{!wrp.cat.Id}"		style="display:inline-block !important"/>		<!-- variant="label-inline"    -->
+                                                        </td>
+                                                        <td>{!rArea.TMKDA_Severity__c}</td>
+                                                      <!-- <td>{!rArea.P360_Scope_of_DD_Review__c}</td>  -->
+                                                        <td>{!rArea.P360_Pass_Fail__c}</td>
+                                                        <!--            <td style="white-space:inherit;" >	
+                                                        <a href="" 		onclick="{!c.commentShowToolTip}"	text-decoration="none"
+                                                               data-recId="{!rArea.Id}" 			data-index="{!rAreaIndex}"
+                                                               target="_blank"						tabindex="-1">View
+                                                            <aura:if  isTrue="{!AND(v.isCommentModalOpen, rArea.Id==v.selectedReviewAreaId)}"> 
+                                                                <div class="slds-box"> 
+                                                                    <lightning:recordViewForm recordId="{!v.selectedReviewAreaId}" objectApiName="P360_Review_Area__c">
+                                                                        <lightning:outputField fieldName="P360_Comment__c" variant="label-hidden"/>
+                                                                    </lightning:recordViewForm> 
+                                                                </div>    
+                                                            </aura:if> 
+                                                        </a>
+                                                    </td> 
+
+                                                    <td class="showmore" >{!rArea.P360_Comment__c}	</td>  -->
+                                                        <td><div class="showmore"  style="width: 350px">{!rArea.P360_Comment__c}</div></td>
+                                                        
+                                                        
+                                                        
+                                                        <td style="white-space: inherit;">{!rArea.TMKDA_Answer__c}</td>
+                                                    </aura:if>     
+                                                </tr>
+                                            </aura:iteration>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                            </aura:iteration>
+                        </tbody>
+                    </table> 
+                </lightning:layout>
+            </lightning:layoutItem>
+        </div>
+        
+        <div class="slds-float_right slds-p-around_x-small">
+            <lightning:button variant="brand" label="Create Primary Connections" onclick="{!c.handleCreationOfRecords}" />             
+        </div>   <aura:set attribute="else">
+        <div class="slds-p-around_small">
+            <div class="slds-box slds-box_xx-small">
+                <p class="slds-text-align_center"><strong>Inherit from Primary has already been completed</strong></p>
+            </div>
+        </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,58 @@
+<template>
+    <div class="spinner">
+        <template if:true={isSpinner}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+             Loading...
+        </template>
+    </div>
+    <lightning-quick-action-panel header="Renewal Due Diligence">
+        <!--<template if:false={isConfirm}>
+            Are you sure to clone this Due Diligence?
+            <div slot="footer">
+                <lightning-button variant="neutral" label="No" onclick={handleNo}></lightning-button>
+                <lightning-button variant="brand" class="slds-m-left_x-small" label="Yes" type="submit" onclick={handleYes}></lightning-button>
+            </div>
+        </template> -->
+        <!-- <template if:true={isConfirm}> -->
+        <template if:true={data}>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input type="text" label="Due Diligence Name" value={name} onchange={handleNameChange} maxlength="80"></lightning-input>
+                    <p class="error-message" style="color: red;">Maximum characters limit is 80</p>
+                    <!--<lightning-input type="date" label="Actual Start Date" value={actualStartDate} onchange={handleActualStartDate}></lightning-input>
+                    <lightning-input type="date" label="Planned Assessment Start Date" value={expectedStartDate} onchange={handleExpectedStartDate}></lightning-input>-->
+                    <!--<lightning-input type="text" label="Existing Due Diligence Name" value={existingduediligence} disabled ></lightning-input>
+                    <p class="error-message" style="color: red;" if:true={isError}>{errorMessage}</p>-->
+                </div>
+                <div class="slds-col">
+                <!--<lightning-input name="enter-search" label="Coverholder / TPA Name" type="search" value={coverHolder} onchange={handleAccountRecrds}></lightning-input>
+                <template if:true={isShowTable}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Example default base table of Opportunities">
+                        <tbody>
+                            <template for:each={accoutData} for:item="acc">
+                                <tr class="slds-hint-parent" key={acc.Id}>
+                                    <td data-label="Account Name">
+                                      <div class="slds-truncate" title={acc.Name}>{acc.Name}</div>
+                                    </td>
+                                 </tr>
+                            </template>
+                        </tbody>
+                      </table>
+                </template>-->
+                    <c-custom-lookupforrenewaland-m-t-a label="Coverholder / DCA Name" selected-icon-name="standard:account"
+                    object-api-name="Account" field-api-name="Name" disabled-mode={isDisabled} 
+                    onvalueselected={handleValueSelectedOnAccount} name={coverHolder} required onchange={handleCoverHolderChange}></c-custom-lookupforrenewaland-m-t-a>
+                <!--<lightning-input type="text" label="Approval_Status" value="Pending" disabled></lightning-input>
+                    <lightning-input type="date" label="Actual End Date" value={actualEndDate} onchange={handleActualEndDate}></lightning-input>
+                    <lightning-input type="date" label="Planned Assessment End Date" value={expectedEndDate} onchange={handleExpectedEndDate}></lightning-input>-->
+                </div>
+            </div>
+            <div slot="footer">
+                <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+                <lightning-button variant="brand" class="slds-m-left_x-small" label="Renew" type="submit" onclick={handleSubmit}></lightning-button>
+            </div>
+        <!--</template> -->
+    </template>
+    </lightning-quick-action-panel>
+</template>

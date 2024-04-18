@@ -1,0 +1,24 @@
+.no-underline {
+  text-decoration: none;
+}
+
+.blue-utility-icon {
+        --sds-c-icon-color-foreground-default: blue;
+        font-weight: medium;
+        text-decoration: none;
+}
+.red-utility-icon {
+        --sds-c-icon-color-foreground-default: red;
+        font-weight: medium;
+        text-decoration: none;
+}
+.cyan-utility-icon {
+        --sds-c-icon-color-foreground-default: #00aaee;
+        font-weight: medium;
+        text-decoration: none;
+}
+.gold-utility-icon {
+        --sds-c-icon-color-foreground-default: #ffc300;
+        font-weight: medium;
+        text-decoration: none;
+}

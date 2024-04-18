@@ -1,0 +1,6 @@
+.THIS .slds-path__nav .slds-is-complete .slds-path__stage{
+    display: none !important;
+}
+.THIS .slds-path__nav .slds-is-complete .slds-path__title{
+    display: contents !important;
+}

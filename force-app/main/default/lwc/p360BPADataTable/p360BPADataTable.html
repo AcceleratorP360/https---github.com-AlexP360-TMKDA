@@ -1,0 +1,287 @@
+<template>
+
+<article class="slds-card slds-card_boundary">
+  <div class="slds-card__header slds-grid">
+    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+		<lightning-icon icon-name="custom:custom85" size="small">
+        </lightning-icon>
+      <div class="slds-media__body slds-m-left_small">
+        <h2 class="slds-card__header-title">
+            <span>{bpaTitle}</span>
+        </h2>
+      </div>
+    
+
+		<!--<div class="slds-m-around_medium">
+			<div class="slds-text-align_right">-->
+				<lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={handleRefresh}
+					variant="border-filled" class="slds-m-right_x-small" slot="actions"></lightning-button-icon>
+				<lightning-button-icon icon-name="utility:edit" alternative-text="Edit All" onclick={handleEditAll}
+					variant="border-filled" class="slds-m-right_x-small" slot="actions"></lightning-button-icon>
+				<span if:true={showNew}>
+				<lightning-button label="Add" onclick={handleAdd} variant="neutral" class="slds-m-right_x-small" slot="actions"></lightning-button>
+				</span>
+			<!--</div>-->
+		<!--</div>-->
+		</header>
+  </div>
+		
+
+		<article class="slds-card slds-card_boundary">
+
+			<template if:true={showSaveCancelButtons}>
+						<div class="ctFooter slds-modal__header">
+							<lightning-button style="padding-left: 3px; padding-right: 3px;" label="Cancel" onclick={handleCancel}></lightning-button>
+							<lightning-button style="padding-left: 3px; padding-right: 3px;" label="Save" variant="brand" onclick={handleSave}></lightning-button>
+						</div>
+					</template>
+			
+
+			
+			<div if:true={isLoaded} class="slds-is-relative slds-m-around_large">
+				<lightning-spinner alternative-text="Loading..." variant="brand">
+				</lightning-spinner>
+			</div>
+			
+			<div if:false={isLoaded}>
+			<div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup}
+				ondblclick={handledblclickresizable} 
+				class="slds-table_header-fixed_container tableScroll"
+				onscroll={tableOuterDivScrolled}>
+				<div id="tableViewInnerDiv" onscroll={tableScrolled} class="slds-scrollable_y tableViewInnerDiv" >
+
+					<table
+						class="slds-table slds-table_col-bordered slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-table_fixed-layout"  >
+	
+						<thead>
+							<tr >   <!-- added VA  tr and in line 40 : slds-table_col-bordered-->
+							
+
+								<template for:each={columns} for:item="eachCol">
+									<template if:true={eachCol.showCoulmn}>
+									<th class="slds-is-resizable dv-dynamic-width " scope="col" style={eachCol.width}
+										key={eachCol.label}>
+										<div class="slds-cell-fixed"  style={eachCol.width}> 								
+										
+												<a class="slds-th__action slds-text-link_reset wrap-text">
+
+												<span class="slds-wrap" >{eachCol.label}</span>
+											</a>
+										<div class="slds-resizable-column"> 
+											<div class="slds-resizable">
+												<span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                                    <span class="slds-resizable__divider"  ></span>
+												</span>
+											
+											</div>
+											
+
+										</div>
+										</div>										
+									</th>
+									
+									</template>		
+																
+								</template>
+								<!-- added to adjust space 
+									<th scope="col">
+                            <div class="slds-table_col-bordered slds-cell-fixed">
+                                  
+                            </div>
+                        </th>-->
+							</tr>				
+						</thead>
+					
+						<tbody>
+							<template for:each={BPADetail} for:item="data">
+								<tr key={data.rowNumb} >
+									<td class="slds-cell_action-mode" role="gridcell">
+										<div class="slds-wrap dv-dynamic-width slds-p-right_medium" style="width:3.5rem">
+											{data.rowNumb}&nbsp;&nbsp;
+											<lightning-button-icon variant="bare" icon-name="utility:edit"
+												name={data.rowNumb} onclick={handleRowEdit}>
+											</lightning-button-icon>
+										</div>							
+									</td>		
+									
+									 
+
+									<template lwc:if={data.rowEdit}>
+
+										<td class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_Section__c}
+												style={sectionWidth}>{data.TMKDA_Section__c}
+											</div>
+										</td>
+                          
+										<td class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.Name} style={questionWidth}>
+												<a data-id={data.Id} onclick={navigateToRecord}>{data.Name}</a>
+												<!--<lightning-input  type="text" name={data.rowNumb} value={data.Name}
+													onchange={handleName}  readonly></lightning-input>-->
+											</div>
+										</td>
+									<!-- slds-cell-edited slds-is-edited cellContainer-->
+										<td class="slds-cell_action-mode wrap-text" role="gridcell">
+											 
+												   
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_Information__c} style={informationWidth}>
+																						
+												<lightning-textarea name={data.rowNumb} maxlength="2000" message-when-too-long="A maximum of 2000 characters are allowed"								
+													value={data.TMKDA_Information__c} onchange={handleInformation}>										
+											
+												</lightning-textarea>					
+												 
+											</div>
+											 
+											     
+										</td>
+										<template if:true={showCoComment}>
+										<td class="slds-cell_action-mode wrap-text" role="gridcell">
+											
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_CO_Comments__c} style={coCommentWidth}>
+												    
+												<lightning-textarea name={data.rowNumb} maxlength="2000" message-when-too-long="A maximum of 2000 characters are allowed"
+													value={data.TMKDA_CO_Comments__c} onchange={handleCoComments}>
+												</lightning-textarea>
+											</div>
+										
+										</td>
+										</template>
+										<td class=" slds-cell_action-mode wrap-text" role="gridcell">
+											 
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium slds-align_absolute-center" 
+										
+												style={checkBoxWidth}>
+											<!--	<div style="display: flex; justify-content: center; align-items: center;"></div>-->
+												<lightning-input type="checkbox" name={data.rowNumb}
+													checked={data.TMKDA_Confirmation_Statement_Accurate__c}
+													onchange={handleConfirmation}>
+												</lightning-input>
+											</div>
+											 
+										</td>
+										
+										<td class="slds-cell_action-mode wrap-text" role="gridcell">
+										 
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium"
+												title={data.TMKDA_Coverholder_Comment__c} style={coverholderWidth}>
+												<lightning-textarea name={data.rowNumb} maxlength="2000" message-when-too-long="A maximum of 2000 characters are allowed"
+													value={data.TMKDA_Coverholder_Comment__c}
+													onchange={handleCoverholder}></lightning-textarea>
+											</div>
+										 
+										</td>                     
+								
+										
+									</template>
+									<template lwc:else>
+
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_Section__c}
+												style={sectionWidth}>{data.TMKDA_Section__c}</div>
+										</th>
+
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.Name} style={questionWidth}>
+												<a data-id={data.Id} onclick={navigateToRecord}>{data.	Name}</a>
+											<!--<a href="\{!TMKDA_BPA_Summary_Header__c.name}/{!TMKDA_BPA_Summary_Detail__c.Id/{!data.Id}}">{data.Name}</a>-->
+											
+											</div>
+										</th>
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_Information__c}
+												style={informationWidth}>
+												{data.TMKDA_Information__c}
+											</div>
+										</th>
+<!--truncate-->
+										<template if:true={showCoComment}>
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium" title={data.TMKDA_CO_Comments__c}
+												style={coCommentWidth}>
+												{data.TMKDA_CO_Comments__c}
+											</div>
+										</th>
+										</template>
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium slds-align_absolute-center"
+												 style={checkBoxWidth}>
+												<lightning-input type="checkbox"
+													checked={data.TMKDA_Confirmation_Statement_Accurate__c} disabled>
+												</lightning-input>
+											</div>
+										</th>
+										
+										<th class="slds-cell_action-mode wrap-text" role="gridcell">
+											<div class="slds-wrap dv-dynamic-width slds-p-right_medium"
+												title={data.TMKDA_Coverholder_Comment__c} style={coverholderWidth}>
+												{data.TMKDA_Coverholder_Comment__c}</div>
+										</th>
+                            <!--
+										<td class="slds-cell_action-mode" role="gridcell">
+											<div class="slds-truncate dv-dynamic-width">
+											Add your delete button here 
+												<lightning-button-icon class="slds-m-right_x-small" variant="bare" icon-name="utility:delete" alternative-text="Delete" name={data.rowNumb} onclick={handleDelete}></lightning-button-icon>
+											</div>
+										</td>
+										
+									-->		
+
+									</template>
+									<td class="slds-cell_action-mode" role="gridcell">
+										<div class="slds-wrap dv-dynamic-width slds-p-right_medium" style="width:3.5rem">
+											<template lwc:if={data.rowDelete}>
+											<lightning-button-icon variant="bare" icon-name="utility:delete"
+												name={data.rowNumb} onclick={handleRowDelete}>
+											</lightning-button-icon>
+											</template>
+										</div>							
+									</td>
+
+								</tr>
+								   
+								
+							</template>
+							
+						</tbody>
+
+
+					</table>
+
+					<!-- Save and Cancel buttons outside the loop -->
+					<template if:true={showSaveCancelButtons}>
+						<div class="ctFooter slds-modal__header">
+							<lightning-button style="padding-left: 3px; padding-right: 3px;" label="Cancel" onclick={handleCancel}></lightning-button>
+							<lightning-button style="padding-left: 3px; padding-right: 3px;" label="Save" variant="brand" onclick={handleSave}></lightning-button>
+						</div>
+					</template>
+
+				</div>
+			</div>
+			</div>
+			</article>
+
+
+
+	</article>
+
+	
+
+</template>
+
+
+
+
+
+<!-- <template lwc:if={BPADetail.data}>
+              <lightning-datatable 
+              key-field="Id"
+                    data={BPADetail.data}
+                    columns={columns}
+                    onsave={handleSave}                   
+                    draft-values={draftValues}
+                   onrowaction={handleRowAction}
+                                 >
+              </lightning-datatable>
+            </template>  -->

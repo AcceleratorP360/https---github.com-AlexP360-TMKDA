@@ -1,0 +1,16 @@
+.table-container {
+    max-height: 500px; /* Set a maximum height for the table container */
+    overflow-y: auto;
+}
+
+/* Fix the header */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.scrollable {
+    max-height: inherit;
+    overflow: auto;
+}

@@ -1,0 +1,74 @@
+.THIS {
+    background-color:#fff;
+}
+.THIS .episodicTbl {border-spacing: 0px;}
+.THIS .episodicTbl TH{background:#0783dc; color:#fff;}
+.THIS .episodicTbl th, .THIS .episodicTbl td{vertical-align:top; white-space: normal; padding: .30rem .5rem;}
+.THIS .episodicTbl th:last-child, .THIS .episodicTbl td:last-child{padding-right:0;}
+.THIS .episodicTbl td .slds-input, .THIS .episodicTbl td .slds-select{width:auto; line-height: 1.2rem; min-height: calc(1.2rem + 2px);}
+.THIS .episodicTbl td .uiInput--textarea.textarea{padding: .12rem 0.3rem; width:100%;}
+.THIS .episodicTbl td .slds-select{height: 13px; min-width:100px;}
+.THIS .episodicTbl td .slds-input.epsInp{width:60px;}
+.THIS .episodicTbl .updateBtnSpn .slds-button{min-width:75px; display:block; margin-bottom:5px; margin-left:0; text-align:left;}
+.THIS .episodicTbl .updateBtnSpn:last-child{margin-bottom:0;}
+.THIS .episodicTbl .rowCol{display:block;}
+.THIS .episodicTbl .rowCol .inpFldSml{width:100%;}
+.THIS .episodicTbl .rowCol .datePicker-openIcon{bottom: 4px;}
+.THIS .episodicTbl .rowCol.dateInp .slds-dropdown-trigger{width: 115px;}
+.THIS .episodicTbl .rowCol.dateInp input{ width:100%;}
+.THIS .episodicTbl .rowCol.dateInp .slds-input-has-icon .slds-input__icon{top: 42%;}
+.THIS .uiInputSelect .form-element__label{display:none;}
+ 
+.THIS .episodicTbl th, .THIS .episodicTbl td{vertical-align:top; border-top:0;}
+.THIS .episodicTbl td{padding-top:10px; padding-bottom: 4px;}
+.THIS .episodicTbl .wrapText{max-width:70px; overflow:hidden; display:inline-block; text-overflow:ellipsis; white-space:nowrap;}
+ 
+.THIS .episodicTbl tbody tr:hover{background:#f5f5f5;}
+.THIS .slds-button.slds-button_brand{line-height: 1.3rem;}
+.THIS .slds-lookup .slds-lookup__search-input{line-height: 1.6rem; min-height: calc(1.6rem + 2px);}
+.THIS .slds-form-element_horizontal .slds-select {min-height: calc(1.6rem + (1px * 2));}
+ 
+.THIS .episodicSubTbl TH{background:#c5c5c5; color:#000;}
+.THIS .episodicSubTbl td:first-child{padding-left: 0.5rem;}
+.THIS .episodicSubTbl td:last-child{padding-right: 0;}
+.THIS .episodicSubTbl td{padding:2px; padding-bottom:0;}
+.THIS .episodicSubTbl .rowCol{display:block; margin-bottom:5px; overflow:hidden;}
+.THIS .episodicSubTbl .rowCol .inpFldSml{width:95px;}
+.THIS .episodicSubTbl .rowCol .dateInp{width:115px;}
+.THIS .episodicSubTbl .textArea{width:120px; padding: .6rem;}
+.THIS .episodicSubTbl input.uiInput--checkbox[type=checkbox]{float:left; display: inline-block; margin-right: 5px;}
+.THIS .septrLine{border-bottom:1px #999 solid !important;}
+ 
+.THIS .listRow .dashIcon{display:none;}
+.THIS .listRow.activeIcon .dashIcon{display:inline-block;}
+.THIS .listRow.activeIcon .addIcon{display:none;}
+ 
+.THIS .loadDataInfo tr.rowDetail:nth-child(odd){background: #eee;} 
+.THIS .loadDataInfo tr.rowDetail td{border-bottom:1px #ccc solid;}
+ 
+.THIS .loadDataInfo{display: contents;}
+ 
+.THIS .loadDataInfo .dataRowItem{display: none;}
+.THIS .loadDataInfo .addIcon{display:inline-block;}
+.THIS .loadDataInfo .dashIcon{display:none;}
+ 
+.THIS .loadDataInfo .rowDetail.activeRow + .dataRowItem{display: contents;}
+.THIS .loadDataInfo .rowDetail.activeRow .addIcon{display:none;}
+.THIS .loadDataInfo .rowDetail.activeRow .dashIcon{display:inline-block;}
+ 
+.THIS .loadDataInfo.active .dataRowItem{display: contents;}
+.THIS .loadDataInfo.active .addIcon{display:none;}
+.THIS .loadDataInfo.active .dashIcon{display:inline-block;}
+ 
+.THIS .loadDataInfo.active .rowDetail.activeRow + .dataRowItem{display: none;}
+.THIS .loadDataInfo.active .rowDetail.activeRow .addIcon{display:inline-block;}
+.THIS .loadDataInfo.active .rowDetail.activeRow .dashIcon{display:none;}
+ 
+.THIS .dataRowItem{display:none;}
+.THIS .rowDetail.activeRow + .dataRowItem{display: contents;}
+.THIS .actBtnOver{width:70px;}
+.THIS .actBtnOver .slds-icon_x-small{width: 0.65rem; height: 0.65rem;}
+.THIS .actBtnOver .slds-icon_container_circle{padding: .3rem;}
+.THIS .actBtnOver .slds-button+.slds-button{margin-left: 0rem;}
+.THIS .statusMarkOver{display:inline-block; padding-top: 3px;}
+.THIS .statusMarkOver .statusMark{display:inline-block; font-weight:bold; margin:0 0 1px 2px; padding:1px 2px; font-size:11px;}

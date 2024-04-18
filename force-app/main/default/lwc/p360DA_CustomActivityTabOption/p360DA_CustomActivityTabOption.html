@@ -1,0 +1,101 @@
+<template>
+  
+        <template if:true={eventVar}>
+             <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium"
+	            id="task-item-expanded-80" style="background-color:white;">
+          
+                <ul class="slds-list_horizontal slds-wrap">
+                <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                    <span class="slds-text-title slds-p-bottom_x-small">Start</span>
+                    <span class="slds-text-body_medium slds-truncate" title="Charlie Gomez">
+                    <a href="#">{value.startDate}</a>
+                    </span>
+                </li>
+                <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                    <span class="slds-text-title slds-p-bottom_x-small">End</span>
+                    <span class="slds-text-body_medium slds-truncate" title="Tesla Cloudhub + Anypoint Connectors">
+                    <a href="#">{value.endDate}</a>
+                    </span>
+                </li>
+                </ul>
+                <div>
+                <span class="slds-text-title">Description</span>
+                <p class="slds-p-top_x-small">{value.description}</p>
+                </div>
+            </article>
+        </template>
+
+
+         <template if:true={callVar}>
+            <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium"
+	            id="task-item-expanded-81" style="background-color:white;">
+                <ul class="slds-list_horizontal slds-wrap">
+                <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                    <span class="slds-text-title slds-p-bottom_x-small">status</span>
+                    <span class="slds-text-body_medium slds-truncate" title="Charlie Gomez">
+                    <a href="#">{value.status}</a>
+                    </span>
+                </li>
+                <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                    <span class="slds-text-title slds-p-bottom_x-small">Description</span>
+                    <span class="slds-text-body_medium slds-truncate" title="Tesla Cloudhub + Anypoint Connectors">
+                    <a href="#">{value.description}</a>
+                    </span>
+                </li>
+                </ul>
+               
+             </article>
+        </template>
+
+
+         <template if:true={taskVar}>
+           <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium"
+	            id="task-item-expanded-82" style="background-color:white;">
+                <ul class="slds-list_horizontal slds-wrap">
+                <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                    <span class="slds-text-title slds-p-bottom_x-small">Status</span>
+                    <span class="slds-text-body_medium slds-truncate" title="Charlie Gomez">
+                    <a href="#">{value.status}</a>
+                    </span>
+                </li>
+                </ul>
+                <div>
+                <span class="slds-text-title">Description</span>
+                <p class="slds-p-top_x-small">{value.description}</p>
+                </div>
+            </article>
+        </template>
+
+
+          <template if:true={emailVar}>
+            <article class="slds-box slds-timeline__item_details slds-theme_shade slds-m-top_x-small slds-m-horizontal_xx-small slds-p-around_medium"
+	            id="task-item-expanded-85" >
+                <ul class="slds-list_horizontal slds-wrap">
+                    <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                        <span class="slds-text-title slds-p-bottom_x-small">From Address</span>
+                        <span class="slds-text-body_medium slds-truncate" title="Jackie Dewar">
+                            <a href="#">{value.FromAddress}</a>
+                        </span>
+                    </li>
+                    <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                        <span class="slds-text-title slds-p-bottom_x-small">To Address</span>
+                        <span class="slds-text-body_medium slds-truncate" title="Lea Chan">
+                        <a href="#">{value.ToAddress}</a>
+                        </span>
+                    </li>
+                    <li class="slds-grid slds-grid_vertical slds-size_1-of-2 slds-p-bottom_small">
+                        <span class="slds-text-title slds-p-bottom_x-small">Related To</span>
+                        <span class="slds-text-body_medium slds-truncate" title="Lea Chan">
+                        <a href="#">{value.RelatedToName}</a>
+                        </span>
+                    </li>
+                </ul>
+                <div>
+                    <span class="slds-text-title">Text Body</span>
+                    <p class="slds-p-top_x-small">{value.TextBody}</p>
+                </div>
+
+            </article>
+          </template>
+
+</template>

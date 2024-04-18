@@ -1,0 +1,194 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" 
+                controller="P360_Custom_Due_Deligence_List">
+    
+    <aura:html tag="style">
+        .fixTableHead { 
+        overflow-y: auto; 
+        height: 450px; 
+        } 
+        
+    </aura:html> 
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="wrapperObject" type="Object[]" />
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:attribute name="tooltip" type="boolean" default="false" />
+    <aura:attribute name="selectedCatId" type="String" />
+    <aura:attribute name="selectedSubCatId" type="String" />
+    <aura:attribute name="selectedReviewAreaId" type="String" />
+    <aura:attribute name="expandAll" type="boolean" default="false"/>
+    <aura:attribute name="selecectedPartyId" type="String" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:navigation aura:id="navService"/>
+    <aura:registerEvent name="P360_Custom_Record_Edit_Page_App" type="c:P360_Custom_Record_Edit_Page_App"/>
+    
+    <aura:if isTrue="{! v.showSpinner }">
+        <div>
+            <lightning:spinner aura:id="mySpinner" variant="brand" size="large"/>
+        </div>
+    </aura:if>
+    <lightning:card footer="" title="">
+         <div class="slds-p-around_small">
+            <lightning:recordEditForm aura:id="recordEditForm"
+                                      objectApiName="P360_Due_Diligence__c">
+                <lightning:messages />
+                <h1><strong>Select the Party:</strong></h1>
+                <lightning:inputField variant="label-hidden" fieldName="P360_CoverHolder_TPA_Name__c" onchange="{!c.handleAccountChange}"/>
+            </lightning:recordEditForm>
+        </div> 
+        <aura:if isTrue="{!not(empty(v.wrapperObject))}">
+            <lightning:layout verticalAlign="center" multipleRows="true" class="slds-align_absolute-center">
+                <div class="fixTableHead">
+                    <table class="slds-table slds-scrollable slds-table_bordered slds-table_col-bordered slds-border_right slds-border_left">
+                        <tr class ="border" >
+                            <th style="width:5%;"></th>
+                            <th style="width:90%; font-weight:bold;">Due Diligence Name</th>
+                           <th style="width:5%; font-weight:bold;">Created Year</th> 
+                        </tr>
+                        
+                        <tbody style="overflow-y: auto; height: 300px;">
+                            
+                            <aura:iteration items="{!v.wrapperObject}" var="wrp" indexVar="dueIndex">
+                                <tr  class ="border">
+                                    <td style="white-space: inherit;width: 5%;"> 
+                                        <div  style="cursor: pointer; " onclick="{!c.handleDueDeligence}" 
+                                             data-index="{!dueIndex}"
+                                             data-recId="{!wrp.dueDeligence.Id}"
+                                             value="{!wrp.dueDeligence.Id}">
+                                            <section class="slds-clearfix">
+                                                <div class="slds-float--left " data-recId="{!wrp.dueDeligence.Id}">
+                                                    <aura:if isTrue="{!!wrp.dueDeligence.Expand_Due_Deligence__c}">
+                                                        <lightning:icon iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!wrp.dueDeligence.Expand_Due_Deligence__c}">
+                                                        <lightning:icon  iconName="utility:dash" size="x-small" alternativeText="Indicates add"/>
+                                                    </aura:if>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </td>
+                                    <td><a class="slds-p-left_medium slds-p-left_medium" href="" onclick="{!c.handleNavigateRecordPage}"
+                                           data-recId="{!wrp.dueDeligence.Id +'-'+ wrp.dueDeligence.Name}"
+                                           id="P360_Due_Diligence__c"
+                                           target="_blank" 
+                                           tabindex="-1">{!wrp.dueDeligence.Name}</a></td>
+                                   <td>{!wrp.createdYear}</td>
+                                </tr>
+                                <aura:if isTrue="{!wrp.dueDeligence.Expand_Due_Deligence__c}">
+                                    <aura:if isTrue="{!not(empty(wrp.catList))}">
+                                        <aura:iteration items="{!wrp.catList }" var="cat" indexVar="catIndex">
+                                            <tr  class ="border" style="background: #dddbda;">
+                                                <td style="white-space: inherit;width: 5%; text-align: Center"> 
+                                                    <div style="cursor: pointer;" onclick="{!c.sectionOne}" 
+                                                         data-index="{!catIndex}"
+                                                         data-recId="{!cat.Id}"                                           
+                                                         value="{!cat.Id}">
+                                                        <section class="slds-clearfix">
+                                                            <div class="slds-float--left " data-recId="{!cat.Id}">
+                                                                <aura:if isTrue="{!!cat.Expand_Category__c}">
+                                                                    <lightning:icon iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{!cat.Expand_Category__c}">
+                                                                    <lightning:icon  iconName="utility:dash" size="x-small" alternativeText="Indicates add"/>
+                                                                </aura:if>
+                                                            </div>
+                                                        </section>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a class="slds-p-left_medium slds-p-left_medium" href="" onclick="{!c.handleNavigateRecordPage}"
+                                                       data-recId="{!cat.Id +'-'+ cat.Name}"
+                                                       target="_blank"
+                                                       id="P360_DD_Category__c"
+                                                       data-name="{!cat.Name}"
+                                                       tabindex="-1">{!cat.Name}</a></td>
+                                            </tr>
+                                            <aura:if isTrue="{!cat.Expand_Category__c}">
+                                                <aura:if isTrue="{!not(empty(wrp.subCatList))}">
+                                                    <aura:iteration items="{!wrp.subCatList }" var="subCat" indexVar="subCatIndex">
+                                                        <tr   class="border" style="background: #ecebea;text-align: right">
+                                                            <td style="white-space: inherit;width: 5%;text-align: right"> 
+                                                                <div style="cursor: pointer;" onclick="{!c.sectionTwo}" 
+                                                                     data-index="{!subCatIndex}"
+                                                                     data-recId ="{!subCat.Id}"
+                                                                     value="{!subCat.Id}">
+                                                                    <section class="slds-clearfix">
+                                                                        <div class="slds-float--left ">
+                                                                            <aura:if isTrue="{!!subCat.Expand_Sub_Catgeory__c}">
+                                                                                <lightning:icon iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!subCat.Expand_Sub_Catgeory__c}">
+                                                                                <lightning:icon iconName="utility:dash" size="x-small" alternativeText="Indicates add"/>
+                                                                            </aura:if>
+                                                                        </div>
+                                                                    </section>
+                                                                </div>
+                                                            </td>
+                                                            <td style="white-space: inherit;width: 95%;">
+                                                                <a class="slds-p-left_medium slds-p-left_medium" href="" onclick="{!c.handleNavigateRecordPage}"
+                                                                   data-recId="{!subCat.Id + '-'+ subCat.Name}"
+                                                                   target="_blank" 
+                                                                   id="P360_DD_Sub_Category__c"
+                                                                   tabindex="-1"> {!subCat.Name} </a>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <aura:if isTrue="{!subCat.Expand_Sub_Catgeory__c}">
+                                                            <aura:if isTrue="{!not(empty(wrp.reviewAreaList))}">
+                                                                <aura:iteration items="{!wrp.reviewAreaList }" var="rArea" indexVar="rAreaIndex">
+                                                                    <tr  class ="border slds-p-left_large">
+                                                                        <td style="white-space: inherit;width: 5%; slds-line-clamp"></td>
+                                                                        <td style="white-space: pre-wrap;width: 95%;slds-line-clamp">
+                                                                            <a class="slds-p-left_large slds-p-left_medium slds-line-clamp" href="" onclick="{!c.handleNavigateRecordPage}"
+                                                                               data-recId="{!rArea.Id + '-' + rArea.P360_Review_Point__c}"
+                                                                               target="_blank" 
+                                                                               id="P360_Review_Area__c"
+                                                                               tabindex="-1">  {!rArea.P360_Review_Point__c} </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </aura:iteration>
+                                                                <aura:set attribute="else">
+                                                                    <tr  class ="border" style="background: #dddbda;">
+                                                                        <td style="white-space: inherit;width: 5%; text-align: center"> 
+                                                                        </td>
+                                                                        <td style="white-space: inherit;width: 95%; text-align: center"><strong>No Related Records found.</strong></td>
+                                                                    </tr>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </aura:if>
+                                                        
+                                                    </aura:iteration>
+                                                    <aura:set attribute="else">
+                                                        <tr  class ="border" style="background: #dddbda;">
+                                                            <td style="white-space: inherit;width: 5%; text-align: center"> 
+                                                            </td>
+                                                            <td style="white-space: inherit;width: 95%; text-align: center"><strong>No Related Records found.</strong></td>
+                                                        </tr>    
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:if>
+                                        </aura:iteration>
+                                        <aura:set attribute="else">
+                                            <tr  class ="border" style="background: #dddbda;">
+                                                <td style="white-space: inherit;width: 5%; text-align: center"> 
+                                                </td>
+                                                <td style="white-space: inherit;width: 95%; text-align: center"><strong>No Related Records found.</strong></td>
+                                            </tr>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:if>
+                            </aura:iteration>
+                        </tbody>
+                    </table> 
+                </div>
+            </lightning:layout>
+            <aura:set attribute="else">
+                <div class="slds-p-around_small">
+                    <div class="slds-box slds-box_xx-small">
+                        <p class="slds-text-align_center"><strong>No Records Found.</strong></p>
+                    </div>
+                </div>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

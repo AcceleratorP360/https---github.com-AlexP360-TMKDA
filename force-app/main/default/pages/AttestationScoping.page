@@ -1,0 +1,324 @@
+<apex:page controller="TMKAttenst2" applyHtmlTag="false" showHeader="false" lightningStylesheets="true" > 
+
+    <html>
+          <style type="text/css">
+				.bPageBlock .pbTitle {
+            			width		: 100%;    
+            			text-align	: center;
+            	}
+    
+        		.logo-container {
+                		display		: inline-block;
+                		text-align	: right;
+                		margin-right: 10px;
+            	}
+            
+            	.form-header {
+                		text-align	: center;
+                		margin-top	: 25px;
+                		margin-bottom: 20px;
+                		font-weight	: bold;
+                		font-size	: 25px;
+            	}
+       	</style>
+        
+		<body style="text-align:center; font-weight: lighter; font-stretch: ultra-condensed; font-family: Bahnschrift;">
+    		<apex:form >
+        		<apex:slds />
+         			<div class="slds-grid">
+            			<div class="slds-col">
+		           			<table width="100%" style="text-align:center; margin-top:25px; margin-bottom:20px;">
+    							<tr style="width:20%; text-align: center; margin-top: 25px; margin-bottom: 20px;">
+        							<td style="border-right: 0.5px; text-align:center;">
+            	<!--<apex:image value="https://tmkis--tmkdev01--c.sandbox.vf.force.com/resource/1702495166000/TMK_Logo";"></apex:image><br/><br/>-->
+            								<apex:image id="theImage" value="{!$Resource.TMK_Logo}" width="70" height="62" alt="Description of image here"/>
+        							</td>
+       								<td style="width:50%; border-top: 0.5px; text-align: center; font-size: 20px;">  <!-- padding-right: 190px; -->
+    									<p style="font-size: 25px; font-weight:bold; color:#00BFFF;">ATTESTATION FORM</p>
+    									<span style="font-size: 18px; font-weight:semi-bold; color:#DAA520;">Please update the form below and press the SUBMIT button</span>
+									</td>
+                                    <td style="width:30%">&nbsp;</td>
+    							</tr>
+							</table>
+
+                
+                <apex:panelGrid width="100%" columns="1">
+					<apex:pageBlock > 
+                        <style>
+         					.radioOption input[type="radio"] + label {
+                   							vertical-align: top;
+        									margin-top: -5px; 	<!-- /* Adjust this value as needed */   -->
+                   			}
+
+               				.radioOption label {
+        									display: inline-block;
+        									vertical-align: top;
+                			}
+            			</style>
+                       
+    					<apex:pageBlockSection title="Policies & Procedures" columns="1" collapsible="true">
+    						<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new TCF policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_001__c}" 
+                                              rendered="{!Customer.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'}" required="true">
+                                <apex:selectOptions value="{!yesNoOptions}" />
+                                
+        					</apex:selectRadio>
+								
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Complaints policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_002__c}" required="true"
+                                              rendered="true">
+                                
+            					<apex:selectOptions value="{!yesNoOptions}" />
+					        </apex:selectRadio>
+        
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Financial Crime policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_003__c}" required="true">
+            					<apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+                            
+                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                                              label="Has a new Conflicts of Interest policy been introduced in the last 12 months?" 
+                                                              value="{!Customer.TMKDA_ATT_004__c}"
+                                                              rendered="{!Customer.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+                                                <apex:selectOptions value="{!yesNoOptions}" />
+                                            </apex:selectRadio>
+                                            
+                                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                                              label="Has a new Succession Plan been introduced in the last 12 months?" 
+                                                              value="{!Customer.TMKDA_ATT_005__c}"
+                                                              rendered="{!Customer.TMKDA_Is_Succession_Planning_in_Scope__c != 'No'
+                                                                        && Customer.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+                                                <apex:selectOptions value="{!yesNoOptions}" />
+                                            </apex:selectRadio>
+
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;"
+                                              label="Has a new BCP been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_006__c}" required="true">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new DRP been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_007__c}" required="true">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+        
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Outsourcing arrangement been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_008__c}" required="true">
+            		
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+        
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Whistleblowing policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_009__c}" 
+                                              rendered="{!customer.TMKDA_Is_Whistleblowing_in_Scope__c != 'No' && customer.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+                                                               
+        					<apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Data Protection policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_010__c}" required="true">
+            				
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+        	
+                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Information Security policy been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_011__c}" required="true">
+            				
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+
+                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Claims procedure been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_012__c}" required="true"
+                                              rendered="{!Customer.TMKDA_Claims_Handling__c != 'No'}">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+                            </apex:selectRadio>
+
+                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Are the loss funds segregated from company operating accounts?" value="{!Customer.TMKDA_ATT_013__c}" required="true"
+                                              rendered="{!Customer.TMKDA_Claims_Handling__c != 'No'}">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+
+                            <apex:selectRadio style="display: inline-flex; margin-top: -10px;" 
+                                              label="Has a new Accounting procedure been introduced in the last 12 months?" value="{!Customer.TMKDA_ATT_014__c}" required="true">
+            
+                                <apex:selectOptions value="{!yesNoOptions}" />
+        					</apex:selectRadio>
+                        </apex:pageBlockSection>
+
+                                
+   <apex:pageBlockSection title="Additional Information" columns="1" collapsible="true">
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Binders requiring Binder Product Attestation (BPA)" value="{!Customer.TMKDA_ATT_015__c}" required="true"
+                     rendered="{!Customer.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                 && Customer.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                 && Customer.TMKDA_Company_Type__c != 'DCA'
+                                 && Customer.TMKDA_Review_Scope__c != 'Run-Off'}">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Have you introduced or changed any financial promotions relating to TMK products?" value="{!Customer.TMKDA_ATT_016__c}" required="true"
+                     rendered="{!Customer.TMKDA_PDT_Outcome__c != 'No BPA required. 2 year audit cycle'
+                                 && Customer.TMKDA_PDT_Outcome__c != 'No BPA required. 3 year audit cycle'
+                                 && Customer.TMKDA_Company_Type__c != 'DCA'
+                                 && Customer.TMKDA_Review_Scope__c != 'Run-Off'}">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Is a formal conduct training program in place for all staff?" value="{!Customer.TMKDA_ATT_017__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Have you introduced or replaced any business system(s)?" value="{!Customer.TMKDA_ATT_018__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has company ownership changed within the last 12 months?" value="{!Customer.TMKDA_ATT_019__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+     <apex:inputField style="display: inline-flex; margin-top: -10px;" label="When was the Licenses and Permits declaration made?" value="{!Customer.TMKDA_ATT_020__c}"
+                      rendered="{!Customer.TMKDA_Company_Type__c != 'Coverholder'}" required="true"/>
+  
+     <apex:inputField style="display: inline-flex; margin-top: -10px;"  label="Have there been any instances that may impact reputation and standing?" value="{!Customer.TMKDA_ATT_021__c}"
+                      rendered="{!Customer.TMKDA_Company_Type__c != 'Coverholder'}" required="true"/>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has your Business Continuity Plan been tested?" value="{!Customer.TMKDA_ATT_022__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Have any BCP issues/improvements been identified in testing?" value="{!Customer.TMKDA_ATT_023__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has your Disaster Recovery Plan been tested?" value="{!Customer.TMKDA_ATT_024__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Have any DRP issues/improvements been identified in testing?" value="{!Customer.TMKDA_ATT_025__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Are any material business functions outsourced?" value="{!Customer.TMKDA_ATT_026__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has there been a change to the level of customer data you hold?" value="{!Customer.TMKDA_ATT_027__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+</apex:pageBlockSection>
+
+
+                                
+    <apex:pageBlockSection title="Atlas" columns="1" collapsible="true" rendered="{!Customer.TMKDA_Company_Type__c != 'DCA'}">
+    <!-- <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has there been a change to the level of customer data you hold" value="{!att27}">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio> -->
+
+     <apex:inputField style="display: inline-flex; margin-top: -10px;" label="When is the PI policy due to expire?" value="{!Customer.TMKDA_ATT_028__c}" required="true"/>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Annual Compliance (including Licenses and Reputation & Standing)" value="{!Customer.TMKDA_ATT_029__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Financials YOA" value="{!Customer.TMKDA_ATT_030__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="Document Request" columns="1" collapsible="true">
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has a complaints log been provided?" value="{!Customer.TMDKA_ATT_031__c}" required="true" >
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has a Conflicts of Interest Log been provided?" value="{!Customer.TMKDA_ATT_032__c}"
+                      rendered="{!Customer.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has a Gifts & Entertainment Log been provided?" value="{!Customer.TMKDA_ATT_033__c}"
+                      rendered="{!Customer.TMKDA_Review_Scope__c != 'Run-Off'}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+     <apex:inputField style="display: inline-flex; margin-top: -10px;" label="Live E&O policy(When is the PI policy due to expire?)" value="{!Customer.TMKDA_ATT_034__c}"
+                      rendered="{!Customer.TMKDA_Company_Type__c != 'Coverholder'}" required="true"/>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Latest Financial Statements" value="{!Customer.TMKDA_ATT_035__c}"
+                      rendered="{!Customer.TMKDA_Company_Type__c != 'Coverholder'}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Has an employee training log been provided, demonstrating appropriate training activity has been carried out and tracked?" value="{!Customer.TMKDA_ATT_036__c}"
+                      rendered="{!Customer.TMKDA_Is_IDD_in_scope__c != 'Yes'}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+</apex:pageBlockSection>
+
+                                
+    <apex:pageBlockSection title="Confirmation Statements" columns="1" collapsible="true">     
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="You will notify TMK of all Financial Crime suspicions immediately?" value="{!Customer.TMKDA_ATT_038__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+                                     
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="You will notify TMK of all Financial Crime incidents prior to the regulator, where legal to do so?" value="{!Customer.TMKDA_ATT_037__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+                                     
+    <apex:selectRadio style="display: inline-flex; margin-top: -10px;" label="Are processes in place to ensure any data breaches are escalated to TMK?" value="{!Customer.TMKDA_ATT_039__c}" required="true">
+        <apex:selectOptions value="{!yesNoOptions}" />
+    </apex:selectRadio>
+        
+     <div style="text-align:left;">
+	                                        <apex:pageBlockSection title="Signoff" columns="2" collapsible="true" >
+    	                                        <apex:outputField style="display: inline-flex; margin-top: -10px;  text-align: left;" label="Name" value="{!Customer.TMKDA_Contact__c}" > </apex:outputField>
+        	                                    <apex:inputText style="display: inline-flex; margin-top: -10px;  margin-bottom: 10px;" label="Position" /> 
+            	                                <apex:inputField style="display: inline-flex; margin-top: -10px;" label="Date" value="{!Customer.TMKDA_Attestation_Start_Date__c}"/>
+                	                            <apex:inputTextarea style="display: inline-flex; margin-top: -10px;" label="Comments" />
+                    	                    </apex:pageBlockSection>
+                                        </div>
+										
+                                        <div style="width:100%; text-align:left;" align="Left">
+                                            <apex:pageBlockSection title="Documents" columns="1" >
+                                                <!--<apex:messages /> -->
+                                                <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel >Title</apex:outputLabel>
+                                                        <apex:inputText value="{!title}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel >File Upload</apex:outputLabel>
+                                                        <apex:inputFile value="{!file}" fileName="{!fileName}" />
+                                                    </apex:pageBlockSectionItem>
+
+                                    <!--            <div align="Center">
+                                                    <apex:commandbutton style="font-size: 18px; margin-bottom: 20px; background-color:#DAA520;color:white;" action="{!upload}" value="Upload" status="status"  />
+                                                </div>-->
+                                                </apex:pageBlockSection>
+                                        </div>
+</apex:pageBlockSection>
+                        
+                  <!--      <apex:pageBlockSection title="Signoff" columns="2" collapsible="true">
+                                    <apex:outputField label="Name" value="{!customer.TMKDA_Contact__c}"/>
+                                    <apex:inputText label="Position" /> 
+                                    <apex:inputField label="Date"  value="{!customer.TMKDA_Attestation_Start_Date__c}"/>
+                                    <apex:inputTextarea label="Comments" />
+                            		</apex:pageBlockSection> -->
+
+                            </apex:pageBlock>
+                        </apex:panelGrid>
+                    </div>
+                </div>
+                <br/>
+          
+                <apex:outputLink value="/page" styleClass="btn" id="register" rendered="{!IF(Customer.TMKDA_PDT_Outcome__c == 'No BPA required. 3 year audit cycle', TRUE, FALSE)}">Register</apex:outputLink>
+       <!--   <apex:outputLink value="/page" styleClass="btn" id="register" rendered="{!IF(AND(Category__c == 'data1',article.Custom_URL == ''), TRUE, FALSE)}">Register</apex:outputLink> -->
+                <div class="slds-m-top_medium" align="Center">
+                    <apex:commandButton value="SUBMIT" action="{!insertCustomer}" style="font-size: 18px; margin-bottom: 20px; background-color:#DAA520;color:white;"/>
+                </div>
+              
+            </apex:form>
+        </body>
+    </html>
+</apex:page>

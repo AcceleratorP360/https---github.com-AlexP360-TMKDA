@@ -1,0 +1,163 @@
+.tableScroll {
+    overflow: auto;
+    overflow-y: hidden;
+    height: 25rem;
+    
+}
+
+
+.wrap-text {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+.p360BPADataTable .slds-table {
+    width:auto;
+}
+.p360BPADataTable .slds-table th:last-child,
+.p360BPADataTable .slds-table td:last-child {
+    padding-right: 0;
+}
+
+
+/*
+.resizer {
+    width: 4px;
+    height: 100%;
+    position: absolute;   
+    right: 0;   
+    top: 0;
+    cursor: col-resize;
+    z-index: 1;
+    
+}
+
+.resizable {
+    position: relative;
+    overflow: hidden;
+    
+}
+
+input[type="text"] {
+    width: calc(100% - 6px); /* Adjust for input padding and border
+    
+}
+
+.edit-mode td:not(:last-child) {
+    padding-right: 12px;
+    
+}
+
+.edit-mode td input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+
+.edit-mode td:last-child {
+    white-space: nowrap;
+}
+
+
+.edit-mode td:last-child lightning-button-icon {
+    margin-left: 10px;
+}
+
+-------------------------
+ */
+
+
+
+/*
+table tr td[title]
+ {
+    pointer-events: none !important;
+}
+
+table tr td[title],
+table tr th[title] {
+    pointer-events: none !important;
+    position: relative;
+}
+
+/* Hide tooltips text 
+table tr td[title]::after,
+table tr th[title]::after {
+    content: "" !important;
+}
+.slds-grid_align-end {
+    justify-content: left !important;
+}
+.slds-grid_align-start {
+    justify-content: left !important;
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ .slds-table th {
+    text-align: left;
+}
+
+/* Enable column label wrap mode 
+.slds-table th .slds-wrap-text {
+    overflow: hidden;
+    white-space: nowrap; /* Prevent line breaks 
+    text-overflow: ellipsis; /* Display ellipsis for truncated text 
+}
+*/
+/*
+
+    .slds-cell-edit lightning-input  {        
+        background-color: burlyyellow;     
+        
+    }
+    .slds-is-edited lightning-input { 
+          background-color: burlyyellow;   
+        
+    }
+
+
+    .slds-cell-edit .slds-grid .slds-grid_align-spread {
+        font-weight: lighter ;/* Adding !important to ensure it overrides other rules 
+    }
+
+    .slds-is-edited .slds-grid .slds-grid_align-spread {
+        font-weight: lighter ; /* Adding !important to ensure it overrides other rules 
+    }
+
+     .slds-cell_action-mode {
+        font-weight: normal !important; /* Set the font weight to normal
+        
+    }
+
+  .slds-cell-edit  .slds-cell-action-mode {
+    background-color: burlyyellow; /* Set the background color 
+     font-weight: normal !important;
+}
+
+/*
+.warning-icon .slds-is-edited .slds-cell-action-mode lightning-input {
+    color: rgb(38, 0, 255);
+    font-size: 5px;
+    margin-left: 5px;
+    .warning-icon .slds-cell-edit  .slds-cell-action-mode  {
+    color: yellow;
+    font-size: 10px;
+    margin-left: 5px;
+    vertical-align: right; /* Align the icon vertically 
+
+}
+*/

@@ -1,0 +1,40 @@
+.THIS .cTable.slds-table_fixed-layout tbody {
+    
+}
+
+.THIS .valueChange{
+    background: wheat;
+}
+
+.THIS .tableFixHead thead th {
+        position: sticky; /* make the table heads sticky */
+        /* position: relative; /* make the table heads relative  by vardhani 26-02-2024*/
+        top: 0; /* table head will be placed from the top of the table and sticks to it */
+        
+        padding: 0px;
+     	border-spacing: 0px;  
+        
+      }
+
+.THIS .primaryLinked{
+  background: beige;
+}
+
+.THIS .is-viewAll{
+    position: sticky;
+    top: 0px;
+    overflow-x:auto; 
+     
+    width:100%;
+}
+
+.THIS .is-not-viewAll{
+    /*height: 20rem;*/
+    overflow-y: auto; position: sticky;top: 0px;
+    overflow-x:auto; width:100%;
+}
+
+/* added by vardhani -- 22/02 */
+.THIS .slds-required {
+    display: none !important;
+}

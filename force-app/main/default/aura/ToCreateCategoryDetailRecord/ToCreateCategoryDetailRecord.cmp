@@ -1,0 +1,20 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+	<aura:attribute name="recordId" type="String" />
+    
+    <!-- Add your input fields for the new record -->
+    <aura:attribute name="categoryName" type="String" />
+    <aura:attribute name="categoryID" type="String" />
+    <aura:attribute name="completionMarker" type="String" />
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    
+    <div class="slds-p-around_medium">
+        <!-- Input fields for the new record -->
+        <lightning:input label="Category Name" value="{!v.categoryName}" />
+        <lightning:input label="Category ID" value="{!v.categoryID}" />
+        <lightning:input label="Completion Marker" value="{!v.completionMarker}" />
+
+        <!-- Button to create the record -->
+        <lightning:button label="Create Record" variant="brand" onclick="{!c.createRecord}" />
+    </div>
+</aura:component>

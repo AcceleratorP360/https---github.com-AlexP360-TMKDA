@@ -1,0 +1,14 @@
+.feed-comments-section{
+	display: none;
+}
+.feed-comments-section.active{
+	display: block;
+}
+
+.feed-title-collapse, .feed-title-expand{
+	display: none;
+}
+
+.feed-title-collapse.active, .feed-title-expand.active{
+	display: inline;
+}

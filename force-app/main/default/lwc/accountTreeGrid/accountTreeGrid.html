@@ -1,0 +1,25 @@
+<template>
+    <div class="slds-p-around_medium lgc-bg">
+
+        <lightning-button
+        label="Collapse All"
+        variant="brand"
+        onclick={clickToCollapseAll}>
+    </lightning-button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <lightning-button
+        label="Expand All"
+        variant="Brand"
+        onclick={clickToExpandAll}>
+    </lightning-button>
+      
+        <lightning-tree-grid columns={gridColumns}
+                                data={gridData}
+                                src={image}
+                                key-field="Id"
+                                hide-checkbox-column=true
+                                ontoggle={handleOnToggle}
+                                onrowaction={handleRowAction}>
+        </lightning-tree-grid>
+
+    </div>
+</template>

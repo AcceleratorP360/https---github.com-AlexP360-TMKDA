@@ -1,0 +1,34 @@
+<template>
+
+ 
+    <!-- create folder card -->
+    <lightning-card  variant="Narrow"  title="Sub Category Records" icon-name="standard:folder" class="cardSpinner">
+        <lightning-button variant="brand" label="Create New Record" onclick={actionToCreateAccountNav}></lightning-button>
+        <!-- loader -->
+        <div if:true={showSpinner}>
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <!-----/loader-------->
+        <div class="slds-m-around_medium">
+            <template if:true={data}>
+                <c-l-w-c-custom-datatable-type
+                    key-field="Id"
+                    data={data} 
+                    columns={columns} 
+                    onvalueselect={handleSelection}
+                    draft-values={draftValues} 
+                    oncellchange={handleCellChange}
+                    onrowaction={handleRowAction}
+                    onsave={handleSave}
+                    oncancel={handleCancel}
+                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-cell-wrap slds-table_col"
+                    hide-checkbox-column>
+                </c-l-w-c-custom-datatable-type>
+            </template>
+        </div>
+    </lightning-card>
+   
+
+</template>

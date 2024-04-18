@@ -1,0 +1,9 @@
+<aura:component implements="lightning:availableForFlowScreens">
+     <aura:attribute name="canCreate" type="Boolean" default="true" />
+    <aura:attribute name="onCreate" type="Object" />
+    <aura:attribute name="onCancel" type="Object" />
+    
+    <lightning:button label="Create" variant="primary" 
+                      onclick="{!c.handleCreate}" />
+    <lightning:button label="Cancel" variant="neutral" onclick="{!c.handleCancel}" />
+</aura:component>

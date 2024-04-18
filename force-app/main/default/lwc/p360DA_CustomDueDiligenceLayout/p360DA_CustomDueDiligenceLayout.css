@@ -1,0 +1,12 @@
+.datatable-container {
+    overflow-x: auto;
+}
+
+.datatable-scroller {
+    width: 140%; /* Ensure the scroller takes the full width of the container */
+}
+
+.scroll-container {
+    max-height: 550px; /* Set the desired maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+}

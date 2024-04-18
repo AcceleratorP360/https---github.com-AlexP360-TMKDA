@@ -1,0 +1,279 @@
+<apex:page extensions="GenerateDDC" standardController="P360_Due_Diligence__c"   applyHtmlTag="false" showHeader="false" renderAs="PDF">
+   
+    <html>
+        <head>
+            <style>
+                @page { 
+                    size: landscape; 
+                         <!--size: portrait;-->
+                }
+                
+                body { font-family  : Arial, Calibri, sans-serif; }
+                
+                .container { 
+                    <!--    float: right;  -->
+                        width: 100%;
+                        }
+
+                @page {
+                    @top-left       {
+                        content     : element(header);
+                    }
+                
+                    @bottom-left    {
+                        content     : element(footer);
+                    }
+                    @bottom-right   {
+                        content     : "Page " counter(page) " of " counter(pages);
+                        font-family : Arial, Calibri, sans-serif;
+                        font-size   : 11px;
+                    }
+                }
+                
+                .pagenumber:before  { content : counter(page); }
+                .pagecount:before   { content : counter(pages); }
+                
+                *                   { box-sizing: border-box; }
+   
+                .heading        { font-weight: bold; }
+                .heading--main  { font-size: 21px; }
+                .heading--sub   { font-size: 21px; }
+                .heading--title { font-weight: bold; text-align: left; font-size:16px; color:blue}
+                
+                .box--half      { float: left; width: 50%; }
+                .box--full      { float: left; width: 50%; }
+   
+                table {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                        margin-top: 25px;
+                        width: 95%;
+                        -fs-table-paginate: paginate;
+                }
+    
+                .articleTable tr td:first-child { width: 50px; }
+                .articleTable tr td:nth-child(2){ width: 180px;}
+            
+                th {
+                        background-color: #e5e5e5;
+                        text-align      : center;
+                        font-family     : Arial, Calibri, sans-serif;
+                        font-size       : 12px;
+                        font-weight     : bold;
+                        padding         : 5px;
+<!--                        border          : 1px solid black;
+                        border          : 1px solid black;  -->
+                        border-collapse : collapse;   
+                }
+                
+                tr {
+                        page-break-inside: avoid;
+                }
+                
+                td {
+                        font-family     : Arial, Calibri, sans-serif;
+                        font-size       : 12px;
+                        padding         : 2px 1px 2px 1px; 
+                        text-align      : left;
+                        border-collapse : collapse;   
+                }
+                
+                .label {
+                        font-size   : 12px;
+                        font-weight : bold;
+                        padding     : 6px;
+                        text-align  : left;
+                        border      : 0px;                      
+<!--                        border-collapse : collapse;   -->
+                }  
+
+                .sublabel {
+                        font-size   : 14px;
+                        color       : #0096FF;
+                        font-weight : bold;
+                        text-align  : left;
+                        border      : 0px;                      
+                }  
+            
+                .header {
+                        display     : block;
+                        margin      : 30px 10px 20px 10px;
+                    <!--    padding     : 40px;   -->
+                        position    : running(header);
+                        font-size   : 13px;
+                }
+    
+                .footer {
+                        display     : block;
+                        padding     : 15px;
+                        position    : running(footer);
+                        font-size   : 11px;
+                }
+                
+            
+        .highlighted-row {
+            background-color: lightblue; /* Change this to the color you want */
+        }
+
+            
+            </style>
+        </head>
+        
+        <body>
+            
+            <!-- **START of FOOTER section here -->
+            <div class="footer">
+                <span>Generated on {!generatedDate}</span>              <!-- <span class="date">{!TODAY()}</span>  -->
+            </div>
+            <!-- **END here -->
+            
+            
+            <!-- **START of HEADER section here -->
+           
+            <div class="header">
+                 <hr/>
+                <span class="heading heading--title">Coverholder/DCA Information:</span>
+                
+            </div>
+
+            <br/><br/>
+            
+            
+            <!-- ADDED BY AMITABH on 21-Mar-23 -->
+            <!-- **START of CONTENT section here -->
+            <div class="container">
+       
+                <!-- ** START of DUE DILIGENCE DETAILS section here     -->
+                <div>
+                    <table style="border: 0;">
+                        <tr>
+                            <td class="label" style="width:20%;">Company Name</td>
+                            <td style="border: 0px;">: {!duediligence.P360_CoverHolder_TPA_Name__c}</td>
+                        </tr>
+                        <tr>
+                         <td class="label" style="width:10%;">Coverholder/DCA</td>
+                         <td style="border: 0px;">: {!duediligence.P360_DD_Coverholder_or_DCA__c}</td>
+                         <td class="label" style="width:10%;">DD Type</td>
+                         <td style="border: 0px;">: {!duediligence.P360_Due_Diligence_Type__c}</td>
+                            <!--        <td style="border: 0px;">: {!duediligence.TMKDA_Binder_Renewal_Date__c}</td> -->
+                         <td class="label" style="width:10%;">Binder Renewal Date</td>
+                         <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.TMKDA_Binder_Renewal_Date__c}" /> 
+							</apex:outputText></td>
+                        </tr>
+                        <tr>
+                            
+                          
+                            <td class="label" style="width:20%;">Domicile</td>
+                            <td style="border: 0px;">: {!duediligence.TMKDA_Domicile__c}</td>
+                            <!--        <td style="border: 0px;">: {!duediligence.P360_DD_Coverholder_Live_Date__c}</td> -->
+                            <td class="label" style="width:10%;">Live Date</td>
+                            <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.P360_DD_Coverholder_Live_Date__c}" /> 
+							</apex:outputText></td>
+                            
+                             <td class="label" style="width:20%;">Total EPI</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Total_EPI__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Line of Business</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Line_of_Business__c}</td>
+                                <!--        <td style="border: 0px;">: {!duediligence.TMKDA_Previous_Committee_Date__c}</td> -->
+                            <td class="label" style="width:10%;">Previous Committee Date</td>
+                            <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.TMKDA_Previous_Committee_Date__c}" /> 
+							</apex:outputText></td>
+                            <td class="label" style="width:20%;">Number of Live Binders</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Number_of_Live_Binders__c}</td>
+                 			
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">DD Connection Status</td>
+                            <td style="border: 0px;">: {!duediligence.TMKDA_DD_Connection_Status__c}</td>
+                            <td class="label" style="width:20%;">DD Connections</td>
+                            <td style="border: 0px;">: {!duediligence.TMKDA_DD_Connection_Status__c}</td>
+                            <td class="label" style="width:10%;">Number of Run Off Binders</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Number_of_Run_Off_Binders__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Customer Domicile</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Customer_Domicile__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Risk Location</td>
+                            <td style="border: 0px;">: {!duediligence.P360_DD_Risk_Location__c}</td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:20%;">Overview</td>
+                            <td style="border: 0px;">: {!duediligence.TMKDA_Overview__c}</td>
+                        </tr>
+                        <hr/>
+                    </table>
+                </div>
+                <div>
+                      <span class="heading heading--title">Audit Summary:</span>
+            
+                     <!--        <td style="border: 0px;">: {!duediligence.P360_DD_Last_Audit_Date__c}</td> -->
+                         <td class="label" style="width:10%;">Last Audit Date</td>
+                         <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.P360_DD_Last_Audit_Date__c}" /> 
+							</apex:outputText></td>
+                    <!--        <td style="border: 0px;">: {duediligence.P360_DD_Next_Audit_Date__c}</td> -->
+                         <td class="label" style="width:10%;">Next Audit Date</td>
+                         <td><apex:outputText value="{0,date,yyyy.MM.dd}">
+    							<apex:param value="{!duediligence.P360_DD_Next_Audit_Date__c}" /> 
+							</apex:outputText></td>
+                    
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Recommendations/Actions</th>
+                                
+                                <th>Actions-Report</th> 
+                                <th>Open at DD Review Date</th>
+                                <th>Overdue at DD Review Date-what is logic of overdue</th>
+                            </tr>
+ 							<td>High</td>
+                            <td>Medium</td>
+                            <td>Low</td>
+                        </thead>  
+                   		
+                        <tbody>
+                                           
+                                <tr>
+                                
+                              	    <td>{!duediligence.TMKDA_High_Actions_Report__c}</td>
+                                    <td>{!duediligence.TMKDA_High_Open_at_DD_Review_Date__c}</td>
+                                    <td>{!duediligence.TMKDA_High_Overview_at_DD_Review_Date__c}</td>
+                                   
+                                </tr>
+                            
+                                <tr>       
+                                    
+                                    <td>{!duediligence.TMKDA_Medium_Actions_Report__c}</td>
+                                    <td>{!duediligence.TMKDA_Medium_Open_at_DD_Review_Date__c}</td>
+                                    <td>{!duediligence.TMKDA_Medium_Overview_at_DD_Review_Date__c}</td>
+                                    
+                                </tr>  
+                            
+                                <tr>
+                                    
+                                    <td>{!duediligence.TMKDA_Low_Actions_Report__c}</td>
+                                    <td>{!duediligence.TMKDA_Low_Open_at_DD_Review_Date__c}</td>
+                                    <td>{!duediligence.TMKDA_Low_Overview_at_DD_Review_Date__c}</td>
+                                   
+                                </tr>
+                              
+                            <table>
+                                 <tr class="center-align"><td>Automatically pulls any open recommendations For secondary reviews, how do we show primary issues</td></tr>
+                            </table>
+                                  <br/>
+                             <span class="heading heading--title">Risk Summary:</span>
+                        </tbody>       
+                    </table>
+                    
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>
